@@ -1,4 +1,4 @@
-$('#example1').idxSlider({
+$('#example1').greatSlider({
 	type: 'fade',
 	//nav: false,
 	autoplay: true,
