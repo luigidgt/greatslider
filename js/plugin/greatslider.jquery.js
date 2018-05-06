@@ -1,16 +1,18 @@
 (function($){
 	
 	$.fn.greatSlider = function(options){
+
 		let _this = this;
 		
-		if (!_this.length) return console.log('IDX Slider: No existe el contenedor maestro para hacer el slider.');
+		if (!_this.length) return console.error('* Great Slider [Logger] : No existe el contenedor maestro para hacer el slider.');
 
-		let settings = $.extend({
+		let settings = {
 			type: 'fade', // fade, swipe
 			transitionTime: 1000, // en milisegundos
 			nav: true, // true, false
 			bullets: true, // true, false
 			autoplay: true, // true, false
+			log: false,
 			layout: {
 
 				containerItems: '.gs-container-items',
@@ -36,18 +38,24 @@
 				noneClass: '.gs-none',
 				attachedClass: '.gs-attached'
 			}
-		}, options);
+		};
+		if (options !== undefined) settings = $.extend(settings, options);
 
 		// variables globales
 		let sLayout = settings.layout,
 				items = _this.find(sLayout.item),
 				nItems = items.length,
 				attachedClass = sLayout.attachedClass.substr(1),
-				displayNodeClass = sLayout.noneClass.substr(1);
+				displayNodeClass = sLayout.noneClass.substr(1),
+				log = [];
 
 		let actions = {
 
 			init: function(){
+				this.log({
+					type: 'not',
+					text: 'Sistema inicializado.'
+				});
 
 				// ejecutando evento nativo de inicialización
 				let onInit = settings.onInit;
@@ -102,7 +110,7 @@
 				}
 
 				let typeRun = sliderType[settings.type];
-				(typeRun !== undefined) ? typeRun(settings) : console.log('el tipo de slider determinado no es válido');
+				(typeRun !== undefined) ? typeRun(settings) : _log('err', 'el tipo de slider determinado no es válido');
 			},
 
 			navs: function() {
@@ -261,13 +269,47 @@
 
 				}
 				*/
+			},
+
+			log: obj => {
+				if(obj == undefined) {
+					return log.forEach(txt => {
+						console.log(txt);
+					});
+				}
+
+				_log(obj.type, obj.text);
 			}
 
 		}
 
+		function _log(type, text){
+			// Types: error (err), warning (war), notification (not).
+			let tipo, pro;
+			switch(type) {
+				case 'err':
+					tipo = 'Error';
+					pro = 'error';
+					break;
+				case 'war':
+					tipo = 'Precaución';
+					pro = 'warn';
+					break;
+				case 'not':
+					tipo = 'Notificación';
+					pro = 'info';
+					break;
+			}
+			let currentdate = new Date(); 
+			let datetime = currentdate.getHours() + ':' + currentdate.getMinutes() + ':' + currentdate.getSeconds();
+			let textComplete = datetime + ' | ' + tipo + ' : ' + text;
+			if (settings.log) console[pro]('Great Slider [Logger] : ' + textComplete);
+			log.push(textComplete);
+		}
+
 		// Inicializando
 		actions.init();
-		return this;
+		return actions;
 	}
 
 })(jQuery);

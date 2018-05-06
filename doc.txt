@@ -1,0 +1,36 @@
+
+* Información del plugin:
+
+	- Nombre: Great Slider	 
+	- Descripción: Un slider todo terreno
+	- Version: Alpha 0.1
+	- Autor: Daniel Pisconte Zevallos
+
+
+* Eventos opcionales:
+
+	- onInit: cuando se inicializa la construcción.
+
+	- onLoadingItem: cuando carga el item que activo.
+		-> elemento e index del item
+
+	- onLoadedItem: cuando terminó de cargar el item activo.
+		-> elemento, index, status
+
+
+* Acciones disponibles:
+
+	- Sistema de registro:
+
+		- Inserción:
+
+			let slider = $('#example1').greatSlider();
+			slider.log({
+				type: 'war',
+				text: 'esta es una precaución de prueba.'
+			});
+
+		- Obtención de registro:
+
+			slider.log();
+			-> varias impresiones en consola de cada registro guardado.

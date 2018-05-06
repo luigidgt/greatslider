@@ -4,6 +4,7 @@ $('#example1').greatSlider({
 	autoplay: true,
 	transitionSpeed: 6500,
 	navSpeed: 1000,
+	log: true,
 	breakPoints: {
 
 		820: {
