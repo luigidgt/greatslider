@@ -1,0 +1,236 @@
+// mini reset
+.gs-container-slider {
+	img {
+		border: 0;
+		outline: 0;
+	}
+
+	ul, ol, li {
+		list-style:none;
+		padding:0;
+		margin: 0;
+	}
+
+	button {
+		outline:0;
+		border:0;
+		padding:0;
+		font-size: inherit;
+		border-radius: 0;
+		-webkit-appearance:none;
+		-moz-appearance:none;
+		appearance:none;
+	}
+}
+//
+
+// Generlaes
+.gs-none {
+	display: none !important; // :V no hay de otra, ¡rayos!
+}
+
+// Tamaño por defecto y relativo
+.gs-container-slider {
+	position: relative;
+}
+
+.gs-container-items {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.gs-wrapper-items {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+
+	.gs-img-item {
+		width: 100%;
+	}
+
+	.gs-item-slider {
+		position: relative;
+
+		&.gs-item-loading {
+			
+			&:before, &:after {
+				content:"";
+				position: absolute;
+				display:block;
+				transition: all .3s linear;
+			}
+
+			&:before {
+				top:0;
+				left:0;
+				z-index:2;
+				width: 100%;
+				height: 100%;
+				transition: all .3s linear;
+				background-color: #fff;
+				opacity: .8;
+			}
+
+			&:after {
+				top:50%;
+				left:50%;
+				z-index:2;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				border:7px solid #f3f3f3;
+				border-top: 7px solid #555;
+				animation: spin .7s linear infinite;
+			}
+
+			@keyframes spin {
+				0% { transform: translate(-50%, -50%) rotate(0deg); }
+				100% { transform: translate(-50%, -50%) rotate(360deg); }
+			}
+		}
+
+		&.gs-item-loaded {
+			&:before, &:after {
+				opacity: 0;
+			}
+		}
+	}
+
+	&.gs-transition-fade {
+
+		.gs-item-slider {
+			position: absolute;
+			opacity: 0;
+			z-index:0;
+			top:0;
+			left:0;
+			width: 100%;
+			height: 100%;
+			opacity:0;
+			transition: all .3s linear;
+		}
+		
+		.gs-item-active {
+			opacity: 1;
+			z-index: 1;
+		}
+	}
+
+	&.gs-transition-swipe {
+		transition: margin .3s;
+	}
+}
+
+
+// ARROWS
+.gs-wrapper-arrows {
+	z-index:4;
+	position: absolute;
+	width: 100%;
+	height: 1px;
+	left:0;
+	top:50%;
+	transform: translateY(-50%);
+	display:flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.gs-prev-arrow, .gs-next-arrow {
+	height: 60px;
+	width: 45px;
+	background-color:red;
+}
+
+// Opcionales, para remover si es el caso//
+.gs-style-prev, .gs-style-next {
+	background-color: #000;
+	opacity: .45;
+	background-repeat: no-repeat;
+	background-position: center center;
+	overflow: hidden;
+	text-indent: -999px;
+	transition: margin .1s linear, opacity .2s linear;
+	background-image: url('../img/arrow.png');
+
+	&:hover {
+		opacity: .8;
+		cursor:pointer;
+	}
+
+	&:active {
+		border-top-right-radius: 4px;
+		border-bottom-right-radius: 4px;
+		opacity: 1;
+	}
+}
+.gs-style-prev {
+	transform: rotateY(180deg);
+
+	&:active {
+		margin-left: -5px;
+		
+	}
+}
+.gs-style-next:active {
+	margin-right: -5px;	
+}
+
+
+// BULLETS
+.gs-wrapper-bullets {
+	
+}
+
+// opcional
+.gs-style-bullets {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index:4;
+	
+	padding: 10px 15px;
+	background-color: rgba(#000, .5);
+	border-radius: 10px;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+
+	.gs-bullet {
+		border-radius: 50%;
+		width: 20px;
+		height: 20px;
+		background-color: rgba(#000, .5);
+		margin-right: 10px;
+		opactiy: .5;
+		transition: all .3s linear;
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+		&:hover {
+			cursor:pointer;
+			opacity: .9;
+			background-color: rgba(#c0c0c0, .5);
+		}
+
+		&:active {
+			opacify: 1;
+		}
+
+		&.gs-bullet-active {
+			opacity: .8;
+			background-color: #fff;
+
+			&:hover {
+				background-color: #fff;
+			}
+		}
+
+		
+	}
+}

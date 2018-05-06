@@ -1,0 +1,43 @@
+doctype html
+html(lang="es")
+	head
+		title Greade Slider
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+		link(rel="stylesheet", href="css/styles.css")
+	body
+
+		h2(style="text-align:center") Fade Slider
+		#example1.gs-container-slider(style="width: 780px; height: 440px;margin-left:auto;margin-right:auto")
+
+			.gs-container-items
+
+				ul.gs-wrapper-items
+
+					li.gs-item-slider
+						img(data-src="img/paisajes/1.jpg", alt="Text").gs-tolazy.gs-img-item
+					
+					li.gs-item-slider
+						img(data-src="img/paisajes/2.jpg", alt="Text").gs-tolazy.gs-img-item
+					
+					li.gs-item-slider
+						img(data-src="img/paisajes/3.jpg", alt="Text").gs-tolazy.gs-img-item
+
+					li.gs-item-slider
+						img(data-src="img/paisajes/4.jpg", alt="Text").gs-tolazy.gs-img-item
+
+					li.gs-item-slider
+						img(data-src="img/paisajes/5.jpg", alt="Text").gs-tolazy.gs-img-item
+			
+			.gs-container-navs
+
+				.gs-wrapper-arrows
+					button.gs-arrow-nav.gs-prev-arrow.gs-style-prev Prev
+					button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
+
+				.gs-wrapper-bullets.gs-style-bullets
+					button.gs-bullet
+
+		script(src="js/lib/jquery-3.3.1.min.js")
+		script(src="js/plugin/greatslider.jquery.min.js")
+		script(src="js/main.js")
