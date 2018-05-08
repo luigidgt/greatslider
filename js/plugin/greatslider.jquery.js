@@ -25,8 +25,8 @@
 				toLazy: '.gs-tolazy',
 
 				containerNavs: '.gs-container-navs',
-				wrapperArrows: '.gs-wrapper-arrows',
 
+				wrapperArrows: '.gs-wrapper-arrows',
 				arrow: '.gs-arrow-nav',
 				arrowPrev: '.gs-prev-arrow',
 				arrowNext: '.gs-next-arrow',
@@ -39,7 +39,12 @@
 				attachedClass: '.gs-attached'
 			}
 		};
-		if (options !== undefined) settings = $.extend(settings, options);
+		if (options !== undefined) $.extend(settings, options);
+		let settingsBk = $.extend({}, settings);
+		delete settingsBk['breakPoints'];
+		delete settingsBk['layout'];
+
+		let breakPoint = 0;
 
 		// variables globales
 		let sLayout = settings.layout,
@@ -51,52 +56,56 @@
 
 		let actions = {
 
-			init: function(){
+			init: function(configs){
+
+				// Constructor de los Items
+				this.items(configs);
+
+				// Constructor de Bullets y anidación de eventos click
+				this.bullets(configs); 
+
+				// Anidando evento click a los Arrows
+				this.navs(configs);
+
+				// Setiemos los breakPoints
+				if (_this.hasClass(attachedClass)) return false;
+
+				//
 				this.log({
 					type: 'not',
 					text: 'Sistema inicializado.'
 				});
-
 				// ejecutando evento nativo de inicialización
 				let onInit = settings.onInit;
 				if (onInit !== undefined) onInit();
+				//
 
-				// Constructor de los Items
-				this.items(settings.type);
-
-				// Constructor de Bullets y anidación de eventos click
-				this.bullets(); 
-
-				// Anidando evento click a los Arrows
-				this.navs();
-
-				// Setiemos los breakPoints
+				_this.addClass(attachedClass);
 				let _objThis = this;
-				let theBreakPoints = settings.breakPoints;
+				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
 					_objThis.breakPoints(theBreakPoints)
-					window.idxSliderBP = false;
-
-					$(window).resize(function(){
-						if (idxSliderBP !== false) clearTimeout(idxSliderBP);
-
-						window.idxSliderBP = setTimeout(() => {
+					window.greatSliderBP = false;
+					// para los breakpoints
+					$(window).resize(() => {
+						console.log('está en resize');
+						if (greatSliderBP !== false) clearTimeout(greatSliderBP);
+						window.greatSliderBP = setTimeout(() => {
 							_objThis.breakPoints(theBreakPoints);
 						}, 1000);
-
 					});
-
 				}
 			},
 
-			items: function(action) {
-				let _thisActions = this;
-				let $wrapperItems = _this.find(sLayout.wrapperItems);
+			items: function(configs) {
+				let _thisActions = this,
+						$wrapperItems = _this.find(sLayout.wrapperItems);
 
 				// Los Items
 				let sliderType = {
 
 					fade: () => { // desaparecimiento
+						if ($wrapperItems.hasClass('gs-transition-fade')) return false;
 						$wrapperItems.addClass('gs-transition-fade');
 						let $firstItem = $wrapperItems.find(sLayout.item).eq(0);
 						$firstItem.addClass(sLayout.itemActive.substr(1));
@@ -104,25 +113,91 @@
 					},
 
 					swipe: () => { // arrastre
+						if ($wrapperItems.hasClass('gs-transition-swipe')) return false;
 						$wrapperItems.addClass('gs-transition-swipe');
 					}
 
 				}
 
-				let typeRun = sliderType[settings.type];
-				(typeRun !== undefined) ? typeRun(settings) : _log('err', 'el tipo de slider determinado no es válido');
+				let typeRun = sliderType[configs.type];
+				(typeRun !== undefined) ? typeRun(configs) : _log('err', 'el tipo de slider determinado no es válido');
 			},
 
-			navs: function() {
+			bullets: function(configs) {
+				let _objThis = this;
+
+				let $wrapperBullets = _this.find(sLayout.wrapperBullets)
+				if (!configs.bullets) {
+					if (!$wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.addClass(displayNodeClass);
+					return false;	
+				} else {
+					if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass)
+				}
+
+				let classBulletActive = sLayout.bulletActive.substr(1);
+
+				let actions = {
+
+					constructor: () => {
+						let $theBullets = $wrapperBullets.find(sLayout.bullet);
+						if ($theBullets.length == nItems) return false; // ya tiene los bullets creados, no continuo.
+						let bulletTag = $theBullets.prop('tagName').toLowerCase();
+						let bulletsHtml = '';
+						let i = 0;
+						while(i < nItems){
+							let bulletFirstClass = (i !== 0) ? '' : ' ' + classBulletActive;
+							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bullet.substr(1) + bulletFirstClass + '"></' + bulletTag + '>';
+							i++;
+						}
+						$wrapperBullets.html(bulletsHtml);
+					},
+
+					nav: () => {
+						if ($wrapperBullets.hasClass(attachedClass)) return false; // ya adjuntó el click a los bullets, no continuo.
+						$wrapperBullets.addClass(attachedClass); 
+						$wrapperBullets.on('click', sLayout.bullet, function(){
+
+							if($(this).hasClass(classBulletActive)) return false;
+							$(this).addClass(classBulletActive).siblings().removeClass(classBulletActive);
+							
+							let typesSlider = {
+
+								fade: function($this){
+									let itemActivating = items.eq($this.index());
+									let itemClassActive = sLayout.itemActive.substr(1);
+									itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
+									_objThis.loadImage(itemActivating);
+								}
+							}
+
+							typesSlider[configs.type]($(this));
+						});
+
+					},
+
+					init: function() {
+						this.constructor();
+						this.nav();
+					}
+
+				}
+
+				actions['init']();	
+			},
+
+			navs: function(configs) {
 				let _objThis = this;
 
 				// verificación
 				let $wrapperArrows = _this.find(sLayout.wrapperArrows);
-				if (!settings.nav) {
-					return $wrapperArrows.addClass(displayNodeClass);
+				if (!configs.nav) {
+					if (!$wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.addClass(displayNodeClass);
 				} else {
 					if ($wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.removeClass(displayNodeClass);
 				}
+
+				if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
+				$wrapperArrows.addClass(attachedClass);
 
 				_this.find(sLayout.arrow).on('click', function(){
 					let activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive);
@@ -141,13 +216,13 @@
 					_objThis.loadImage(itemActivating);
 
 					// Bullets
-					if(!settings.bullets) return false;
+					if(!configs.bullets) return false;
 					let bulletItemActive = sLayout.bulletActive.substr(1);
 					_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
 				});
 			},
 
-			loadImage: function($item){
+			loadImage: $item => {
 				let $toLazy = $item.find(sLayout.toLazy);
 				if (!$toLazy.length) return false;
 				let dataSrc = $toLazy.attr('data-src');
@@ -162,113 +237,18 @@
 							$item.removeClass(sLayout.itemLoading.substr(1));
 						}, 500);
 					}
+					let $lazyIndex = $toLazy.parents(sLayout.item).index();
 					$toLazy.attr('src', dataSrc).one({
 						load: () => {
-							if (onLoadedItem !== undefined) onLoadedItem($toLazy, $toLazy.parents(sLayout.item).index(), 'success');
+							if (onLoadedItem !== undefined) onLoadedItem($toLazy, $lazyIndex, 'success');
 							_cleanClass($item);
 						},
 						error: () => {
-							if (onLoadedItem !== undefined) onLoadedItem($toLazy, $toLazy.parents(sLayout.item).index(), 'error');
+							if (onLoadedItem !== undefined) onLoadedItem($toLazy, $lazyIndex, 'error');
 							_cleanClass($item);
 						}
 					}).removeAttr('data-src');
 				}
-			},
-
-			bullets: function(action) {
-
-				let _objThis = this;
-				let $wrapperBullets = _this.find(sLayout.wrapperBullets)
-				if (!settings.bullets) {
-					return $wrapperBullets.addClass(displayNodeClass);
-				} else {
-					if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass)
-				}
-
-				let actions = {
-
-					constructor: () => {
-						let bulletTag = $wrapperBullets.find(sLayout.bullet).prop('tagName').toLowerCase();
-						let bulletsHtml = '';
-						let i = 0;
-						while(i < nItems){
-							let bulletFirstClass = (i !== 0) ? '' : ' ' + sLayout.bulletActive.substr(1);
-							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bullet.substr(1) + bulletFirstClass + '"></' + bulletTag + '>';
-							i++;
-						}
-						$wrapperBullets.html(bulletsHtml);
-					},
-
-					nav: () => {
-						if ($wrapperBullets.hasClass(attachedClass)) return false;
-						$wrapperBullets.addClass(attachedClass); 
-						let bulletItemActiveClass = sLayout.bulletActive.substr(1);
-						$wrapperBullets.on('click', sLayout.bullet, function(){
-
-							if($(this).hasClass(bulletItemActiveClass)) return false;
-							$(this).addClass(bulletItemActiveClass).siblings().removeClass(bulletItemActiveClass);
-							
-							let typesSlider = {
-
-								fade: function($this){
-									let itemActivating = items.eq($this.index());
-									let itemClassActive = sLayout.itemActive.substr(1);
-									itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
-									_objThis.loadImage(itemActivating);
-								},
-
-								swipe: function(){
-
-								}
-
-							}
-
-							typesSlider[settings.type]($(this));
-						});
-
-					},
-
-					init: function() {
-						this.constructor();
-						this.nav();
-					}
-
-				}
-
-				actions[(action == undefined) ? 'init' : action]();	
-			},
-
-			breakPoints: function(breakPoints){
-				/*
-					
-					.sort(function(a, b){
-					   if (a == b) return 0;
-					   return (a < b) ? -1 : 1; 
-					})
-
-				*/
-				/*
-				let _objThis = this;
-				let windowWidth = $(window).width();
-
-				let theBreakPoints = Object.keys(breakPoints);
-
-				theBreakPoints.forEach(item => {
-					if(Number(item) <= windowWidth) lastMatch = item;
-				});
-
-				if(lastMatch) {
-					//
-					let newOptions = breakPoints[lastMatch];
-					$.extend(settings, newOptions);
-					let alias = {bullets: 'bullets', nav: 'navs'};
-					Object.keys(newOptions).forEach(bp => {
-						_objThis[alias['' + bp + '']]();
-					});
-					//
-
-				}
-				*/
 			},
 
 			log: obj => {
@@ -279,8 +259,32 @@
 				}
 
 				_log(obj.type, obj.text);
-			}
+			},
 
+			breakPoints: function(breakPoints){
+				let _objThis = this;
+				let windowWidth = $(window).width();
+				let bkOptions = {}, finalBp;
+				Object.keys(breakPoints).forEach(medida => {
+					if (medida <= windowWidth) {
+						$.extend(bkOptions, breakPoints[medida]);
+						finalBp = medida;
+					}
+				});
+				let bkOptionsFinales = Object.keys(bkOptions);
+				if (bkOptionsFinales.length) {
+					if (breakPoint !== finalBp) {
+						breakPoint = finalBp;
+						bkOptions = $.extend({}, settingsBk, bkOptions);
+						_objThis.init(bkOptions);
+					}
+				} else {
+					if(breakPoint !== 0) {
+						breakPoint = 0;
+						_objThis.init(settingsBk);
+					}
+				}
+			}	
 		}
 
 		function _log(type, text){
@@ -308,7 +312,7 @@
 		}
 
 		// Inicializando
-		actions.init();
+		actions.init(settings);
 		return actions;
 	}
 

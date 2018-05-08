@@ -1,13 +1,13 @@
 $('#example1').greatSlider({
 	type: 'fade',
-	//nav: false,
+	nav: false,
 	autoplay: true,
 	transitionSpeed: 6500,
 	navSpeed: 1000,
-	log: true,
+	//log: true,
 	breakPoints: {
 
-		820: {
+		825: {
 			nav: true
 		},
 
