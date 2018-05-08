@@ -1,5 +1,5 @@
 $('#example1').greatSlider({
-	type: 'fade',
+	type: 'swipe',
 	nav: false,
 	autoplay: true,
 	transitionSpeed: 6500,
@@ -18,14 +18,26 @@ $('#example1').greatSlider({
 	}
 
 	/*
+
 	onInit: function(){
 		console.log('Inicializando Slider');
 	},
+
+	onInited: () => {
+		console.log('Sistema inicializado XD');
+	},
+
 	onLoadingItem: ($img, index) => {
 		console.log('Está cargando... ', $img, index)
 	},
+
 	onLoadedItem: ($img, index, status) => {
 		console.log('Yá cargó:', $img, index, status)
+	},
+
+	onResized: (width) => {
+		console.log('El ancho es: ' + width);
 	}
+
 	*/
 });

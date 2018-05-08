@@ -120,6 +120,9 @@
 
 	&.gs-transition-swipe {
 		transition: margin .3s;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
 	}
 }
 

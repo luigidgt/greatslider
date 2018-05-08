@@ -10,8 +10,9 @@
 			type: 'fade', // fade, swipe
 			transitionTime: 1000, // en milisegundos
 			nav: true, // true, false
+			items: 1,
 			bullets: true, // true, false
-			autoplay: true, // true, false
+			autoplay: false, // true, false
 			log: false,
 			layout: {
 
@@ -73,7 +74,7 @@
 				//
 				this.log({
 					type: 'not',
-					text: 'Sistema inicializado.'
+					text: 'Slider Inicializandoce.'
 				});
 				// ejecutando evento nativo de inicialización
 				let onInit = settings.onInit;
@@ -84,22 +85,36 @@
 				let _objThis = this;
 				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
-					_objThis.breakPoints(theBreakPoints)
+					_objThis.breakPoints(theBreakPoints, window.innerWidth)
 					window.greatSliderBP = false;
 					// para los breakpoints
 					$(window).resize(() => {
-						console.log('está en resize');
 						if (greatSliderBP !== false) clearTimeout(greatSliderBP);
 						window.greatSliderBP = setTimeout(() => {
-							_objThis.breakPoints(theBreakPoints);
+							let wWindow = window.innerWidth;
+							let onResized = settings.onResized;
+							if (onResized !== undefined) onResized(wWindow);
+							//
+							_objThis.breakPoints(theBreakPoints, wWindow);
 						}, 1000);
 					});
 				}
+
+				// Sistema inicializado
+				let onInited = settings.onInited;
+				if (onInited !== undefined) onInited();
+
+				this.log({
+					type: 'not',
+					text: 'Slider Inicializandoce.'
+				});
 			},
 
 			items: function(configs) {
 				let _thisActions = this,
-						$wrapperItems = _this.find(sLayout.wrapperItems);
+						$wrapperItems = _this.find(sLayout.wrapperItems),
+						$firstItem = $wrapperItems.find(sLayout.item).eq(0),
+						iActivePure = sLayout.itemActive.substr(1);
 
 				// Los Items
 				let sliderType = {
@@ -107,14 +122,20 @@
 					fade: () => { // desaparecimiento
 						if ($wrapperItems.hasClass('gs-transition-fade')) return false;
 						$wrapperItems.addClass('gs-transition-fade');
-						let $firstItem = $wrapperItems.find(sLayout.item).eq(0);
-						$firstItem.addClass(sLayout.itemActive.substr(1));
+						$firstItem.addClass(iActivePure);
 						_thisActions.loadImage($firstItem);
 					},
 
 					swipe: () => { // arrastre
 						if ($wrapperItems.hasClass('gs-transition-swipe')) return false;
-						$wrapperItems.addClass('gs-transition-swipe');
+						$wrapperItems.addClass('gs-transition-swipe').css('width', (nItems * 100) + '%');
+						items.css('width', (100 / nItems) + '%');
+
+						let initItems = configs.items;
+						if (initItems == 1) { // si no se determinó , es de uno
+							_thisActions.loadImage($firstItem);
+							$firstItem.addClass(iActivePure);
+						}
 					}
 
 				}
@@ -155,22 +176,35 @@
 					nav: () => {
 						if ($wrapperBullets.hasClass(attachedClass)) return false; // ya adjuntó el click a los bullets, no continuo.
 						$wrapperBullets.addClass(attachedClass); 
-						$wrapperBullets.on('click', sLayout.bullet, function(){
 
+						$wrapperBullets.on('click', sLayout.bullet, function(){
 							if($(this).hasClass(classBulletActive)) return false;
 							$(this).addClass(classBulletActive).siblings().removeClass(classBulletActive);
+
+							let bulletIndex = $(this).index(),
+									$itemActivating = items.eq(bulletIndex),
+									itemClassActive = sLayout.itemActive.substr(1);
 							
 							let typesSlider = {
 
 								fade: function($this){
-									let itemActivating = items.eq($this.index());
-									let itemClassActive = sLayout.itemActive.substr(1);
-									itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
-									_objThis.loadImage(itemActivating);
+									$itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
+									
+								},
+
+								swipe: function($this) {
+									let cItems = configs.items;
+									if (cItems == 1) { // si no se determinó , es de uno
+										$itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
+										_this.find(sLayout.wrapperItems).css('margin-left', '-' + (bulletIndex * 100) + '%');
+										_objThis.loadImage($itemActivating);
+									}
 								}
+
 							}
 
 							typesSlider[configs.type]($(this));
+
 						});
 
 					},
@@ -186,7 +220,9 @@
 			},
 
 			navs: function(configs) {
-				let _objThis = this;
+				let _objThis = this,
+				itemClassActive = sLayout.itemActive.substr(1),
+				itemConfigs = configs.items;
 
 				// verificación
 				let $wrapperArrows = _this.find(sLayout.wrapperArrows);
@@ -200,25 +236,38 @@
 				$wrapperArrows.addClass(attachedClass);
 
 				_this.find(sLayout.arrow).on('click', function(){
-					let activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive);
-					let activeItemIndex = activeItem.index();
-					let itemToActive;
+
+					let activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive), // obteniendo el item activado
+							activeItemIndex = activeItem.index(),
+							itemToActive;
 
 					if ($(this).hasClass(sLayout.arrowNext.substr(1))) { // click en next
+
 						itemToActive = (activeItemIndex == (items.length - 1)) ? 0 : activeItemIndex + 1;
+
 					} else { // click en prev
+
 						itemToActive = (activeItemIndex == 0) ? items.length - 1 : activeItemIndex - 1;
+
 					}
 
-					let itemClassActive = sLayout.itemActive.substr(1);
+					// solo si es swipe
+					if (configs.type == 'swipe') {
+						_this.find(sLayout.wrapperItems).css('margin-left', '-' + (itemToActive * 100) + '%');
+					}
+					//
+					
 					let itemActivating = items.eq(itemToActive);
 					itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
+
 					_objThis.loadImage(itemActivating);
 
 					// Bullets
 					if(!configs.bullets) return false;
 					let bulletItemActive = sLayout.bulletActive.substr(1);
 					_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
+
+
 				});
 			},
 
@@ -261,12 +310,11 @@
 				_log(obj.type, obj.text);
 			},
 
-			breakPoints: function(breakPoints){
+			breakPoints: function(breakPoints, widthWindow){
 				let _objThis = this;
-				let windowWidth = $(window).width();
 				let bkOptions = {}, finalBp;
 				Object.keys(breakPoints).forEach(medida => {
-					if (medida <= windowWidth) {
+					if (medida <= widthWindow) {
 						$.extend(bkOptions, breakPoints[medida]);
 						finalBp = medida;
 					}
@@ -284,7 +332,8 @@
 						_objThis.init(settingsBk);
 					}
 				}
-			}	
+			}
+
 		}
 
 		function _log(type, text){
