@@ -1,5 +1,6 @@
 $('#example1').greatSlider({
 	type: 'swipe',
+	items: 2,
 	nav: false,
 	autoplay: true,
 	transitionSpeed: 6500,
@@ -41,3 +42,11 @@ $('#example1').greatSlider({
 
 	*/
 });
+
+/* A trabajar:
+	
+	Configuracion:
+
+		 - startPosition
+
+*/

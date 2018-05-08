@@ -11,6 +11,7 @@
 			transitionTime: 1000, // en milisegundos
 			nav: true, // true, false
 			items: 1,
+			slideBy: 1,
 			bullets: true, // true, false
 			autoplay: false, // true, false
 			log: false,
@@ -113,7 +114,8 @@
 			items: function(configs) {
 				let _thisActions = this,
 						$wrapperItems = _this.find(sLayout.wrapperItems),
-						$firstItem = $wrapperItems.find(sLayout.item).eq(0),
+						$theItems = $wrapperItems.find(sLayout.item)
+						$firstItem = $theItems.eq(0),
 						iActivePure = sLayout.itemActive.substr(1);
 
 				// Los Items
@@ -128,14 +130,29 @@
 
 					swipe: () => { // arrastre
 						if ($wrapperItems.hasClass('gs-transition-swipe')) return false;
-						$wrapperItems.addClass('gs-transition-swipe').css('width', (nItems * 100) + '%');
-						items.css('width', (100 / nItems) + '%');
+						$wrapperItems.addClass('gs-transition-swipe');
 
-						let initItems = configs.items;
+						// items
+						let wrapperWidth, itemsWidth,
+								initItems = configs.items;
 						if (initItems == 1) { // si no se determinó , es de uno
-							_thisActions.loadImage($firstItem);
-							$firstItem.addClass(iActivePure);
+							wrapperWidth = nItems * 100;
+							itemsWidth = 100 / nItems;
+						} else { // si de determinó, así que será relativo
+							wrapperWidth = (nItems * 100) / 2;
+							itemsWidth = 100 / nItems;
 						}
+
+						$wrapperItems.css('width', wrapperWidth + '%');
+						items.css('width', itemsWidth + '%');
+
+						let i = 0;
+						while (i < initItems) {
+							_thisActions.loadImage($theItems.eq(i));
+							i++;
+						};
+
+						$theItems.eq(initItems - 1).addClass(iActivePure);
 					}
 
 				}
@@ -253,7 +270,18 @@
 
 					// solo si es swipe
 					if (configs.type == 'swipe') {
-						_this.find(sLayout.wrapperItems).css('margin-left', '-' + (itemToActive * 100) + '%');
+						let mLeft 
+						let nCitems = configs.items;
+						if (nCitems == 1) {
+							mLeft = (100 / 1) * itemToActive;
+						} else {
+							mLeft = ((100 / nCitems) / nCitems) * itemToActive;
+						}
+						//(100 / 1) * 1
+
+						_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
+						
+
 					}
 					//
 					
