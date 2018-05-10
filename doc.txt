@@ -10,6 +10,10 @@
 * Eventos opcionales:
 
 	- onInit: cuando se inicializa la construcción.
+		-> no devuelve nada.
+
+	- onInited: cuando yá terminó de inicializarce el sistema.
+		-> tampoco devuelve nada.
 
 	- onLoadingItem: cuando carga el item que activo.
 		-> elemento e index del item
@@ -17,6 +21,8 @@
 	- onLoadedItem: cuando terminó de cargar el item activo.
 		-> elemento, index, status
 
+	- onResized: cuando se está redimencionando la pantalla.
+		-> el ancho de la pantalla
 
 * Acciones disponibles:
 

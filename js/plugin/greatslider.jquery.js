@@ -177,12 +177,13 @@
 				let actions = {
 
 					constructor: () => {
+						let maxBullets = nItems - (configs.items - 1); // calculando de acuerdo a los items a mostrar.
 						let $theBullets = $wrapperBullets.find(sLayout.bullet);
-						if ($theBullets.length == nItems) return false; // ya tiene los bullets creados, no continuo.
+						if ($theBullets.length == maxBullets) return false; // ya tiene los bullets creados, no continuo.
 						let bulletTag = $theBullets.prop('tagName').toLowerCase();
 						let bulletsHtml = '';
 						let i = 0;
-						while(i < nItems){
+						while(i < maxBullets){
 							let bulletFirstClass = (i !== 0) ? '' : ' ' + classBulletActive;
 							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bullet.substr(1) + bulletFirstClass + '"></' + bulletTag + '>';
 							i++;
@@ -252,50 +253,9 @@
 				if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
 				$wrapperArrows.addClass(attachedClass);
 
-				_this.find(sLayout.arrow).on('click', function(){
-
-					let activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive), // obteniendo el item activado
-							activeItemIndex = activeItem.index(),
-							itemToActive;
-
-					if ($(this).hasClass(sLayout.arrowNext.substr(1))) { // click en next
-
-						itemToActive = (activeItemIndex == (items.length - 1)) ? 0 : activeItemIndex + 1;
-
-					} else { // click en prev
-
-						itemToActive = (activeItemIndex == 0) ? items.length - 1 : activeItemIndex - 1;
-
-					}
-
-					// solo si es swipe
-					if (configs.type == 'swipe') {
-						let mLeft 
-						let nCitems = configs.items;
-						if (nCitems == 1) {
-							mLeft = (100 / 1) * itemToActive;
-						} else {
-							mLeft = ((100 / nCitems) / nCitems) * itemToActive;
-						}
-						//(100 / 1) * 1
-
-						_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
-						
-
-					}
-					//
-					
-					let itemActivating = items.eq(itemToActive);
-					itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
-
-					_objThis.loadImage(itemActivating);
-
-					// Bullets
-					if(!configs.bullets) return false;
-					let bulletItemActive = sLayout.bulletActive.substr(1);
-					_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
-
-
+				// haciendo click en PREV o NEXT
+				_this.find(sLayout.arrow).on('click', function() {
+					_objThis._goTo(($(this).hasClass(sLayout.arrowNext.substr(1))) ? 'next' : 'prev', configs);
 				});
 			},
 
@@ -360,6 +320,74 @@
 						_objThis.init(settingsBk);
 					}
 				}
+			},
+
+			_swipeTo: ()=> {
+
+			},
+
+			_goTo: function(to, configs){
+				let activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive), // obteniendo el item activado
+						activeItemIndex = activeItem.index(),
+						itemToActive;
+
+				if (typeof to == 'string') { // puede ser next o prev, veamos
+
+					if (to == 'next') { // vamos al siguiente item
+
+						if (configs.slideBy == 1) {
+							itemToActive = (activeItemIndex == (items.length - 1)) ? configs.items - 1 : activeItemIndex + 1
+						}
+					} else { // es prev
+
+						if (configs.slideBy == 1) {
+							itemToActive = (activeItemIndex == (configs.items - 1)) ? items.length - 1 : activeItemIndex - 1;
+						}
+
+					}
+
+					// el tipo de pase
+					let typesSlide = {
+
+						swipe: () => {
+							let mLeft = ((100 / configs.items) * (itemToActive + 1)) - 100;
+							if (mLeft < 0) mLeft = 0; // si el numero es negativo, significa que yá llegó al último.
+							_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
+						},
+
+						fade: () => {
+
+						},
+
+						default: () => {
+							return console.log('No existe ese tipo de Slider');
+						}
+
+					}
+
+					typesSlide[configs.type]();
+
+					// El item a activar
+					let itemActivating = items.eq(itemToActive),
+							itemClassActive = sLayout.itemActive.substr(1);
+							itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
+
+					// Cargando la imagen
+					this.loadImage(itemActivating);
+
+					// Activando el Bullet correspondiente
+					if(!configs.bullets) return false;
+					let bulletItemActive = sLayout.bulletActive.substr(1);
+					itemToActive = itemToActive - 1;
+					if (itemToActive < 0) itemToActive = 0;
+					_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
+
+					
+
+				} else if(typeof to == 'number') { // es un index, (number)
+					// go to
+				}
+
 			}
 
 		}
