@@ -4,7 +4,7 @@
 
 		let _this = this;
 		
-		if (!_this.length) return console.error('* Great Slider [Logger] : No existe el contenedor maestro para hacer el slider.');
+		if (!_this.length) return _log('err', '* Great Slider [Logger] : No existe el contenedor maestro para hacer el slider.', true);
 
 		let settings = {
 			type: 'fade', // fade, swipe
@@ -66,7 +66,7 @@
 
 				// verificaciones de sentido comun
 				if (configs.slideBy > configs.items) {
-					console.error('* Great Slider [Logger] : No es posible determinar que el pase por frame (' + configs.slideBy + ') sea mayor al mostrado de items (' + configs.items +').');
+					_log('err', '* Great Slider [Logger] : No es posible determinar que el pase por frame (' + configs.slideBy + ') sea mayor al mostrado de items (' + configs.items +').', true);
 					return false;
 				}
 				//
@@ -94,7 +94,6 @@
 					text: 'Slider Inicializandoce.'
 				});
 				
-				
 				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
 					_objThis.breakPoints(theBreakPoints, window.innerWidth)
@@ -120,7 +119,6 @@
 					type: 'not',
 					text: 'Slider Inicializado.'
 				});
-
 			},
 
 			items: function(configs) {
@@ -154,9 +152,20 @@
 							i++;
 						};
 
-						$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
+						// busca si ya se tiene activo un item
+						let $activeItem = $wrapperItems.find(sLayout.itemActive);
+						if (!$activeItem.length) { // no lo hay, activo el determinado por configs.items
+							$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
+							console.log('entra 1')
+						} else { // activo el primero
+							let $activeItemIndex = $activeItem.index();
+							if ($activeItemIndex < (initItems - 1)) {
+								$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
+							} else {
+								_thisActions.goTo($activeItem.index() + 1, true);
+							}
+						}
 					}
-
 				}
 
 				let typeRun = sliderType[configs.type];
@@ -179,21 +188,38 @@
 				let actions = {
 
 					constructor: () => {
-						let maxBullets = nItems - (configs.items - 1); // calculando de acuerdo a los items a mostrar.
-						let $theBullets = $wrapperBullets.find(sLayout.bullet);
+						// calculando de acuerdo a los items a mostrar.
+						let $theBullets = $wrapperBullets.find(sLayout.bullet),
+								bulletTag = $theBullets.prop('tagName').toLowerCase(),
+								bulletsHtml = '',
+								maxBullets;
 
+						if(configs.type == 'fade') {
+							maxBullets = nItems;
+						} else {
+
+
+							//maxBullets = nItems / configs.items;
+							maxBullets = nItems - (configs.items - 1);
+
+							
+
+
+
+						}
+
+						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
 						if ($theBullets.length == maxBullets) return false; // ya tiene los bullets creados, no continuo.
 
-						let bulletTag = $theBullets.prop('tagName').toLowerCase();
-						let bulletsHtml = '';
 						let i = 0;
 						while(i < maxBullets){
 							let bulletFirstClass = (i !== 0) ? '' : ' ' + classBulletActive;
 							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bullet.substr(1) + bulletFirstClass + '"></' + bulletTag + '>';
 							i++;
 						}
-						$wrapperBullets.html(bulletsHtml);
 
+						$wrapperBullets.html(bulletsHtml);
+	
 					},
 
 					nav: () => {
@@ -204,28 +230,17 @@
 							if($(this).hasClass(classBulletActive)) return false;
 							$(this).addClass(classBulletActive).siblings().removeClass(classBulletActive);
 
-							let bulletIndex = $(this).index(),
-									$itemActivating = items.eq(bulletIndex),
-									itemClassActive = sLayout.itemActive.substr(1);
-							
-							let typesSlider = {
+							if (configs.type == 'swipe') {
+								//let suma = ($(this).index() + 1) * configsBk.slideBy
+								let suma = ($(this).index() + 1) + configsBk.slideBy;
 
-								fade: function($this){
-									$itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
-								},
+								if (suma > nItems) suma = nItems;
 
-								swipe: function($this) {
-									let cItems = configs.items;
-									if (cItems == 1) { // si no se determinó , es de uno
-										$itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
-										_this.find(sLayout.wrapperItems).css('margin-left', '-' + (bulletIndex * 100) + '%');
-										_objThis.loadImage($itemActivating);
-									}
-								}
+								_objThis.goTo(suma);
 
 							}
 
-							typesSlider[configs.type]($(this));
+								
 
 						});
 
@@ -257,9 +272,8 @@
 
 				// haciendo click en PREV o NEXT
 				_this.find(sLayout.arrow).on('click', function(){
-					_objThis._goTo(($(this).hasClass(sLayout.arrowNext.substr(1))) ? 'next' : 'prev', configsBk);
+					_objThis.goTo(($(this).hasClass(sLayout.arrowNext.substr(1))) ? 'next' : 'prev', configsBk);
 				});
-				
 			},
 
 			loadImage: $item => {
@@ -325,11 +339,7 @@
 				}
 			},
 
-			_swipeTo: ()=> {
-
-			},
-
-			_goTo: function(to, configs){
+			goTo: function(to, configs){
 				let activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive), // obteniendo el item activado
 						activeItemIndex = activeItem.index(),
 						itemToActive;
@@ -337,15 +347,13 @@
 				if (typeof to == 'string') { // puede ser next o prev, veamos
 
 					if (to == 'next') { // vamos al siguiente item
-
 						if (activeItemIndex == (items.length - 1)) { // yá llegó al último
 							itemToActive = configs.items - 1;
 						} else {
 							// si es que los items restantes son menores a los que se determinó por cada pase
 							let leftItems = items.length - (activeItemIndex + 1);
 							itemToActive = (leftItems < configs.slideBy) ? activeItemIndex + leftItems : activeItemIndex + configs.slideBy;
-						}
-						
+						}	
 					} else { // es prev
 						if(activeItemIndex == (configs.slideBy - 1)) {
 							itemToActive = items.length - 1;
@@ -355,67 +363,62 @@
 						}
 					}
 
-					// el tipo de pase
-					let typesSlide = {
-
-						swipe: () => {
-							//console.log('activar el item numero: ' + itemToActive);
-
-							let mLeft = ( (100 / configs.items) * (itemToActive + 1) ) - 100;
-							if (mLeft < 0) mLeft = 0; // si el numero es negativo, significa que yá llegó al último.
-							_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
-
-
-						},
-
-						fade: () => {
-
-						},
-
-						default: () => {
-							return console.log('No existe ese tipo de Slider');
+				} else if (typeof to == 'number') { // es un index real, (number)
+					let relocation = configs,
+							toIndexReal = to - 1;
+					configs = configsBk;
+					// verificaciónes lógicas
+					if (to > items.length) return _log('err', 'No es posible ir a puesto de item mayor al numero de items disponibles.', true);
+					if (relocation == undefined) { // si no es una relocalización mandada desde la construcción del ancho del wrapper.
+						if (to == (activeItemIndex + 1)) return _log('not', 'Ya nos encontramos en ese puesto.', true);
+					}
+					if (configs.type == 'swipe') {
+						if (toIndexReal < activeItemIndex && (to - configs.slideBy) < 0) {
+							return _log('err', 'No es posible desplazarce al puesto "' + to + '", debido a que faltarían items a mostrar en pantalla.', true);
 						}
-
 					}
-
-					typesSlide[configs.type]();
-
-					// OnLlega al último XD
-					if(itemToActive == (nItems - 1)) {
-						let lastItem = settings.onLastItem;
-						if (lastItem !== undefined) lastItem();
-					};
-
-					// El item a activar
-					let itemActivating = items.eq(itemToActive),
-							itemClassActive = sLayout.itemActive.substr(1);
-							itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
-
-					// Cargando la o las imagen correspondientes
-					let itemsToLoad = 0;
-					while(itemsToLoad < configs.slideBy) {
-						this.loadImage(items.eq((activeItemIndex + 1) + itemsToLoad));
-						itemsToLoad++;
-					}
-
-					// Activando el Bullet correspondiente
-					/*
-					if(!configs.bullets) return false;
-					let bulletItemActive = sLayout.bulletActive.substr(1);
-					itemToActive = itemToActive - 1;
-					if (itemToActive < 0) itemToActive = 0;
-					_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
-					*/
-
-				} else if(typeof to == 'number') { // es un index, (number)
-					// go to
+					//
+					itemToActive = toIndexReal;
 				}
 
+				// El item a activar
+				let itemActivating = items.eq(itemToActive),
+						itemClassActive = sLayout.itemActive.substr(1);
+						itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
+
+				// el tipo de pase
+				if (configs.type == 'swipe') {
+					let mLeft = ( (100 / configs.items) * (itemToActive + 1) ) - 100;
+					if (mLeft < 0) mLeft = 0; // si el numero es negativo, significa que yá llegó al último.
+					_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
+				}
+
+				// OnLlega al último XD
+				if(itemToActive == (nItems - 1)) {
+					let lastItem = settings.onLastItem;
+					if (lastItem !== undefined) lastItem();
+				};
+
+				// Cargando la o las imagen correspondientes
+				let indexsToLoad = itemToActive;
+				while(indexsToLoad > (itemToActive - configs.slideBy)) {
+					this.loadImage(items.eq(indexsToLoad));
+					indexsToLoad--;
+				}
+
+				// Activando el Bullet correspondiente
+				/*
+				if(!configs.bullets) return false;
+				let bulletItemActive = sLayout.bulletActive.substr(1);
+				itemToActive = itemToActive - 1;
+				if (itemToActive < 0) itemToActive = 0;
+				_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
+				*/
 			}
 
 		}
 
-		function _log(type, text){
+		function _log(type, text, required){
 			// Types: error (err), warning (war), notification (not).
 			let tipo, pro;
 			switch(type) {
@@ -435,7 +438,11 @@
 			let currentdate = new Date(); 
 			let datetime = currentdate.getHours() + ':' + currentdate.getMinutes() + ':' + currentdate.getSeconds();
 			let textComplete = datetime + ' | ' + tipo + ' : ' + text;
-			if (settings.log) console[pro]('Great Slider [Logger] : ' + textComplete);
+			if (settings.log) {
+				console[pro]('Great Slider [Logger] : ' + textComplete);
+			} else {
+				if (required) console[pro]('Great Slider [Logger] : ' + textComplete);
+			}
 			log.push(textComplete);
 		}
 
@@ -445,3 +452,4 @@
 	}
 
 })(jQuery);
+
