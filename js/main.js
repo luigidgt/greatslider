@@ -1,15 +1,18 @@
 $('#example1').greatSlider({
 	type: 'swipe',
-	items: 2,
-	nav: false,
+	items: 1,
+	//slideBy: 2,
+	nav: true,
 	autoplay: true,
 	transitionSpeed: 6500,
 	navSpeed: 1000,
+	bullets: false,
 	//log: true,
 	breakPoints: {
 
 		825: {
-			nav: true
+			//nav: true
+			items: 2
 		},
 
 		1024: {

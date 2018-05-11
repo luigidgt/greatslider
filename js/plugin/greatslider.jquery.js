@@ -42,6 +42,7 @@
 			}
 		};
 		if (options !== undefined) $.extend(settings, options);
+
 		let settingsBk = $.extend({}, settings);
 		delete settingsBk['breakPoints'];
 		delete settingsBk['layout'];
@@ -59,6 +60,13 @@
 		let actions = {
 
 			init: function(configs){
+
+				// verificaciones de sentido comun
+				if (configs.slideBy > configs.items) {
+					console.error('* Great Slider [Logger] : No es posible determinar que el pase por frame (' + configs.slideBy + ') sea mayor al mostrado de items (' + configs.items +').');
+					return false;
+				}
+				//
 
 				// Constructor de los Items
 				this.items(configs);
@@ -129,22 +137,12 @@
 					},
 
 					swipe: () => { // arrastre
-						if ($wrapperItems.hasClass('gs-transition-swipe')) return false;
-						$wrapperItems.addClass('gs-transition-swipe');
+						if (!$wrapperItems.hasClass('gs-transition-swipe')) $wrapperItems.addClass('gs-transition-swipe');
 
 						// items
-						let wrapperWidth, itemsWidth,
-								initItems = configs.items;
-						if (initItems == 1) { // si no se determinó , es de uno
-							wrapperWidth = nItems * 100;
-							itemsWidth = 100 / nItems;
-						} else { // si de determinó, así que será relativo
-							wrapperWidth = (nItems * 100) / 2;
-							itemsWidth = 100 / nItems;
-						}
-
-						$wrapperItems.css('width', wrapperWidth + '%');
-						items.css('width', itemsWidth + '%');
+						let initItems = configs.items;
+						$wrapperItems.css('width', ((nItems * 100) / initItems) + '%');
+						items.css('width', (100 / nItems) + '%');
 
 						let i = 0;
 						while (i < initItems) {
@@ -152,7 +150,7 @@
 							i++;
 						};
 
-						$theItems.eq(initItems - 1).addClass(iActivePure);
+						$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
 					}
 
 				}
@@ -179,7 +177,9 @@
 					constructor: () => {
 						let maxBullets = nItems - (configs.items - 1); // calculando de acuerdo a los items a mostrar.
 						let $theBullets = $wrapperBullets.find(sLayout.bullet);
+
 						if ($theBullets.length == maxBullets) return false; // ya tiene los bullets creados, no continuo.
+
 						let bulletTag = $theBullets.prop('tagName').toLowerCase();
 						let bulletsHtml = '';
 						let i = 0;
@@ -189,6 +189,7 @@
 							i++;
 						}
 						$wrapperBullets.html(bulletsHtml);
+
 					},
 
 					nav: () => {
@@ -207,7 +208,6 @@
 
 								fade: function($this){
 									$itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
-									
 								},
 
 								swipe: function($this) {
@@ -238,9 +238,7 @@
 			},
 
 			navs: function(configs) {
-				let _objThis = this,
-				itemClassActive = sLayout.itemActive.substr(1),
-				itemConfigs = configs.items;
+				let _objThis = this;
 
 				// verificación
 				let $wrapperArrows = _this.find(sLayout.wrapperArrows);
@@ -250,13 +248,14 @@
 					if ($wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.removeClass(displayNodeClass);
 				}
 
-				if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
-				$wrapperArrows.addClass(attachedClass);
+				//if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
+				//$wrapperArrows.addClass(attachedClass);
 
 				// haciendo click en PREV o NEXT
-				_this.find(sLayout.arrow).on('click', function() {
+				_this.find(sLayout.arrow).off('click').on('click', function(){
 					_objThis._goTo(($(this).hasClass(sLayout.arrowNext.substr(1))) ? 'next' : 'prev', configs);
 				});
+				
 			},
 
 			loadImage: $item => {
@@ -335,13 +334,24 @@
 
 					if (to == 'next') { // vamos al siguiente item
 
-						if (configs.slideBy == 1) {
-							itemToActive = (activeItemIndex == (items.length - 1)) ? configs.items - 1 : activeItemIndex + 1
+						//itemToActive = (activeItemIndex == (items.length - 1)) ? configs.items - 1 : activeItemIndex + configs.slideBy;
+
+						if (activeItemIndex == (items.length - 1)) { // yá llegó al último
+
+							//console.log('llegó al último');
+							itemToActive = configs.items - 1;
+
+						} else {
+							itemToActive = activeItemIndex + configs.slideBy;
+							// si es que los items restantes son menores a los que se determinó por cada pase
+							let resta = items.length - (activeItemIndex + 1);
+							if (resta < configs.slideBy) itemToActive = activeItemIndex + resta;
 						}
+						
 					} else { // es prev
 
 						if (configs.slideBy == 1) {
-							itemToActive = (activeItemIndex == (configs.items - 1)) ? items.length - 1 : activeItemIndex - 1;
+							itemToActive = (activeItemIndex == (configs.items - 1)) ? items.length - 1 : activeItemIndex - configs.slideBy;
 						}
 
 					}
@@ -350,9 +360,13 @@
 					let typesSlide = {
 
 						swipe: () => {
-							let mLeft = ((100 / configs.items) * (itemToActive + 1)) - 100;
+							//console.log('activar el item numero: ' + itemToActive);
+
+							let mLeft = ( (100 / configs.items) * (itemToActive + 1) ) - 100;
 							if (mLeft < 0) mLeft = 0; // si el numero es negativo, significa que yá llegó al último.
 							_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
+
+
 						},
 
 						fade: () => {
@@ -372,17 +386,21 @@
 							itemClassActive = sLayout.itemActive.substr(1);
 							itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
 
-					// Cargando la imagen
-					this.loadImage(itemActivating);
+					// Cargando la o las imagen correspondientes
+					let itemsToLoad = 0;
+					while(itemsToLoad < configs.slideBy) {
+						this.loadImage(items.eq((activeItemIndex + 1) + itemsToLoad));
+						itemsToLoad++;
+					}
 
 					// Activando el Bullet correspondiente
+					/*
 					if(!configs.bullets) return false;
 					let bulletItemActive = sLayout.bulletActive.substr(1);
 					itemToActive = itemToActive - 1;
 					if (itemToActive < 0) itemToActive = 0;
 					_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
-
-					
+					*/
 
 				} else if(typeof to == 'number') { // es un index, (number)
 					// go to
