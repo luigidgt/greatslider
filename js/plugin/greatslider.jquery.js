@@ -55,11 +55,14 @@
 				nItems = items.length,
 				attachedClass = sLayout.attachedClass.substr(1),
 				displayNodeClass = sLayout.noneClass.substr(1),
-				log = [];
+				log = [],
+				configsBk;
 
 		let actions = {
 
 			init: function(configs){
+				let _objThis = this;
+				configsBk = configs; // relleno para consumirlo globalmente
 
 				// verificaciones de sentido comun
 				if (configs.slideBy > configs.items) {
@@ -77,21 +80,21 @@
 				// Anidando evento click a los Arrows
 				this.navs(configs);
 
-				// Setiemos los breakPoints
+				// Solo una vez
 				if (_this.hasClass(attachedClass)) return false;
-
-				//
-				this.log({
-					type: 'not',
-					text: 'Slider Inicializandoce.'
-				});
+				_this.addClass(attachedClass);
+				
 				// ejecutando evento nativo de inicialización
 				let onInit = settings.onInit;
 				if (onInit !== undefined) onInit();
 				//
 
-				_this.addClass(attachedClass);
-				let _objThis = this;
+				this.log({
+					type: 'not',
+					text: 'Slider Inicializandoce.'
+				});
+				
+				
 				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
 					_objThis.breakPoints(theBreakPoints, window.innerWidth)
@@ -105,7 +108,7 @@
 							if (onResized !== undefined) onResized(wWindow);
 							//
 							_objThis.breakPoints(theBreakPoints, wWindow);
-						}, 1000);
+						}, 750);
 					});
 				}
 
@@ -115,8 +118,9 @@
 
 				this.log({
 					type: 'not',
-					text: 'Slider Inicializandoce.'
+					text: 'Slider Inicializado.'
 				});
+
 			},
 
 			items: function(configs) {
@@ -237,23 +241,23 @@
 				actions['init']();	
 			},
 
-			navs: function(configs) {
+			navs: function() {
 				let _objThis = this;
 
 				// verificación
 				let $wrapperArrows = _this.find(sLayout.wrapperArrows);
-				if (!configs.nav) {
+				if (!configsBk.nav) {
 					if (!$wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.addClass(displayNodeClass);
 				} else {
 					if ($wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.removeClass(displayNodeClass);
 				}
 
-				//if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
-				//$wrapperArrows.addClass(attachedClass);
+				if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
+				$wrapperArrows.addClass(attachedClass);
 
 				// haciendo click en PREV o NEXT
-				_this.find(sLayout.arrow).off('click').on('click', function(){
-					_objThis._goTo(($(this).hasClass(sLayout.arrowNext.substr(1))) ? 'next' : 'prev', configs);
+				_this.find(sLayout.arrow).on('click', function(){
+					_objThis._goTo(($(this).hasClass(sLayout.arrowNext.substr(1))) ? 'next' : 'prev', configsBk);
 				});
 				
 			},
@@ -334,26 +338,21 @@
 
 					if (to == 'next') { // vamos al siguiente item
 
-						//itemToActive = (activeItemIndex == (items.length - 1)) ? configs.items - 1 : activeItemIndex + configs.slideBy;
-
 						if (activeItemIndex == (items.length - 1)) { // yá llegó al último
-
-							//console.log('llegó al último');
 							itemToActive = configs.items - 1;
-
 						} else {
-							itemToActive = activeItemIndex + configs.slideBy;
 							// si es que los items restantes son menores a los que se determinó por cada pase
-							let resta = items.length - (activeItemIndex + 1);
-							if (resta < configs.slideBy) itemToActive = activeItemIndex + resta;
+							let leftItems = items.length - (activeItemIndex + 1);
+							itemToActive = (leftItems < configs.slideBy) ? activeItemIndex + leftItems : activeItemIndex + configs.slideBy;
 						}
 						
 					} else { // es prev
-
-						if (configs.slideBy == 1) {
-							itemToActive = (activeItemIndex == (configs.items - 1)) ? items.length - 1 : activeItemIndex - configs.slideBy;
+						if(activeItemIndex == (configs.slideBy - 1)) {
+							itemToActive = items.length - 1;
+						} else {
+							let leftItems = (activeItemIndex + 1) - configs.slideBy;
+							itemToActive = (leftItems <= configs.slideBy) ? configs.slideBy - 1 : activeItemIndex - configs.slideBy;
 						}
-
 					}
 
 					// el tipo de pase
@@ -380,6 +379,12 @@
 					}
 
 					typesSlide[configs.type]();
+
+					// OnLlega al último XD
+					if(itemToActive == (nItems - 1)) {
+						let lastItem = settings.onLastItem;
+						if (lastItem !== undefined) lastItem();
+					};
 
 					// El item a activar
 					let itemActivating = items.eq(itemToActive),

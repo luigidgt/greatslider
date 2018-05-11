@@ -12,13 +12,20 @@ $('#example1').greatSlider({
 
 		825: {
 			//nav: true
-			items: 2
+			items: 2,
+			slideBy: 2
 		},
 
 		1024: {
-			bullets: false
+			bullets: false,
+			items: 3,
+			slideBy: 3
+		},
+
+		1600: {
+			items: 4,
+			slideBy: 4
 		}
-		
 	}
 
 	/*
@@ -41,6 +48,10 @@ $('#example1').greatSlider({
 
 	onResized: (width) => {
 		console.log('El ancho es: ' + width);
+	},
+
+	onLastItem: () => {
+		console.log('llegué al último item');
 	}
 
 	*/
