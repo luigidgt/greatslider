@@ -198,6 +198,7 @@
 							maxBullets = nItems;
 						} else {
 							maxBullets = nItems / configs.items;
+							//maxBullets = ((nItems - configs.items) / configs.slideBy) + 1;
 						}
 
 						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
@@ -224,6 +225,7 @@
 
 							if (configs.type == 'swipe') {
 								let suma = ($(this).index() + 1) * configsBk.items;
+								//let suma = configsBk.items + (configsBk.slideBy * $(this).index());
 								if (suma > nItems) suma = nItems;
 								_objThis.goTo(suma);
 							}
