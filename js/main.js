@@ -13,7 +13,7 @@ let $miSlider = $('#example1').greatSlider({
 		825: {
 			//nav: true
 			items: 2,
-			slideBy: 1
+			slideBy: 2
 		},
 
 		1024: {

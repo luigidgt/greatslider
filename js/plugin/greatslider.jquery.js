@@ -197,15 +197,7 @@
 						if(configs.type == 'fade') {
 							maxBullets = nItems;
 						} else {
-
-
-							//maxBullets = nItems / configs.items;
-							maxBullets = nItems - (configs.items - 1);
-
-							
-
-
-
+							maxBullets = nItems / configs.items;
 						}
 
 						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
@@ -231,17 +223,10 @@
 							$(this).addClass(classBulletActive).siblings().removeClass(classBulletActive);
 
 							if (configs.type == 'swipe') {
-								//let suma = ($(this).index() + 1) * configsBk.slideBy
-								let suma = ($(this).index() + 1) + configsBk.slideBy;
-
+								let suma = ($(this).index() + 1) * configsBk.items;
 								if (suma > nItems) suma = nItems;
-
 								_objThis.goTo(suma);
-
 							}
-
-								
-
 						});
 
 					},
@@ -401,7 +386,7 @@
 
 				// Cargando la o las imagen correspondientes
 				let indexsToLoad = itemToActive;
-				while(indexsToLoad > (itemToActive - configs.slideBy)) {
+				while(indexsToLoad > (itemToActive - configs.items)) {
 					this.loadImage(items.eq(indexsToLoad));
 					indexsToLoad--;
 				}
