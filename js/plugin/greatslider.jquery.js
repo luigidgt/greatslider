@@ -156,7 +156,6 @@
 						let $activeItem = $wrapperItems.find(sLayout.itemActive);
 						if (!$activeItem.length) { // no lo hay, activo el determinado por configs.items
 							$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
-							console.log('entra 1')
 						} else { // activo el primero
 							let $activeItemIndex = $activeItem.index();
 							if ($activeItemIndex < (initItems - 1)) {
@@ -172,7 +171,7 @@
 				(typeRun !== undefined) ? typeRun(configs) : _log('err', 'el tipo de slider determinado no es válido');
 			},
 
-			bullets: function(configs) {
+			bullets: function(configs, action) {
 				let _objThis = this;
 
 				let $wrapperBullets = _this.find(sLayout.wrapperBullets)
@@ -187,32 +186,46 @@
 
 				let actions = {
 
-					constructor: () => {
+					constructor: function(){
 						// calculando de acuerdo a los items a mostrar.
 						let $theBullets = $wrapperBullets.find(sLayout.bullet),
 								bulletTag = $theBullets.prop('tagName').toLowerCase(),
-								bulletsHtml = '',
-								maxBullets;
+								bulletsHtml = '';
 
-						if(configs.type == 'fade') {
-							maxBullets = nItems;
-						} else {
-							maxBullets = nItems / configs.items;
-							//maxBullets = ((nItems - configs.items) / configs.slideBy) + 1;
+						let maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
+						//maxBullets = ((nItems - configs.items) / configs.slideBy) + 1;
+						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
+
+						if ($theBullets.length == maxBullets) {
+							// activando el item correspondiente
+							this.active();
+							return false;
 						}
 
-						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
-						if ($theBullets.length == maxBullets) return false; // ya tiene los bullets creados, no continuo.
+						// Creo los bullets que faltan
+						let i = 0,
+								itemToActive = this.active(true);
 
-						let i = 0;
 						while(i < maxBullets){
-							let bulletFirstClass = (i !== 0) ? '' : ' ' + classBulletActive;
-							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bullet.substr(1) + bulletFirstClass + '"></' + bulletTag + '>';
+							let bulletClassActive = (i !== itemToActive) ? '' : ' ' + classBulletActive;
+							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bullet.substr(1) + bulletClassActive + '"></' + bulletTag + '>';
 							i++;
 						}
 
 						$wrapperBullets.html(bulletsHtml);
-	
+					},
+
+					active: getIndex => {
+						let itemActive = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive).index(),
+								classBulletActive = sLayout.bulletActive.substr(1);
+
+						let bulletToActive = (itemActive + 1) / configs.items;
+						if (bulletToActive % 1 !== 0) bulletToActive = Math.floor(bulletToActive) + 1;
+						bulletToActive -= 1;
+
+						if (getIndex) return bulletToActive; // si es que se solicita
+						let $bulletActiving = _this.find(sLayout.bullet).eq(bulletToActive);
+						if (!$bulletActiving.hasClass(classBulletActive)) $bulletActiving.addClass(classBulletActive).siblings().removeClass(classBulletActive);
 					},
 
 					nav: () => {
@@ -230,7 +243,6 @@
 								_objThis.goTo(suma);
 							}
 						});
-
 					},
 
 					init: function() {
@@ -240,7 +252,8 @@
 
 				}
 
-				actions['init']();	
+				let theAction = (action == undefined) ? 'init' : action;
+				actions[theAction]();	
 			},
 
 			navs: function() {
@@ -394,13 +407,8 @@
 				}
 
 				// Activando el Bullet correspondiente
-				/*
 				if(!configs.bullets) return false;
-				let bulletItemActive = sLayout.bulletActive.substr(1);
-				itemToActive = itemToActive - 1;
-				if (itemToActive < 0) itemToActive = 0;
-				_this.find(sLayout.bullet).eq(itemToActive).addClass(bulletItemActive).siblings().removeClass(bulletItemActive);
-				*/
+				this.bullets(configs, 'active');
 			}
 
 		}

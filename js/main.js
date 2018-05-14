@@ -19,17 +19,17 @@ let $miSlider = $('#example1').greatSlider({
 		1024: {
 			//bullets: false,
 			items: 3,
-			slideBy: 1
+			slideBy: 3
+		},
+
+		1280: {
+			items: 4,
+			slideBy: 2
 		},
 
 		1600: {
-			items: 4,
-			slideBy: 4
-		},
-
-		1900: {
 			items: 5,
-			slideBy: 5
+			slideBy: 3
 		}
 		
 	}

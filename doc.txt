@@ -32,7 +32,7 @@
 
 			let slider = $('#example1').greatSlider();
 			slider.log({
-				type: 'war',
+				type: 'war', 
 				text: 'esta es una precaución de prueba.'
 			});
 
