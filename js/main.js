@@ -1,7 +1,7 @@
 let $miSlider = $('#example1').greatSlider({
-	type: 'swipe',
+	type: 'fade',
 	items: 1,
-	//slideBy: 2,
+	slideBy: 1,
 	nav: true,
 	autoplay: true,
 	transitionSpeed: 6500,
@@ -33,6 +33,7 @@ let $miSlider = $('#example1').greatSlider({
 		}
 		
 	}
+	//startPosition: 4
 
 	/*
 

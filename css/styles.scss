@@ -100,6 +100,7 @@
 
 	&.gs-transition-fade {
 
+		/*
 		.gs-item-slider {
 			position: absolute;
 			opacity: 0;
@@ -110,6 +111,17 @@
 			height: 100%;
 			opacity:0;
 			transition: all .3s linear;
+		}
+		*/
+		.gs-item-slider {
+			width: 100%;
+			height: 100%;
+			transition: all .3s linear 3s;
+			opacity:0;
+
+			&:not(.gs-item-active) {
+				display:none;
+			}
 		}
 		
 		.gs-item-active {

@@ -15,6 +15,7 @@
 			bullets: true, // true, false
 			autoplay: false, // true, false
 			log: false,
+			//startPosition: 0, parametro fantasma, solo si es solicitado
 			layout: {
 
 				containerItems: '.gs-container-items',
@@ -42,6 +43,7 @@
 			}
 		};
 		if (options !== undefined) $.extend(settings, options);
+		if (settings.type == 'fade') delete settings['breakPoints']; // si el slider es fade no debe a ver breakpoints
 
 		let settingsBk = $.extend({}, settings);
 		delete settingsBk['breakPoints'];
@@ -66,7 +68,7 @@
 
 				// verificaciones de sentido comun
 				if (configs.slideBy > configs.items) {
-					_log('err', '* Great Slider [Logger] : No es posible determinar que el pase por frame (' + configs.slideBy + ') sea mayor al mostrado de items (' + configs.items +').', true);
+					_log('err', 'No es posible determinar que el pase por frame (' + configs.slideBy + ') sea mayor al mostrado de items (' + configs.items +').', true);
 					return false;
 				}
 				//
@@ -119,6 +121,14 @@
 					type: 'not',
 					text: 'Slider Inicializado.'
 				});
+
+				let startPosition = configs.startPosition;
+				if (startPosition !== undefined) {
+					if (startPosition > nItems) {
+						return _log('err', 'No es posible iniciar en el item con posición "' + startPosition + '" ya que esa posición sobrepasa el numero total de items existentes.', true);
+					}
+					this.goTo(startPosition, true);
+				}
 			},
 
 			items: function(configs) {
