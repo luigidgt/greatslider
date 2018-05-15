@@ -24,13 +24,24 @@
 	- onResized: cuando se está redimencionando la pantalla.
 		-> el ancho de la pantalla
 
+	- onLastItem: cuando se llega al último item.
+
+	- onPlay: cuando se inicializa el autoplay.
+
+	- onStop: cuando se detiene el autoplay.
+
+	- onStep: cuando se realiza un pase de frame(s).
+		-> el index de item activo.
+
+
 * Acciones disponibles:
+
+	let slider = $('#example1').greatSlider();
 
 	- Sistema de registro:
 
 		- Inserción:
 
-			let slider = $('#example1').greatSlider();
 			slider.log({
 				type: 'war', 
 				text: 'esta es una precaución de prueba.'
@@ -40,3 +51,17 @@
 
 			slider.log();
 			-> varias impresiones en consola de cada registro guardado.
+
+	- Pase de slider
+
+		- Next: ir al siguiente frame:
+
+			slider.goTo('next');
+
+		- Prev: ir al previo frame:
+
+			slider.goTo('prev');
+
+		- Específico: ir a un específico frame, por ejemplo al quinto:
+
+			slider.goTo(5)

@@ -22,7 +22,7 @@ html(lang="es")
 					
 					li.gs-item-slider
 						img(data-src="img/paisajes/3.jpg", alt="Text").gs-tolazy.gs-img-item
-					
+
 					li.gs-item-slider
 						img(data-src="img/paisajes/4.jpg", alt="Text").gs-tolazy.gs-img-item
 
@@ -67,8 +67,12 @@ html(lang="es")
 
 				.gs-wrapper-bullets.gs-style-bullets
 					button.gs-bullet
-
-			button#go ir al item 5
+		.botones(style="text-align:center;margin-top:20px;")
+			button#go(style="padding:10px;border:1px solid #c0c0c0;margin-right: 20px") ir al item 5
+			button#prev(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") &#60; Prev
+			button#play(style="padding:10px;border:1px solid #c0c0c0;margin-right: 2px") Play
+			button#stop(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") Stop
+			button#next(style="padding:10px;border:1px solid #c0c0c0;margin-right: 5px") Next &#62;
 		script(src="js/lib/jquery-3.3.1.min.js")
 		script(src="js/plugin/greatslider.jquery.js")
 		script(src="js/main.js")

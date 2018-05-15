@@ -8,13 +8,15 @@
 
 		let settings = {
 			type: 'fade', // fade, swipe
-			transitionTime: 1000, // en milisegundos
 			nav: true, // true, false
+			navSpeed: 1000, // en milisegundos
 			items: 1,
 			slideBy: 1,
 			bullets: true, // true, false
 			autoplay: false, // true, false
 			log: false,
+			autoplay: false,
+			autoPlaySpeed: 5000,
 			//startPosition: 0, parametro fantasma, solo si es solicitado
 			layout: {
 
@@ -49,7 +51,9 @@
 		delete settingsBk['breakPoints'];
 		delete settingsBk['layout'];
 
-		let breakPoint = 0;
+		let breakPoint = 0,
+				greatSliderInterval,
+				greatSliderBreakPoint;
 
 		// variables globales
 		let sLayout = settings.layout,
@@ -99,11 +103,11 @@
 				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
 					_objThis.breakPoints(theBreakPoints, window.innerWidth)
-					window.greatSliderBP = false;
+					greatSliderBreakPoint = false;
 					// para los breakpoints
 					$(window).resize(() => {
-						if (greatSliderBP !== false) clearTimeout(greatSliderBP);
-						window.greatSliderBP = setTimeout(() => {
+						if (greatSliderBreakPoint !== false) clearTimeout(greatSliderBreakPoint);
+						greatSliderBreakPoint = setTimeout(() => {
 							let wWindow = window.innerWidth;
 							let onResized = settings.onResized;
 							if (onResized !== undefined) onResized(wWindow);
@@ -122,12 +126,18 @@
 					text: 'Slider Inicializado.'
 				});
 
+				// Comenzar en un item en específico
 				let startPosition = configs.startPosition;
 				if (startPosition !== undefined) {
 					if (startPosition > nItems) {
 						return _log('err', 'No es posible iniciar en el item con posición "' + startPosition + '" ya que esa posición sobrepasa el numero total de items existentes.', true);
 					}
 					this.goTo(startPosition, true);
+				}
+
+				// Si se determinó un auto pase del slider
+				if(configs.autoplay) {
+					this.play(configs);
 				}
 			},
 
@@ -355,6 +365,9 @@
 						itemToActive;
 
 				if (typeof to == 'string') { // puede ser next o prev, veamos
+					if (configs == undefined) {
+						configs = configsBk;
+					}
 
 					if (to == 'next') { // vamos al siguiente item
 						if (activeItemIndex == (items.length - 1)) { // yá llegó al último
@@ -400,7 +413,13 @@
 				if (configs.type == 'swipe') {
 					let mLeft = ( (100 / configs.items) * (itemToActive + 1) ) - 100;
 					if (mLeft < 0) mLeft = 0; // si el numero es negativo, significa que yá llegó al último.
-					_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
+					//_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
+					_this.find(sLayout.wrapperItems).animate({
+						'margin-left' : '-' +  mLeft + '%'
+					}, configs.navSpeed, () => {
+						let onStep = configs.onStep;
+						if(onStep !== undefined) onStep(itemToActive + 1);
+					});
 				}
 
 				// OnLlega al último XD
@@ -419,6 +438,23 @@
 				// Activando el Bullet correspondiente
 				if(!configs.bullets) return false;
 				this.bullets(configs, 'active');
+			},
+
+			play: function(configs) {
+				if (configs == undefined) configs = configsBk;
+				if (typeof greatSliderInterval == 'undefined' || typeof greatSliderInterval == 'number') {
+					greatSliderInterval = setInterval(()=>{
+						this.goTo('next');
+					}, configs.autoPlaySpeed);
+				}
+				let playAP = configsBk.onPlay;
+				if (playAP !== undefined) playAP();
+			},
+
+			stop: () => {
+				clearInterval(greatSliderInterval);
+				let stopAP = configsBk.onStop;
+				if (stopAP !== undefined) stopAP();
 			}
 
 		}

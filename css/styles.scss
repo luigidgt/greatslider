@@ -113,29 +113,37 @@
 			transition: all .3s linear;
 		}
 		*/
+		
 		.gs-item-slider {
 			width: 100%;
 			height: 100%;
-			transition: all .3s linear 3s;
-			opacity:0;
+			animation-name: fade;
+			animation-timing-function: linear;
+			animation-duration: .3s;
+		}
 
-			&:not(.gs-item-active) {
-				display:none;
-			}
+		.gs-item-slider:not(.gs-item-active) {
+			display:none;
 		}
 		
+		
 		.gs-item-active {
-			opacity: 1;
-			z-index: 1;
+			//z-index: 1;
+			//opacity: 1;
 		}
 	}
 
 	&.gs-transition-swipe {
-		transition: margin .3s;
+		//transition: margin .3s;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
 	}
+}
+
+@keyframes fade {
+  from {opacity: 0}
+  to {opacity: 1}
 }
 
 
