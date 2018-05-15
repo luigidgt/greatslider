@@ -8,16 +8,23 @@
 
 		let settings = {
 			type: 'fade', // fade, swipe
+
 			nav: true, // true, false
 			navSpeed: 1000, // en milisegundos
+
 			items: 1,
 			slideBy: 1,
+
 			bullets: true, // true, false
+
 			autoplay: false, // true, false
+			autoplaySpeed: 5000,
+
 			log: false,
-			autoplay: false,
-			autoPlaySpeed: 5000,
+			
 			//startPosition: 0, parametro fantasma, solo si es solicitado
+			lazyLoad: true,
+			lazyAttr: 'data-lazy',
 			layout: {
 
 				containerItems: '.gs-container-items',
@@ -26,8 +33,6 @@
 				itemActive: '.gs-item-active',
 				itemLoading: '.gs-item-loading',
 				itemLoaded: '.gs-item-loaded',
-
-				toLazy: '.gs-tolazy',
 
 				containerNavs: '.gs-container-navs',
 
@@ -155,7 +160,7 @@
 						if ($wrapperItems.hasClass('gs-transition-fade')) return false;
 						$wrapperItems.addClass('gs-transition-fade');
 						$firstItem.addClass(iActivePure);
-						_thisActions.loadImage($firstItem);
+						if (configs.lazyLoad) _thisActions.loadLazy($firstItem);
 					},
 
 					swipe: () => { // arrastre
@@ -166,11 +171,14 @@
 						$wrapperItems.css('width', ((nItems * 100) / initItems) + '%');
 						items.css('width', (100 / nItems) + '%');
 
-						let i = 0;
-						while (i < initItems) {
-							_thisActions.loadImage($theItems.eq(i));
-							i++;
-						};
+						// cargando los elementos 'lazy'
+						if (configs.lazyLoad) {
+							let i = 0;
+							while (i < initItems) {
+								_thisActions.loadLazy($theItems.eq(i));
+								i++;
+							};
+						}
 
 						// busca si ya se tiene activo un item
 						let $activeItem = $wrapperItems.find(sLayout.itemActive);
@@ -296,33 +304,64 @@
 				});
 			},
 
-			loadImage: $item => {
-				let $toLazy = $item.find(sLayout.toLazy);
-				if (!$toLazy.length) return false;
-				let dataSrc = $toLazy.attr('data-src');
-				if(dataSrc !== undefined) {
-					let onLoadingItem = settings.onLoadingItem;
-					if (onLoadingItem !== undefined) onLoadingItem($toLazy, $toLazy.parents(sLayout.item).index());
-					$item.addClass(sLayout.itemLoading.substr(1));
-					let onLoadedItem = settings.onLoadedItem;
-					function _cleanClass($item){
-						$item.addClass(sLayout.itemLoaded.substr(1));
-						setTimeout(() => {
-							$item.removeClass(sLayout.itemLoading.substr(1));
-						}, 500);
-					}
-					let $lazyIndex = $toLazy.parents(sLayout.item).index();
-					$toLazy.attr('src', dataSrc).one({
-						load: () => {
-							if (onLoadedItem !== undefined) onLoadedItem($toLazy, $lazyIndex, 'success');
-							_cleanClass($item);
-						},
-						error: () => {
-							if (onLoadedItem !== undefined) onLoadedItem($toLazy, $lazyIndex, 'error');
-							_cleanClass($item);
-						}
-					}).removeAttr('data-src');
+			loadLazy: $item => {
+				let $lazyElements = $item.find('[' + settings.lazyAttr + ']');
+				if (!$lazyElements.length) return false;
+
+				let $itemIndex = $item.index();
+
+				function _cleanClass($item){
+					$item.addClass(sLayout.itemLoaded.substr(1));
+					setTimeout(() => {
+						$item.removeClass(sLayout.itemLoading.substr(1));
+					}, 500);
 				}
+
+				$lazyElements.each(function(){
+
+					_element = $(this);
+					let dataLazy = _element.attr(settings.lazyAttr);
+					if(dataLazy !== undefined) {
+
+						let onLoadingItem = settings.onLoadingItem;
+						if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
+
+						$item.addClass(sLayout.itemLoading.substr(1));
+						let onLoadedItem = settings.onLoadedItem;
+
+						let lazyTypes = {
+
+							img: ()=> {
+								_element.attr('src', dataLazy).one({
+									load: () => {
+										if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'success');
+										_cleanClass($item);
+									},
+									error: () => {
+										if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'error');
+										_cleanClass($item);
+									}
+								}).removeAttr(settings.lazyAttr);
+
+							},
+
+							video: ()=> {
+
+							},
+
+							iframe: ()=> {
+
+							}
+						}
+
+						let typeLazy = lazyTypes[_element.prop('tagName').toLowerCase()];
+						if(typeLazy !== undefined) typeLazy();
+
+					}
+
+				});
+
+
 			},
 
 			log: obj => {
@@ -428,11 +467,13 @@
 					if (lastItem !== undefined) lastItem();
 				};
 
-				// Cargando la o las imagen correspondientes
-				let indexsToLoad = itemToActive;
-				while(indexsToLoad > (itemToActive - configs.items)) {
-					this.loadImage(items.eq(indexsToLoad));
-					indexsToLoad--;
+				// Cargando los elements 'lazy'
+				if (configs.lazyLoad) {
+					let indexsToLoad = itemToActive;
+					while(indexsToLoad > (itemToActive - configs.items)) {
+						this.loadLazy(items.eq(indexsToLoad));
+						indexsToLoad--;
+					}
 				}
 
 				// Activando el Bullet correspondiente
@@ -445,7 +486,7 @@
 				if (typeof greatSliderInterval == 'undefined' || typeof greatSliderInterval == 'number') {
 					greatSliderInterval = setInterval(()=>{
 						this.goTo('next');
-					}, configs.autoPlaySpeed);
+					}, configs.autoplaySpeed);
 				}
 				let playAP = configsBk.onPlay;
 				if (playAP !== undefined) playAP();

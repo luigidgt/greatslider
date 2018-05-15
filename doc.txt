@@ -65,3 +65,13 @@
 		- Específico: ir a un específico frame, por ejemplo al quinto:
 
 			slider.goTo(5)
+
+
+/*
+	Cosas por hacer:
+
+	- agregar metodo destroy.
+	- adicionar carga por demanda para videos, audios, e iframes.
+	- agregar eventos de 'onLoadingLazy' y 'onLoadedLazy' y que devuelva el index relativo al item.
+
+*/

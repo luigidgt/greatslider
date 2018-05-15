@@ -3,12 +3,9 @@ let $miSlider = $('#example1').greatSlider({
 	items: 1,
 	//slideBy: 1,
 	nav: true,
-	autoplay: true,
 	navSpeed: 500,
 	bullets: true,
 	//log: true,
-	autoplay: true,
-	autoPlaySpeed: 2500,
 	breakPoints: {
 		825: {
 			//nav: true
