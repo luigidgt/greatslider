@@ -376,12 +376,14 @@
 									if (dataLazy.indexOf('youtu.be') !== -1) {
 										idYt = dataLazy.substr(dataLazy.lastIndexOf('/') + 1, 11);
 										parameters = dataLazy.substr(dataLazy.lastIndexOf('/') + 12);
+										parameters = parameters.substr(1);
 									}
 
 									// si el url es https://www.youtube.com/embed/4RUGmBxe65U
 									if (dataLazy.indexOf('embed') !== -1) {
 										idYt = dataLazy.substr(dataLazy.lastIndexOf('/') + 1, 11);
 										parameters = dataLazy.substr(dataLazy.lastIndexOf('/') + 12);
+										parameters = parameters.substr(1);
 									}
 
 									// limpiando del primer caracter
@@ -389,39 +391,52 @@
 									if (firstCaracter == '&') parameters = parameters.substr(1);
 
 									// cambio de parametro tiempo de inicio
-									if(parameters.indexOf('t=') !== -1) {
-
+									if(parameters.indexOf('rt=') == -1 && parameters.indexOf('t=') !== -1) {
 										parameters = parameters.replace('t=', 'start=');
-
 										if (parameters.indexOf('&') !== -1) {
-
 											let newParameters = [];
 											$.each(parameters.split('&'), function(i, k) {
 												let splitParameters = k.split('=');
 												if (splitParameters[0] == 'start') {
-													let theTime = splitParameters[1];
-													let minutes = theTime.indexOf('m'),
+													let theTime = splitParameters[1],
+															minutes = theTime.indexOf('m'),
 															seconds = theTime.indexOf('s');
+													let minutesNumber = 0,
+															secondsNumber = 0;
 													if (minutes !== -1) {
-														if(seconds !== -1) seconds = Number(theTime.substring((minutes + 1), seconds));
-														console.log('los segundos son: ', seconds);
-														minutes = Number(minutes.substring(0, minutes)) * 60;
-														console.log('los minutos: ', minutes);
+														minutesNumber = Number(theTime.substring(0, minutes)) * 60; 
+														minutes = minutes + 1;
+													} else {
+														minutes = 0;
 													}
-													newParameters.push('start=' + (minutes + seconds));
+													if(seconds !== -1) secondsNumber = Number(theTime.substring(minutes, seconds));
+													newParameters.push('start=' + (minutesNumber + secondsNumber));
 												} else {
 													newParameters.push(k);
 												}
 											});
-											console.log(newParameters);
 											parameters = newParameters.join('&');
+										} else {
+											parameters = parameters.substring(0, parameters.length - 1);
 										}
 									}
 
+									// agregandole finalmente el autoplay si es que no lo tiene
 									if(parameters.indexOf('autoplay') == -1) parameters += '&autoplay=1';
 
 									// final url
 									dataLazy = 'https://www.youtube.com/embed/' + idYt + '?' + parameters + '&enablejsapi=1';
+								
+								} else if (dataLazy.indexOf('vimeo')){
+									let idVideo = dataLazy.substr(dataLazy.lastIndexOf('/') + 1, 9);
+									let parameters = dataLazy.substring(dataLazy.lastIndexOf('/') + 11, dataLazy.length);
+
+									let newParameters = '';
+									$.each({title: 0,api: 1,byline: 0,transparent: 0, autoplay: 1}, function(k, v){
+										if(parameters.indexOf(k) == -1) newParameters += '&' + k + '=' + v;
+									});
+									parameters = (!parameters.length) ? newParameters.substr(1) : parameters += newParameters.substr(1);
+									dataLazy = 'https://player.vimeo.com/video/' + idVideo + '#' + parameters;
 								}
 
 								_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
@@ -433,8 +448,6 @@
 								}
 								
 							}
-
-							
 						}
 					}
 
