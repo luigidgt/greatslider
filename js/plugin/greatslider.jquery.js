@@ -362,37 +362,79 @@
 						},
 
 						iframe: ()=> {
-							
-							if (dataLazy.indexOf('youtu') !== -1) { // es un video de youtube
+							if (!$item.hasClass(itemClassLoaded)) {
+								if (dataLazy.indexOf('youtu') !== -1) { // es un video de youtube
 
-								// si el url es https://www.youtube.com/watch?v=4RUGmBxe65U
-								if (dataLazy.indexOf('watch') !== -1) {
-									dataLazy = dataLazy.substr(dataLazy.lastIndexOf('=') + 1) 
-								}
-
-								// si el url es https://youtu.be/4RUGmBxe65U
-								if (dataLazy.indexOf('youtu.be') !== -1) {
-									dataLazy = dataLazy.substr(dataLazy.lastIndexOf('/') + 1) 
-								}
-
-								// si el url es https://www.youtube.com/embed/4RUGmBxe65U
-								if (dataLazy.indexOf('embed') !== -1) {
-									dataLazy = dataLazy.substr(dataLazy.lastIndexOf('/') + 1) 
-								}
-
-								if(dataLazy.indexOf('autoplay') == -1) { // no tiene autoplay
-									if(dataLazy.indexOf('?') == -1) {
-										dataLazy += '?autoplay=1';
-									} else {
-										dataLazy += '&autoplay=1';
+									let parameters, idYt;
+									// si el url es https://www.youtube.com/watch?v=4RUGmBxe65U
+									if (dataLazy.indexOf('watch') !== -1) {
+										idYt = dataLazy.substr(dataLazy.indexOf('=') + 1, 11);
+										parameters = dataLazy.substr(dataLazy.indexOf('=') + 12);
 									}
+
+									// si el url es https://youtu.be/4RUGmBxe65U
+									if (dataLazy.indexOf('youtu.be') !== -1) {
+										idYt = dataLazy.substr(dataLazy.lastIndexOf('/') + 1, 11);
+										parameters = dataLazy.substr(dataLazy.lastIndexOf('/') + 12);
+									}
+
+									// si el url es https://www.youtube.com/embed/4RUGmBxe65U
+									if (dataLazy.indexOf('embed') !== -1) {
+										idYt = dataLazy.substr(dataLazy.lastIndexOf('/') + 1, 11);
+										parameters = dataLazy.substr(dataLazy.lastIndexOf('/') + 12);
+									}
+
+									// limpiando del primer caracter
+									let firstCaracter = parameters.substring(0, 1);
+									if (firstCaracter == '&') parameters = parameters.substr(1);
+
+									// cambio de parametro tiempo de inicio
+									if(parameters.indexOf('t=') !== -1) {
+
+										parameters = parameters.replace('t=', 'start=');
+
+										if (parameters.indexOf('&') !== -1) {
+
+											let newParameters = [];
+											$.each(parameters.split('&'), function(i, k) {
+												let splitParameters = k.split('=');
+												if (splitParameters[0] == 'start') {
+													let theTime = splitParameters[1];
+													let minutes = theTime.indexOf('m'),
+															seconds = theTime.indexOf('s');
+													if (minutes !== -1) {
+														if(seconds !== -1) seconds = Number(theTime.substring((minutes + 1), seconds));
+														console.log('los segundos son: ', seconds);
+														minutes = Number(minutes.substring(0, minutes)) * 60;
+														console.log('los minutos: ', minutes);
+													}
+													newParameters.push('start=' + (minutes + seconds));
+												} else {
+													newParameters.push(k);
+												}
+											});
+											console.log(newParameters);
+											parameters = newParameters.join('&');
+										}
+									}
+
+									if(parameters.indexOf('autoplay') == -1) parameters += '&autoplay=1';
+
+									// final url
+									dataLazy = 'https://www.youtube.com/embed/' + idYt + '?' + parameters + '&enablejsapi=1';
 								}
 
-								// final url
-								dataLazy = 'https://www.youtube.com/embed/' + dataLazy;
+								_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
+								$item.addClass(sLayout.itemLoaded.substr(1));
+							} else {
+								// si el iframe es de YT
+								if(_element.attr('src').indexOf('youtu') !== -1) {
+									_element.get(0).contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+								}
+								
 							}
 
-							_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
+							
 						}
 					}
 
@@ -480,13 +522,23 @@
 					itemToActive = toIndexReal;
 				}
 
-				// Deteniendo reproducción en items que tienen elementos reproducibles (video, audio)
+				// Deteniendo reproducción en items que tienen elementos reproducibles (video, audio y iframes de youtube o vimeo)
 				let $videos = $activeItem.find('video, audio');
 				if ($videos.length) {
 					$videos.each(function(){
 						$(this).get(0).pause();
 					});
 				}
+
+				// pausa a los videos de youtube
+				let $iframes = $activeItem.find('iframe');
+				if($iframes.length) {
+					$iframes.each(function(){
+						if($(this).attr('src').indexOf('youtu') !== -1) {
+							$(this).get(0).contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+						}
+					});
+				};
 
 				// El item a activar
 				let itemActivating = items.eq(itemToActive),
