@@ -1,3 +1,4 @@
+/*
 let $miSlider = $('#example1').greatSlider({
 	type: 'swipe',
 	items: 1,
@@ -46,4 +47,12 @@ $('#next').click(()=>{
 
 $('#prev').click(()=>{
 	$miSlider.goTo('prev');
+});
+
+*/
+
+$('#example2').greatSlider({
+	type: 'fade',
+	nav: false,
+	bullets: true
 })

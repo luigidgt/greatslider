@@ -4,7 +4,7 @@
 
 		let _this = this;
 		
-		if (!_this.length) return _log('err', '* Great Slider [Logger] : No existe el contenedor maestro para hacer el slider.', true);
+		if (!_this.length) return console.error('* Great Slider [Logger] : No existe el contenedor maestro para hacer el slider.');
 
 		let settings = {
 			type: 'fade', // fade, swipe
@@ -23,8 +23,11 @@
 			log: false,
 			
 			//startPosition: 0, parametro fantasma, solo si es solicitado
+
 			lazyLoad: true,
+			lazyClass: '.gs-lazy',
 			lazyAttr: 'data-lazy',
+
 			layout: {
 
 				containerItems: '.gs-container-items',
@@ -264,12 +267,12 @@
 							if($(this).hasClass(classBulletActive)) return false;
 							$(this).addClass(classBulletActive).siblings().removeClass(classBulletActive);
 
-							if (configs.type == 'swipe') {
+							//if (configs.type == 'swipe') {
 								let suma = ($(this).index() + 1) * configsBk.items;
 								//let suma = configsBk.items + (configsBk.slideBy * $(this).index());
 								if (suma > nItems) suma = nItems;
 								_objThis.goTo(suma);
-							}
+							//}
 						});
 					},
 
@@ -305,33 +308,28 @@
 			},
 
 			loadLazy: $item => {
-				let $lazyElements = $item.find('[' + settings.lazyAttr + ']');
+				let $lazyElements = $item.find(settings.lazyClass);
 				if (!$lazyElements.length) return false;
 
-				let $itemIndex = $item.index();
-
-				function _cleanClass($item){
-					$item.addClass(sLayout.itemLoaded.substr(1));
-					setTimeout(() => {
-						$item.removeClass(sLayout.itemLoading.substr(1));
-					}, 500);
-				}
+				let $itemIndex = $item.index(),
+						onLoadingItem = settings.onLoadingItem,
+						onLoadedItem = settings.onLoadedItem,
+						itemClassLoaded = sLayout.itemLoaded.substr(1);
+				
 
 				$lazyElements.each(function(){
+					let _element = $(this),
+							dataLazy = _element.attr(settings.lazyAttr);
 
-					_element = $(this);
-					let dataLazy = _element.attr(settings.lazyAttr);
-					if(dataLazy !== undefined) {
+					let lazyTypes = {
 
-						let onLoadingItem = settings.onLoadingItem;
-						if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
+						img: ()=> {
+							if(dataLazy !== undefined) {
 
-						$item.addClass(sLayout.itemLoading.substr(1));
-						let onLoadedItem = settings.onLoadedItem;
-
-						let lazyTypes = {
-
-							img: ()=> {
+								if (!_element.hasClass(itemClassLoaded)) {
+									$item.addClass(sLayout.itemLoading.substr(1));
+									if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
+								}
 								_element.attr('src', dataLazy).one({
 									load: () => {
 										if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'success');
@@ -342,26 +340,26 @@
 										_cleanClass($item);
 									}
 								}).removeAttr(settings.lazyAttr);
+							}
+						},
 
-							},
-
-							video: ()=> {
-
-							},
-
-							iframe: ()=> {
+						video: ()=> {
+							if(dataLazy !== undefined) {
+								_element.attr('src', dataLazy).removeAttr(settings.lazyAttr).addClass(itemClassLoaded).get(0).play();
 
 							}
+
+						},
+
+						iframe: ()=> {
+
 						}
-
-						let typeLazy = lazyTypes[_element.prop('tagName').toLowerCase()];
-						if(typeLazy !== undefined) typeLazy();
-
 					}
 
+					let typeLazy = lazyTypes[_element.prop('tagName').toLowerCase()];
+					if(typeLazy !== undefined) typeLazy();
+
 				});
-
-
 			},
 
 			log: obj => {
@@ -498,6 +496,13 @@
 				if (stopAP !== undefined) stopAP();
 			}
 
+		}
+
+		function _cleanClass($item){
+			$item.addClass(sLayout.itemLoaded.substr(1));
+			setTimeout(() => {
+				$item.removeClass(sLayout.itemLoading.substr(1));
+			}, 500);
 		}
 
 		function _log(type, text, required){
