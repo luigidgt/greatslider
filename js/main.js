@@ -52,7 +52,9 @@ $('#prev').click(()=>{
 */
 
 $('#example2').greatSlider({
-	type: 'fade',
+	type: 'swipe',
 	nav: false,
 	bullets: true
-})
+});
+
+

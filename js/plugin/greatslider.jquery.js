@@ -10,7 +10,7 @@
 			type: 'fade', // fade, swipe
 
 			nav: true, // true, false
-			navSpeed: 1000, // en milisegundos
+			navSpeed: 500, // en milisegundos
 
 			items: 1,
 			slideBy: 1,
@@ -25,7 +25,7 @@
 			//startPosition: 0, parametro fantasma, solo si es solicitado
 
 			lazyLoad: true,
-			lazyClass: '.gs-lazy',
+			lazyClass: 'gs-lazy',
 			lazyAttr: 'data-lazy',
 
 			layout: {
@@ -48,8 +48,8 @@
 				bullet: '.gs-bullet',
 				bulletActive: '.gs-bullet-active',
 
-				noneClass: '.gs-none',
-				attachedClass: '.gs-attached'
+				noneClass: 'gs-none',
+				attachedClass: 'gs-attached'
 			}
 		};
 		if (options !== undefined) $.extend(settings, options);
@@ -68,7 +68,7 @@
 				items = _this.find(sLayout.item),
 				nItems = items.length,
 				attachedClass = sLayout.attachedClass.substr(1),
-				displayNodeClass = sLayout.noneClass.substr(1),
+				displayNodeClass = sLayout.noneClass,
 				log = [],
 				configsBk;
 
@@ -308,7 +308,7 @@
 			},
 
 			loadLazy: $item => {
-				let $lazyElements = $item.find(settings.lazyClass);
+				let $lazyElements = $item.find('.' + settings.lazyClass);
 				if (!$lazyElements.length) return false;
 
 				let $itemIndex = $item.index(),
@@ -326,10 +326,9 @@
 						img: ()=> {
 							if(dataLazy !== undefined) {
 
-								if (!_element.hasClass(itemClassLoaded)) {
-									$item.addClass(sLayout.itemLoading.substr(1));
-									if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
-								}
+								$item.addClass(sLayout.itemLoading.substr(1));
+								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
+
 								_element.attr('src', dataLazy).one({
 									load: () => {
 										if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'success');
@@ -344,15 +343,56 @@
 						},
 
 						video: ()=> {
-							if(dataLazy !== undefined) {
-								_element.attr('src', dataLazy).removeAttr(settings.lazyAttr).addClass(itemClassLoaded).get(0).play();
+							if (!$item.hasClass(itemClassLoaded)) {
+								$item.addClass(sLayout.itemLoading.substr(1));
+								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
 
+								if(dataLazy !== undefined) {
+									_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
+								} else {
+									_element.find('source').each(function(){
+										$(this).attr('src', $(this).attr(settings.lazyAttr)).removeAttr(settings.lazyAttr);
+									});
+								}
+								_element.get(0).load();
+								checkVideoLoaded($item, _element);
+							} else {
+								_element.get(0).play();
 							}
-
 						},
 
 						iframe: ()=> {
+							
+							if (dataLazy.indexOf('youtu') !== -1) { // es un video de youtube
 
+								// si el url es https://www.youtube.com/watch?v=4RUGmBxe65U
+								if (dataLazy.indexOf('watch') !== -1) {
+									dataLazy = dataLazy.substr(dataLazy.lastIndexOf('=') + 1) 
+								}
+
+								// si el url es https://youtu.be/4RUGmBxe65U
+								if (dataLazy.indexOf('youtu.be') !== -1) {
+									dataLazy = dataLazy.substr(dataLazy.lastIndexOf('/') + 1) 
+								}
+
+								// si el url es https://www.youtube.com/embed/4RUGmBxe65U
+								if (dataLazy.indexOf('embed') !== -1) {
+									dataLazy = dataLazy.substr(dataLazy.lastIndexOf('/') + 1) 
+								}
+
+								if(dataLazy.indexOf('autoplay') == -1) { // no tiene autoplay
+									if(dataLazy.indexOf('?') == -1) {
+										dataLazy += '?autoplay=1';
+									} else {
+										dataLazy += '&autoplay=1';
+									}
+								}
+
+								// final url
+								dataLazy = 'https://www.youtube.com/embed/' + dataLazy;
+							}
+
+							_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
 						}
 					}
 
@@ -397,8 +437,8 @@
 			},
 
 			goTo: function(to, configs){
-				let activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive), // obteniendo el item activado
-						activeItemIndex = activeItem.index(),
+				let $activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive),
+						activeItemIndex = $activeItem.index(),
 						itemToActive;
 
 				if (typeof to == 'string') { // puede ser next o prev, veamos
@@ -422,7 +462,6 @@
 							itemToActive = (leftItems <= configs.slideBy) ? configs.slideBy - 1 : activeItemIndex - configs.slideBy;
 						}
 					}
-
 				} else if (typeof to == 'number') { // es un index real, (number)
 					let relocation = configs,
 							toIndexReal = to - 1;
@@ -439,6 +478,14 @@
 					}
 					//
 					itemToActive = toIndexReal;
+				}
+
+				// Deteniendo reproducción en items que tienen elementos reproducibles (video, audio)
+				let $videos = $activeItem.find('video, audio');
+				if ($videos.length) {
+					$videos.each(function(){
+						$(this).get(0).pause();
+					});
 				}
 
 				// El item a activar
@@ -496,6 +543,28 @@
 				if (stopAP !== undefined) stopAP();
 			}
 
+		}
+
+		let checkVideoTimes = 0;
+		function checkVideoLoaded($item, $video){
+			let onLoadedItem = settings.onLoadedItem;
+			checkVideoTimes += 0.25;
+			if(checkVideoTimes >= 20) {
+				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'error');
+				_cleanClass($item);
+				return false;
+			}
+			let theVideo = $video.get(0);
+			if (theVideo.readyState == 4) {
+				theVideo.play();
+				_cleanClass($item);
+				checkVideoTimes = 0;
+				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'success');
+			} else {
+				setTimeout(()=> {
+					checkVideoLoaded($item, $video);
+				}, 250);
+			}
 		}
 
 		function _cleanClass($item){
