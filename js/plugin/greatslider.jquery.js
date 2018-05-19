@@ -257,7 +257,7 @@
 			items: function(configs) {
 				let _thisActions = this,
 						$wrapperItems = _this.find(sLayout.wrapperItems),
-						$theItems = $wrapperItems.find('.' + sLayout.itemClass)
+						$theItems = $wrapperItems.find('.' + sLayout.itemClass),
 						$firstItem = $theItems.eq(0),
 						iActivePure = sLayout.itemActiveClass;
 
@@ -782,7 +782,7 @@
 				if (stopAP !== undefined) stopAP();
 			},
 
-			fullscreen: configs => {
+			fullscreen: function(configs) {
 
 				// es la invocación del metodo desde una acción
 				if (typeof configs == 'string') { 
@@ -830,17 +830,46 @@
 					}
 				});
 
+				// Anidación de navegación por teclas de flechas
+				let navByArrow = event => {
+
+					if (event.type == 'keyup') {
+						switch(event.which){
+							case 37:
+							case 40:
+								this.goTo('prev');
+								break;
+							case 38:
+							case 39:
+								this.goTo('next');
+								break;
+						}
+					} /*else if(event.type == 'mousewheel') {
+						this.goTo((event.originalEvent.wheelDelta / 120 > 0) ? 'prev' : 'next');
+					}*/
+				}
+
+				// adición y sustracción de clase indicativa y ejecución de evento interno onFullscreen
 				$(document).on(fullScreenApi.fullScreenEventName, ()=>{
 					if (fullScreenApi.isFullScreen()){ // in
 						_this.addClass(sLayout.fsInClass);
 						$fsElement.addClass(sLayout.fsInClass);
 						let inFs = configs.onFullscreenIn;
 						if(inFs !== undefined) inFs();
+						$(document).on('keyup', navByArrow);
+						/*
+						$(document).on({
+							'keyup': navByArrow,
+							'mousewheel': navByArrow;
+						});
+						*/
+
 					} else { // out
 						_this.removeClass(sLayout.fsInClass);
 						$fsElement.removeClass(sLayout.fsInClass);
 						let outFs = configs.onFullscreenOut;
 						if(outFs !== undefined) outFs();
+						$(document).off('keyup', navByArrow);
 					}
 				});
 

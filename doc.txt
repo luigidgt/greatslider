@@ -143,28 +143,14 @@
 	Cosas por hacer:
 
 	- agregar metodo destroy.
-	- agregar eventos de 'onLoadingLazy' y 'onLoadedLazy' y que devuelva el index relativo al item.
 	- agregar linea de tiempo restante para el pase entre frames abajo
 	- que el auto play pueda desactivarce por breakpoint
 
 	Cosas en las que estoy trabajando:
 
-		eventos nuevos:
+	- anidación de navegación por teclas de flechas en fullscreen
+	- anidación de navegación por la ruedita del mouse en fullscreen
 
-			onFullscreenIn
-			onFullscreenOut
-
-		metodos nuevos:
-
-			let $miSlider = $('#example1');
-
-			$miSlide.inFullscreen();
-			$miSlide.outFullscreen();
-
-
-		configuracions nuevas:
-
-			fullScreen: true // true, false
-
+	
 
 */
