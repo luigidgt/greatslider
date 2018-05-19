@@ -7,6 +7,62 @@
 	- Autor: Daniel Pisconte Zevallos
 
 
+* Parametros de configuración:
+
+	{
+		type: 'fade', // fade, swipe : determina el tipo de slider
+
+		nav: true, // true, false : oculta o muestra las flechas de navegación
+		navSpeed: 500, // en milisegundos
+
+		items: 1, // numero de items a mostrar en pantalla
+		slideBy: 1, // numero de items entre cada pase
+
+		bullets: true, // true, false : aparece o desaparece los bullets
+
+		autoplay: false, // true, false : activa o desactiva el autoplay
+		autoplaySpeed: 5000, // tiempo de espera entre cada paso
+
+		log: false, // true, false: para registrar en consola toda acción o incidente ocurrido.
+		
+		startPosition: 0, // la posición del item que estará activo por defecto
+
+		fullScreen: false, // false, true : habilita o deshabilita la pantalla completa
+
+		lazyLoad: true, // true, false : habilita la carga por demanda
+		lazyClass: 'gs-lazy', // la clase que tendrá el o los items a cargar por demanda
+		lazyAttr: 'data-lazy', // el atributo que tendrá el o los items para cargar por demanda
+
+		layout: {
+
+			containerItems: '.gs-container-items', // contenedor maestro del slider
+			wrapperItems: '.gs-wrapper-items', // envoltorio de la lista de items
+
+			itemClass: '.gs-item-slider', // la clase que tendrá cada item del slider
+			itemActiveClass: 'gs-item-active', // la clase que tendrá el item activo
+			itemLoadingClass: 'gs-item-loading', // la clase que tendrán los items cuando estén cargando
+			itemLoadedClass: 'gs-item-loaded', // la clase que tendrá el item cuando terminó de cargar
+
+			containerNavs: '.gs-container-navs', // el contenedor de la navegación (flechas y bullets)
+
+			wrapperArrows: '.gs-wrapper-arrows', // el envoltorio de las flechas de navegación
+			arrowPrev: '.gs-prev-arrow', // flecha izquierda
+			arrowNext: '.gs-next-arrow', // flecha derecha
+
+			wrapperBullets: '.gs-wrapper-bullets', // envoltorio de los bullets
+			bulletClass: 'gs-bullet', // clase que tendrá el primer bullets y los bullets restantes
+			bulletActiveClass: 'gs-bullet-active', // clase que tendrá el bullet activo
+
+			fsButton: '.gs-fs', // boton que activa y desactiva el fullscreen
+			fsInClass: 'gs-infs', // clase que se le agregará al boton de fullscreen y el contenedor maestro del slider cuando se encuentre en fullscreen
+
+			noneClass: 'gs-none', // clase general que desaparece del DOM a varios elementos
+			attachedClass: 'gs-attached' // clase general indicativa de anidación de eventos sobre un elemento.
+		}
+
+	}
+
+
 * Eventos opcionales:
 
 	- onInit: cuando se inicializa la construcción.
@@ -33,8 +89,12 @@
 	- onStep: cuando se realiza un pase de frame(s).
 		-> el index de item activo.
 
+	- onFullscreenIn: cuando se entra en el modo full screen
 
-* Acciones disponibles:
+	- onFullscreenOut: cuando se sale del modo full screen
+
+
+* Metodos disponibles:
 
 	let slider = $('#example1').greatSlider();
 
@@ -52,26 +112,59 @@
 			slider.log();
 			-> varias impresiones en consola de cada registro guardado.
 
-	- Pase de slider
 
-		- Next: ir al siguiente frame:
+	- Pase de slider:
 
-			slider.goTo('next');
+		- Next: ir al siguiente frame: slider.goTo('next');
 
-		- Prev: ir al previo frame:
+		- Prev: ir al previo frame: slider.goTo('prev');
 
-			slider.goTo('prev');
+		- Específico: ir a un específico frame, por ejemplo al quinto: slider.goTo(5)
 
-		- Específico: ir a un específico frame, por ejemplo al quinto:
+		- Auto Play:
 
-			slider.goTo(5)
+			Iniciar: slider.play();
+			Detener: slider.stop();
 
+
+	- Full Screen:
+
+		- Entrar: slider.fullscreen('in'); 
+
+		- Salir: slider.fullscreen('out');
+
+		- Chekear si se está en FS:
+
+			slider.fullscreen('check');
+			-> true o false //
 
 /*
+
 	Cosas por hacer:
 
 	- agregar metodo destroy.
-	- adicionar carga por demanda para videos, audios, e iframes.
 	- agregar eventos de 'onLoadingLazy' y 'onLoadedLazy' y que devuelva el index relativo al item.
+	- agregar linea de tiempo restante para el pase entre frames abajo
+	- que el auto play pueda desactivarce por breakpoint
+
+	Cosas en las que estoy trabajando:
+
+		eventos nuevos:
+
+			onFullscreenIn
+			onFullscreenOut
+
+		metodos nuevos:
+
+			let $miSlider = $('#example1');
+
+			$miSlide.inFullscreen();
+			$miSlide.outFullscreen();
+
+
+		configuracions nuevas:
+
+			fullScreen: true // true, false
+
 
 */

@@ -1,3 +1,60 @@
+// Full Screen API
+(function() {
+	let fullScreenApi = {
+			supportsFullScreen: false,
+			isFullScreen: function() { return false; },
+			requestFullScreen: function() {},
+			cancelFullScreen: function() {},
+			fullScreenEventName: '',
+			prefix: ''
+		},
+		browserPrefixes = 'webkit moz o ms khtml'.split(' ');
+ 
+	// check for native support
+	if (typeof document.cancelFullScreen !== 'undefined') {
+		fullScreenApi.supportsFullScreen = true;
+	} else {
+		// check for fullscreen support by vendor prefix
+		let il = browserPrefixes.length;
+		for (var i = 0; i < il; i++ ) {
+			let thePrefix = browserPrefixes[i];
+			if (typeof document[thePrefix + 'CancelFullScreen' ] !== 'undefined' ) {
+				fullScreenApi.supportsFullScreen = true;
+				fullScreenApi.prefix = thePrefix;
+				break;
+			}
+		}
+	}
+ 
+	// update methods to do something useful
+	if (fullScreenApi.supportsFullScreen) {
+		fullScreenApi.fullScreenEventName = fullScreenApi.prefix + 'fullscreenchange';
+ 
+		fullScreenApi.isFullScreen = function() {
+			switch (this.prefix) {
+				case '':
+					return document.fullScreen;
+				case 'webkit':
+					return document.webkitIsFullScreen;
+				default:
+					return document[this.prefix + 'FullScreen'];
+			}
+		}
+
+		fullScreenApi.requestFullScreen = function(el) {
+			return (this.prefix === '') ? el.requestFullScreen() : el[this.prefix + 'RequestFullScreen']();
+		}
+
+		fullScreenApi.cancelFullScreen = function(el) {
+			return (this.prefix === '') ? document.cancelFullScreen() : document[this.prefix + 'CancelFullScreen']();
+		}
+	}
+ 
+	// export api
+	window.fullScreenApi = fullScreenApi;
+})();
+
+// Great Slider Plugin
 (function($){
 	
 	$.fn.greatSlider = function(options){
@@ -23,6 +80,7 @@
 			log: false,
 			
 			//startPosition: 0, parametro fantasma, solo si es solicitado
+			fullscreen: false,
 
 			lazyLoad: true,
 			lazyClass: 'gs-lazy',
@@ -32,21 +90,24 @@
 
 				containerItems: '.gs-container-items',
 				wrapperItems: '.gs-wrapper-items',
-				item: '.gs-item-slider',
-				itemActive: '.gs-item-active',
-				itemLoading: '.gs-item-loading',
-				itemLoaded: '.gs-item-loaded',
+				itemClass: 'gs-item-slider',
+				itemActiveClass: 'gs-item-active',
+				itemLoadingClass: 'gs-item-loading',
+				itemLoadedClass: 'gs-item-loaded',
 
 				containerNavs: '.gs-container-navs',
 
 				wrapperArrows: '.gs-wrapper-arrows',
-				arrow: '.gs-arrow-nav',
 				arrowPrev: '.gs-prev-arrow',
 				arrowNext: '.gs-next-arrow',
 
 				wrapperBullets: '.gs-wrapper-bullets',
-				bullet: '.gs-bullet',
-				bulletActive: '.gs-bullet-active',
+				bulletClass: 'gs-bullet',
+				bulletActiveClass: 'gs-bullet-active',
+
+				fsButton: '.gs-fs',
+				fsInClass: 'gs-infs',
+				fsOutClass: 'gs-outfs',
 
 				noneClass: 'gs-none',
 				attachedClass: 'gs-attached'
@@ -64,12 +125,15 @@
 				greatSliderInterval,
 				greatSliderBreakPoint,
 				sLayout = settings.layout,
-				items = _this.find(sLayout.item),
+				items = _this.find('.' + sLayout.itemClass),
 				nItems = items.length,
-				attachedClass = sLayout.attachedClass.substr(1),
+				attachedClass = sLayout.attachedClass,
 				displayNodeClass = sLayout.noneClass,
 				log = [],
+				fullscreen = false,
 				configsBk;
+
+		if (!nItems) return console.error('* Great Slider [Logger] : No existen items para crear el slider :V');
 
 		// Funciones útiles
 		let checkVideoTimes = 0;
@@ -95,9 +159,9 @@
 		}
 
 		function _cleanClass($item){
-			$item.addClass(sLayout.itemLoaded.substr(1));
+			$item.addClass(sLayout.itemLoadedClass);
 			setTimeout(() => {
-				$item.removeClass(sLayout.itemLoading.substr(1));
+				$item.removeClass(sLayout.itemLoadingClass);
 			}, 500);
 		}
 
@@ -127,6 +191,9 @@
 
 				// Anidando evento click a los Arrows
 				this.navs(configs);
+
+				// Full Screen
+				this.fullscreen(configs);
 
 				// Solo una vez
 				if (_this.hasClass(attachedClass)) return false;
@@ -190,9 +257,9 @@
 			items: function(configs) {
 				let _thisActions = this,
 						$wrapperItems = _this.find(sLayout.wrapperItems),
-						$theItems = $wrapperItems.find(sLayout.item)
+						$theItems = $wrapperItems.find('.' + sLayout.itemClass)
 						$firstItem = $theItems.eq(0),
-						iActivePure = sLayout.itemActive.substr(1);
+						iActivePure = sLayout.itemActiveClass;
 
 				// Los Items
 				let sliderType = {
@@ -222,7 +289,7 @@
 						}
 
 						// busca si ya se tiene activo un item
-						let $activeItem = $wrapperItems.find(sLayout.itemActive);
+						let $activeItem = $wrapperItems.find('.' + sLayout.itemActiveClass);
 						if (!$activeItem.length) { // no lo hay, activo el determinado por configs.items
 							$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
 						} else { // activo el primero
@@ -251,15 +318,16 @@
 					if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass)
 				}
 
-				let classBulletActive = sLayout.bulletActive.substr(1);
+				let classBulletActive = sLayout.bulletActiveClass;
 
 				let actions = {
 
 					constructor: function(){
 						// calculando de acuerdo a los items a mostrar.
-						let $theBullets = $wrapperBullets.find(sLayout.bullet),
+						let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass).eq(0),
 								bulletTag = $theBullets.prop('tagName').toLowerCase(),
 								bulletsHtml = '';
+
 
 						let maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
 						//maxBullets = ((nItems - configs.items) / configs.slideBy) + 1;
@@ -277,7 +345,7 @@
 
 						while(i < maxBullets){
 							let bulletClassActive = (i !== itemToActive) ? '' : ' ' + classBulletActive;
-							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bullet.substr(1) + bulletClassActive + '"></' + bulletTag + '>';
+							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bulletClass + bulletClassActive + '"></' + bulletTag + '>';
 							i++;
 						}
 
@@ -285,15 +353,14 @@
 					},
 
 					active: getIndex => {
-						let itemActive = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive).index(),
-								classBulletActive = sLayout.bulletActive.substr(1);
+						let itemActive = _this.find(sLayout.wrapperItems + ' .' + sLayout.itemActiveClass).index();
 
 						let bulletToActive = (itemActive + 1) / configs.items;
 						if (bulletToActive % 1 !== 0) bulletToActive = Math.floor(bulletToActive) + 1;
 						bulletToActive -= 1;
 
 						if (getIndex) return bulletToActive; // si es que se solicita
-						let $bulletActiving = _this.find(sLayout.bullet).eq(bulletToActive);
+						let $bulletActiving = _this.find('.' + sLayout.bulletClass).eq(bulletToActive);
 						if (!$bulletActiving.hasClass(classBulletActive)) $bulletActiving.addClass(classBulletActive).siblings().removeClass(classBulletActive);
 					},
 
@@ -301,7 +368,7 @@
 						if ($wrapperBullets.hasClass(attachedClass)) return false; // ya adjuntó el click a los bullets, no continuo.
 						$wrapperBullets.addClass(attachedClass); 
 
-						$wrapperBullets.on('click', sLayout.bullet, function(){
+						$wrapperBullets.on('click', '.' + sLayout.bulletClass, function(){
 							if($(this).hasClass(classBulletActive)) return false;
 							$(this).addClass(classBulletActive).siblings().removeClass(classBulletActive);
 
@@ -339,10 +406,16 @@
 				if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
 				$wrapperArrows.addClass(attachedClass);
 
-				// haciendo click en PREV o NEXT
-				_this.find(sLayout.arrow).on('click', function(){
-					_objThis.goTo(($(this).hasClass(sLayout.arrowNext.substr(1))) ? 'next' : 'prev', configsBk);
+				// haciendo click PREV
+				_this.find(sLayout.arrowPrev).on('click', function(){
+					_objThis.goTo('prev', configsBk);
 				});
+
+				// haciendo click NEXT
+				_this.find(sLayout.arrowNext).on('click', function(){
+					_objThis.goTo('next', configsBk);
+				});
+				
 			},
 
 			loadLazy: $item => {
@@ -352,7 +425,7 @@
 				let $itemIndex = $item.index(),
 						onLoadingItem = settings.onLoadingItem,
 						onLoadedItem = settings.onLoadedItem,
-						itemClassLoaded = sLayout.itemLoaded.substr(1);
+						itemClassLoaded = sLayout.itemLoadedClass;
 				
 				$lazyElements.each(function(){
 					let _element = $(this),
@@ -363,7 +436,7 @@
 						img: ()=> {
 							if(dataLazy !== undefined) {
 
-								$item.addClass(sLayout.itemLoading.substr(1));
+								$item.addClass(sLayout.itemLoadingClass);
 								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
 
 								_element.attr('src', dataLazy).one({
@@ -381,7 +454,7 @@
 
 						video: ()=> {
 							if (!$item.hasClass(itemClassLoaded)) {
-								$item.addClass(sLayout.itemLoading.substr(1));
+								$item.addClass(sLayout.itemLoadingClass);
 								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
 
 								if(dataLazy !== undefined) {
@@ -466,11 +539,11 @@
 									dataLazy = 'https://www.youtube.com/embed/' + idYt + '?' + parameters + '&enablejsapi=1';
 
 									_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
-									$item.addClass(sLayout.itemLoaded.substr(1));
+									$item.addClass(sLayout.itemLoadedClass);
 								
 								} else if (dataLazy.indexOf('vimeo')){
 
-									$item.addClass(sLayout.itemLoading.substr(1));
+									$item.addClass(sLayout.itemLoadingClass);
 
 									let idVideo = dataLazy.substr(dataLazy.lastIndexOf('/') + 1, 9);
 									let parameters = dataLazy.substring(dataLazy.lastIndexOf('/') + 11, dataLazy.length);
@@ -586,7 +659,7 @@
 			},
 
 			goTo: function(to, configs){
-				let $activeItem = _this.find(sLayout.wrapperItems + ' ' + sLayout.itemActive),
+				let $activeItem = _this.find(sLayout.wrapperItems + ' .' + sLayout.itemActiveClass),
 						activeItemIndex = $activeItem.index(),
 						itemToActive;
 
@@ -656,7 +729,7 @@
 
 				// El item a activar
 				let itemActivating = items.eq(itemToActive),
-						itemClassActive = sLayout.itemActive.substr(1);
+						itemClassActive = sLayout.itemActiveClass;
 						itemActivating.addClass(itemClassActive).siblings().removeClass(itemClassActive);
 
 				// el tipo de pase
@@ -707,6 +780,70 @@
 				clearInterval(greatSliderInterval);
 				let stopAP = configsBk.onStop;
 				if (stopAP !== undefined) stopAP();
+			},
+
+			fullscreen: configs => {
+
+				// es la invocación del metodo desde una acción
+				if (typeof configs == 'string') { 
+					if (fullScreenApi.supportsFullScreen) {
+						let actionsFs = {
+							in: ()=> {
+								fullScreenApi.requestFullScreen(_this.get(0));
+							},
+							out: ()=> {
+								fullScreenApi.cancelFullScreen(_this.get(0));
+							},
+							check: ()=> {
+								return fullScreenApi.isFullScreen();
+							}
+						}
+						let theFsAction = actionsFs[configs];
+						return (theFsAction !== undefined) ? theFsAction() : this.log({type: 'not', text: 'la orden "' + configs + '" del metodo fullscreen no es valida.', required: true});
+					} else {
+						return this.log({type: 'war', text: 'El dispositivo actual no soporta Full Screen.', required: true});
+					}
+					return false; // para asegurarnos de no seguir con el flujo normal
+				}
+
+				// no es invocación del metodo con orden, es el flujo normal
+				let $fsElement = _this.find(sLayout.fsButton);
+
+				if (configs.fullscreen) {
+					if (!fullScreenApi.supportsFullScreen) return this.log({type: 'war', text: 'El dispositivo actual no soporta Full Screen.', required: true});
+					if ($fsElement.hasClass(displayNodeClass)) $fsElement.removeClass(displayNodeClass)
+				} else {
+					if (!$fsElement.hasClass(displayNodeClass)) $fsElement.addClass(displayNodeClass);
+				}
+
+				if ($fsElement.hasClass(attachedClass)) return false; // ya se adjunto el evento click
+				$fsElement.addClass(attachedClass);
+
+				$fsElement.on('click', function(e){
+					e.preventDefault();
+					if(!fullscreen) { // no nos encontramos en Full Screen
+						fullscreen = true;
+						fullScreenApi.requestFullScreen(_this.get(0));
+					} else { // salgamos de Full Screen
+						fullscreen = false;
+						fullScreenApi.cancelFullScreen(_this.get(0));
+					}
+				});
+
+				$(document).on(fullScreenApi.fullScreenEventName, ()=>{
+					if (fullScreenApi.isFullScreen()){ // in
+						_this.addClass(sLayout.fsInClass);
+						$fsElement.addClass(sLayout.fsInClass);
+						let inFs = configs.onFullscreenIn;
+						if(inFs !== undefined) inFs();
+					} else { // out
+						_this.removeClass(sLayout.fsInClass);
+						$fsElement.removeClass(sLayout.fsInClass);
+						let outFs = configs.onFullscreenOut;
+						if(outFs !== undefined) outFs();
+					}
+				});
+
 			}
 
 		}
@@ -717,4 +854,3 @@
 	}
 
 })(jQuery);
-

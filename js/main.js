@@ -1,12 +1,20 @@
 
 let $miSlider = $('#example1').greatSlider({
 	type: 'swipe',
-	items: 1,
+	//items: 1,
 	//slideBy: 1,
 	nav: true,
-	navSpeed: 500,
+	//navSpeed: 500,
 	bullets: true,
+	fullscreen: true,
+	onFullscreenIn: ()=> {
+		console.log('entré a fullScreen');
+	},
+	onFullscreenOut: ()=>{
+		console.log('salí de fullScreen');
+	}
 	//log: true,
+	/*
 	breakPoints: {
 		825: {
 			//nav: true
@@ -26,11 +34,9 @@ let $miSlider = $('#example1').greatSlider({
 			items: 5,
 			slideBy: 5
 		}
-	},
-
-	onResized: (ancho)=>{
-		console.log('el acnho nuevo de la ventana es: ' + ancho);
 	}
+	*/
+	
 });
 
 /*
@@ -57,10 +63,10 @@ $('#prev').click(()=>{
 
 */
 
+/*
 let $example2 = $('#example2').greatSlider({
 	type: 'swipe',
 	nav: false,
 	bullets: true
 });
-
-
+*/

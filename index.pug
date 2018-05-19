@@ -16,7 +16,8 @@ html(lang="es")
 
 					- for (var i = 1; i <= 15; i++)
 						li.gs-item-slider
-							img(data-lazy="img/paisajes/" + i + ".jpg", alt="Text", style="width: 100%").gs-lazy
+							.gs-wrapper-content
+								img(data-lazy="img/paisajes/" + i + ".jpg", alt="Text", style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block").gs-lazy
 							
 			.gs-container-navs
 
@@ -26,15 +27,17 @@ html(lang="es")
 
 				.gs-wrapper-bullets.gs-style-bullets
 					button.gs-bullet
-		.botones(style="text-align:center;margin-top:20px;")
+
+			button.gs-fs Full Screen
+		//.botones(style="text-align:center;margin-top:20px;")
 			button#go(style="padding:10px;border:1px solid #c0c0c0;margin-right: 20px") ir al item 5
 			button#prev(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") &#60; Prev
 			button#play(style="padding:10px;border:1px solid #c0c0c0;margin-right: 2px") Play
 			button#stop(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") Stop
 			button#next(style="padding:10px;border:1px solid #c0c0c0;margin-right: 5px") Next &#62;
 		
-		h2(style="text-align:center") Slider Swipe Video
-		#example2.gs-container-slider(style="margin-left:auto;margin-right:auto;width: 850px")
+		//h2(style="text-align:center") Slider Swipe Video
+		//#example2.gs-container-slider(style="margin-left:auto;margin-right:auto;width: 850px")
 			.gs-container-items
 				ul.gs-wrapper-items
 
