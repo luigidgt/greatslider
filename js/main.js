@@ -1,4 +1,4 @@
-/*
+
 let $miSlider = $('#example1').greatSlider({
 	type: 'swipe',
 	items: 1,
@@ -26,8 +26,14 @@ let $miSlider = $('#example1').greatSlider({
 			items: 5,
 			slideBy: 5
 		}
+	},
+
+	onResized: (ancho)=>{
+		console.log('el acnho nuevo de la ventana es: ' + ancho);
 	}
 });
+
+/*
 
 $('#go').click(()=>{
 	$miSlider.goTo(5);
@@ -51,7 +57,7 @@ $('#prev').click(()=>{
 
 */
 
-$('#example2').greatSlider({
+let $example2 = $('#example2').greatSlider({
 	type: 'swipe',
 	nav: false,
 	bullets: true

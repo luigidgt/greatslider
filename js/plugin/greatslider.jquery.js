@@ -59,12 +59,11 @@
 		delete settingsBk['breakPoints'];
 		delete settingsBk['layout'];
 
+		// variables globales
 		let breakPoint = 0,
 				greatSliderInterval,
-				greatSliderBreakPoint;
-
-		// variables globales
-		let sLayout = settings.layout,
+				greatSliderBreakPoint,
+				sLayout = settings.layout,
 				items = _this.find(sLayout.item),
 				nItems = items.length,
 				attachedClass = sLayout.attachedClass.substr(1),
@@ -72,6 +71,37 @@
 				log = [],
 				configsBk;
 
+		// Funciones útiles
+		let checkVideoTimes = 0;
+		function checkVideoLoaded($item, $video){
+			let onLoadedItem = settings.onLoadedItem;
+			checkVideoTimes += 0.25;
+			if(checkVideoTimes >= 20) {
+				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'error');
+				_cleanClass($item);
+				return false;
+			}
+			let theVideo = $video.get(0);
+			if (theVideo.readyState == 4) {
+				theVideo.play();
+				_cleanClass($item);
+				checkVideoTimes = 0;
+				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'success');
+			} else {
+				setTimeout(()=> {
+					checkVideoLoaded($item, $video);
+				}, 250);
+			}
+		}
+
+		function _cleanClass($item){
+			$item.addClass(sLayout.itemLoaded.substr(1));
+			setTimeout(() => {
+				$item.removeClass(sLayout.itemLoading.substr(1));
+			}, 500);
+		}
+
+		// Acciones disponibles
 		let actions = {
 
 			init: function(configs){
@@ -80,7 +110,11 @@
 
 				// verificaciones de sentido comun
 				if (configs.slideBy > configs.items) {
-					_log('err', 'No es posible determinar que el pase por frame (' + configs.slideBy + ') sea mayor al mostrado de items (' + configs.items +').', true);
+					this.log({
+						type: 'err',
+						text: 'No es posible determinar que el pase por frame (' + configs.slideBy + ') sea mayor al mostrado de items (' + configs.items +').',
+						required: true
+					});
 					return false;
 				}
 				//
@@ -138,7 +172,11 @@
 				let startPosition = configs.startPosition;
 				if (startPosition !== undefined) {
 					if (startPosition > nItems) {
-						return _log('err', 'No es posible iniciar en el item con posición "' + startPosition + '" ya que esa posición sobrepasa el numero total de items existentes.', true);
+						return this.log({
+							type: 'err',
+							text: 'No es posible iniciar en el item con posición "' + startPosition + '" ya que esa posición sobrepasa el numero total de items existentes.',
+							required: true
+						});
 					}
 					this.goTo(startPosition, true);
 				}
@@ -199,7 +237,7 @@
 				}
 
 				let typeRun = sliderType[configs.type];
-				(typeRun !== undefined) ? typeRun(configs) : _log('err', 'el tipo de slider determinado no es válido');
+				(typeRun !== undefined) ? typeRun(configs) : this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
 			},
 
 			bullets: function(configs, action) {
@@ -316,7 +354,6 @@
 						onLoadedItem = settings.onLoadedItem,
 						itemClassLoaded = sLayout.itemLoaded.substr(1);
 				
-
 				$lazyElements.each(function(){
 					let _element = $(this),
 							dataLazy = _element.attr(settings.lazyAttr);
@@ -363,6 +400,7 @@
 
 						iframe: ()=> {
 							if (!$item.hasClass(itemClassLoaded)) {
+
 								if (dataLazy.indexOf('youtu') !== -1) { // es un video de youtube
 
 									let parameters, idYt;
@@ -426,29 +464,61 @@
 
 									// final url
 									dataLazy = 'https://www.youtube.com/embed/' + idYt + '?' + parameters + '&enablejsapi=1';
+
+									_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
+									$item.addClass(sLayout.itemLoaded.substr(1));
 								
 								} else if (dataLazy.indexOf('vimeo')){
+
+									$item.addClass(sLayout.itemLoading.substr(1));
+
 									let idVideo = dataLazy.substr(dataLazy.lastIndexOf('/') + 1, 9);
 									let parameters = dataLazy.substring(dataLazy.lastIndexOf('/') + 11, dataLazy.length);
 
 									let newParameters = '';
-									$.each({title: 0,api: 1,byline: 0,transparent: 0, autoplay: 1}, function(k, v){
+									$.each({title: 0,api: 1,byline: 0,transparent: 0}, function(k, v){
 										if(parameters.indexOf(k) == -1) newParameters += '&' + k + '=' + v;
 									});
 									parameters = (!parameters.length) ? newParameters.substr(1) : parameters += newParameters.substr(1);
+									if (parameters.indexOf('autoplay=1') !== -1) parameters = parameters.replace('autoplay=1','');
+									if (parameters.indexOf('&&') !== -1) parameters = parameters.replace('&&','');
 									dataLazy = 'https://player.vimeo.com/video/' + idVideo + '#' + parameters;
+									_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
+									lazyTypes.script('https://player.vimeo.com/api/player.js', ()=>{
+										_cleanClass($item);
+										let player = new Vimeo.Player(_element);
+        						player.play();
+									});
 								}
 
-								_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
-								$item.addClass(sLayout.itemLoaded.substr(1));
 							} else {
 								// si el iframe es de YT
-								if(_element.attr('src').indexOf('youtu') !== -1) {
+								let theSrcIframe = _element.attr('src');
+								if(theSrcIframe.indexOf('youtu') !== -1) {
 									_element.get(0).contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+								} else if(theSrcIframe.indexOf('vimeo') !== -1) {
+									let player = new Vimeo.Player(_element);
+									player.play();
 								}
 								
 							}
+						},
+
+						script: function(theSrc, done){
+							let r = false,
+									s = document.createElement('script');
+									s.type = 'text/javascript';
+									s.src = theSrc;
+									s.onload = s.onreadystatechange = function() {
+										if ( !r && (!this.readyState || this.readyState == 'complete') ) {
+											r = true;
+											let theDone = done;
+											if (typeof theDone == 'function') theDone(done);
+										}
+									};
+							document.body.appendChild(s);
 						}
+
 					}
 
 					let typeLazy = lazyTypes[_element.prop('tagName').toLowerCase()];
@@ -464,7 +534,31 @@
 					});
 				}
 
-				_log(obj.type, obj.text);
+				// Types: error (err), warning (war), notification (not).
+				let tipo, pro;
+				switch(obj.type) {
+					case 'err':
+						tipo = 'Error';
+						pro = 'error';
+						break;
+					case 'war':
+						tipo = 'Precaución';
+						pro = 'warn';
+						break;
+					case 'not':
+						tipo = 'Notificación';
+						pro = 'info';
+						break;
+				}
+				let currentdate = new Date(); 
+				let datetime = currentdate.getHours() + ':' + currentdate.getMinutes() + ':' + currentdate.getSeconds();
+				let textComplete = datetime + ' | ' + tipo + ' : ' + obj.text;
+				if (settings.log) {
+					console[pro]('Great Slider [Logger] : ' + textComplete);
+				} else {
+					if (obj.required) console[pro]('Great Slider [Logger] : ' + textComplete);
+				}
+				log.push(textComplete);
 			},
 
 			breakPoints: function(breakPoints, widthWindow){
@@ -522,13 +616,13 @@
 							toIndexReal = to - 1;
 					configs = configsBk;
 					// verificaciónes lógicas
-					if (to > items.length) return _log('err', 'No es posible ir a puesto de item mayor al numero de items disponibles.', true);
+					if (to > items.length) return this.log({type: 'err', text: 'No es posible ir a puesto de item mayor al numero de items disponibles.', required: true});
 					if (relocation == undefined) { // si no es una relocalización mandada desde la construcción del ancho del wrapper.
-						if (to == (activeItemIndex + 1)) return _log('not', 'Ya nos encontramos en ese puesto.', true);
+						if (to == (activeItemIndex + 1)) this.log({type: 'not', text: 'Ya nos encontramos en ese puesto (' + to + ').', required: true});
 					}
 					if (configs.type == 'swipe') {
 						if (toIndexReal < activeItemIndex && (to - configs.slideBy) < 0) {
-							return _log('err', 'No es posible desplazarce al puesto "' + to + '", debido a que faltarían items a mostrar en pantalla.', true);
+							return this.log({type: 'err', text: 'No es posible desplazarce al puesto "' + to + '", debido a que faltarían items a mostrar en pantalla.', required: true});
 						}
 					}
 					//
@@ -547,9 +641,16 @@
 				let $iframes = $activeItem.find('iframe');
 				if($iframes.length) {
 					$iframes.each(function(){
-						if($(this).attr('src').indexOf('youtu') !== -1) {
+						let $iframeSrc = $(this).attr('src');
+
+						if($iframeSrc.indexOf('youtu') !== -1) {
 							$(this).get(0).contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+
+						} else if ($iframeSrc.indexOf('vimeo') !== -1) {
+							let player = new Vimeo.Player($(this));
+							player.pause();
 						}
+
 					});
 				};
 
@@ -608,63 +709,6 @@
 				if (stopAP !== undefined) stopAP();
 			}
 
-		}
-
-		let checkVideoTimes = 0;
-		function checkVideoLoaded($item, $video){
-			let onLoadedItem = settings.onLoadedItem;
-			checkVideoTimes += 0.25;
-			if(checkVideoTimes >= 20) {
-				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'error');
-				_cleanClass($item);
-				return false;
-			}
-			let theVideo = $video.get(0);
-			if (theVideo.readyState == 4) {
-				theVideo.play();
-				_cleanClass($item);
-				checkVideoTimes = 0;
-				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'success');
-			} else {
-				setTimeout(()=> {
-					checkVideoLoaded($item, $video);
-				}, 250);
-			}
-		}
-
-		function _cleanClass($item){
-			$item.addClass(sLayout.itemLoaded.substr(1));
-			setTimeout(() => {
-				$item.removeClass(sLayout.itemLoading.substr(1));
-			}, 500);
-		}
-
-		function _log(type, text, required){
-			// Types: error (err), warning (war), notification (not).
-			let tipo, pro;
-			switch(type) {
-				case 'err':
-					tipo = 'Error';
-					pro = 'error';
-					break;
-				case 'war':
-					tipo = 'Precaución';
-					pro = 'warn';
-					break;
-				case 'not':
-					tipo = 'Notificación';
-					pro = 'info';
-					break;
-			}
-			let currentdate = new Date(); 
-			let datetime = currentdate.getHours() + ':' + currentdate.getMinutes() + ':' + currentdate.getSeconds();
-			let textComplete = datetime + ' | ' + tipo + ' : ' + text;
-			if (settings.log) {
-				console[pro]('Great Slider [Logger] : ' + textComplete);
-			} else {
-				if (required) console[pro]('Great Slider [Logger] : ' + textComplete);
-			}
-			log.push(textComplete);
 		}
 
 		// Inicializando

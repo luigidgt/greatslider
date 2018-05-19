@@ -7,33 +7,44 @@
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
-    <!--h2(style="text-align:center") Slider Swipe-->
-    <!--#example1.gs-container-slider(style="margin-left:auto;margin-right:auto;")
-    .gs-container-items
-    
-    	ul.gs-wrapper-items
-    
-    		- for (var i = 1; i <= 15; i++)
-    			li.gs-item-slider
-    				img(data-lazy="img/paisajes/" + i + ".jpg", alt="Text", style="width: 100%").gs-lazy
-    				
-    .gs-container-navs
-    
-    	.gs-wrapper-arrows
-    		button.gs-arrow-nav.gs-prev-arrow.gs-style-prev Prev
-    		button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
-    
-    	.gs-wrapper-bullets.gs-style-bullets
-    		button.gs-bullet
-    -->
-    <!--.botones(style="text-align:center;margin-top:20px;")
-    button#go(style="padding:10px;border:1px solid #c0c0c0;margin-right: 20px") ir al item 5
-    button#prev(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") &#60; Prev
-    button#play(style="padding:10px;border:1px solid #c0c0c0;margin-right: 2px") Play
-    button#stop(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") Stop
-    button#next(style="padding:10px;border:1px solid #c0c0c0;margin-right: 5px") Next &#62;
-    
-    -->
+    <h2 style="text-align:center">Slider Swipe</h2>
+    <div class="gs-container-slider" id="example1" style="margin-left:auto;margin-right:auto;">
+      <div class="gs-container-items">
+        <ul class="gs-wrapper-items">
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/1.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/2.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/3.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/4.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/5.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/6.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/7.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/8.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/9.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/10.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/11.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/12.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/13.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/14.jpg" alt="Text" style="width: 100%"></li>
+          <li class="gs-item-slider"><img class="gs-lazy" data-lazy="img/paisajes/15.jpg" alt="Text" style="width: 100%"></li>
+        </ul>
+      </div>
+      <div class="gs-container-navs">
+        <div class="gs-wrapper-arrows">
+          <button class="gs-arrow-nav gs-prev-arrow gs-style-prev">Prev</button>
+          <button class="gs-arrow-nav gs-next-arrow gs-style-next">Next</button>
+        </div>
+        <div class="gs-wrapper-bullets gs-style-bullets">
+          <button class="gs-bullet"></button>
+        </div>
+      </div>
+    </div>
+    <div class="botones" style="text-align:center;margin-top:20px;">
+      <button id="go" style="padding:10px;border:1px solid #c0c0c0;margin-right: 20px">ir al item 5</button>
+      <button id="prev" style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px">&#60; Prev</button>
+      <button id="play" style="padding:10px;border:1px solid #c0c0c0;margin-right: 2px">Play</button>
+      <button id="stop" style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px">Stop</button>
+      <button id="next" style="padding:10px;border:1px solid #c0c0c0;margin-right: 5px">Next &#62;</button>
+    </div>
     <h2 style="text-align:center">Slider Swipe Video</h2>
     <div class="gs-container-slider" id="example2" style="margin-left:auto;margin-right:auto;width: 850px">
       <div class="gs-container-items">
@@ -53,7 +64,7 @@
             <iframe class="gs-lazy" width="100%" height="478px" data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&amp;t=13s&amp;rel=0&amp;showinfo=0&amp;iv_load_policy=3" frameborder="0" allowfullscreen></iframe>
           </li>
           <li class="gs-item-slider">
-            <iframe class="gs-lazy" width="100%" height="478px" data-lazy="https://vimeo.com/270221211#t=15s&amp;autoplay=1" frameborder="0" allowfullscreen id="algo"></iframe>
+            <iframe class="gs-lazy" width="100%" height="478px" data-lazy="https://vimeo.com/270221211#&amp;autoplay=1" frameborder="0" allowfullscreen id="algo"></iframe>
           </li>
         </ul>
       </div>
@@ -70,6 +81,5 @@
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/plugin/greatslider.jquery.js"></script>
     <script src="js/main.js"></script>
-    <script src="https://player.vimeo.com/api/player.js"></script>
   </body>
 </html>
