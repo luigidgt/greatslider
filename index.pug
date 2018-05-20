@@ -5,19 +5,77 @@ html(lang="es")
 		meta(charset="utf-8")
 		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
 		link(rel="stylesheet", href="css/styles.css")
+		// estilos solo de muestra
+		style.
+			.gs-wrapper-content img {
+				margin-left:auto;
+				margin-right:auto;
+				max-width: 100%;
+				max-height: 100%;
+				display:block;
+			}
+
+			#example1 {
+				margin-left:auto;
+				margin-right:auto;
+				width: 1280px;
+			}
+
+			h2 {
+				text-align:center
+			}
+
+			.botones button {
+				padding:10px;
+				border:1px solid #c0c0c0;
+				border-radius: 2px;
+				background-color: #e7e7e7;
+				transition: all .1s linear;
+				font-size: 15px;
+			}
+
+			.botones button:hover {
+				cursor:pointer
+			}
+
+			.botones button:active {
+				background-color: #555555;
+				border-color:#555555;
+				color: #fff;
+			}
+
+			#go {
+				margin-right: 20px
+			}
+
+			#prev, #stop {
+				margin-right: 10px
+			}
+
+			#play {
+				margin-right: 2px
+			}
+
+			#active, #next {
+				margin-right: 5px
+			}
+
+			.botones {
+				text-align:center;
+				margin-top:20px;
+			}
 	body
 
-		h2(style="text-align:center") Slider Swipe
-		#example1.gs-container-slider(style="margin-left:auto;margin-right:auto;")
+		h2 Slider Swipe
+		#example1.gs-container-slider
 
 			.gs-container-items
 
 				ul.gs-wrapper-items
-
 					- for (var i = 1; i <= 15; i++)
 						li.gs-item-slider
 							.gs-wrapper-content
-								img(data-lazy="img/paisajes/" + i + ".jpg", alt="Text", style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block").gs-lazy
+								img(data-lazy="img/naturaleza/720/" + i + ".jpg", data-lazyfs="img/naturaleza/1080/" + i + ".jpg", alt="Text").gs-lazy
 							
 			.gs-container-navs
 
@@ -29,14 +87,17 @@ html(lang="es")
 					button.gs-bullet
 
 			button.gs-fs Full Screen
-		//.botones(style="text-align:center;margin-top:20px;")
-			button#go(style="padding:10px;border:1px solid #c0c0c0;margin-right: 20px") ir al item 5
-			button#prev(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") &#60; Prev
-			button#play(style="padding:10px;border:1px solid #c0c0c0;margin-right: 2px") Play
-			button#stop(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") Stop
-			button#next(style="padding:10px;border:1px solid #c0c0c0;margin-right: 5px") Next &#62;
+		.botones
+			button#active el Activo
+			button#go ir al item 5
+			button#prev &#60; Prev
+			button#play Play
+			button#stop Stop
+			button#next Next &#62;
+			button#fs Full Screen
+		.cualquiera(style="display:flex; justify-content: center; align-items: center; color:red; background-color:#fff") soy un div cualquiera, anda la osa XD
 		
-		//h2(style="text-align:center") Slider Swipe Video
+		//h2 Slider Swipe Video
 		//#example2.gs-container-slider(style="margin-left:auto;margin-right:auto;width: 850px")
 			.gs-container-items
 				ul.gs-wrapper-items

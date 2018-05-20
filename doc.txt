@@ -138,6 +138,11 @@
 			slider.fullscreen('check');
 			-> true o false //
 
+	- Información general
+
+		- Saber que item está activo: slider.getActive();
+			-> {item, index}
+
 /*
 
 	Cosas por hacer:
@@ -147,9 +152,12 @@
 	- que el auto play pueda desactivarce por breakpoint
 
 	Cosas en las que estoy trabajando:
-
-	- anidación de navegación por teclas de flechas en fullscreen
+	
 	- anidación de navegación por la ruedita del mouse en fullscreen
+	- cambiar 'items' en fullscreen
+
+	VERIFICAR Importante: el evento anidado al documento full screen in , se ejecuta si otro elemento
+										entra en full screen, no encesariamente el slider
 
 	
 

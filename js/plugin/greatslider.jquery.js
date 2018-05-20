@@ -85,6 +85,7 @@
 			lazyLoad: true,
 			lazyClass: 'gs-lazy',
 			lazyAttr: 'data-lazy',
+			lazyAttrFs : 'data-lazyfs',
 
 			layout: {
 
@@ -130,7 +131,6 @@
 				attachedClass = sLayout.attachedClass,
 				displayNodeClass = sLayout.noneClass,
 				log = [],
-				fullscreen = false,
 				configsBk;
 
 		if (!nItems) return console.error('* Great Slider [Logger] : No existen items para crear el slider :V');
@@ -426,7 +426,7 @@
 						onLoadingItem = settings.onLoadingItem,
 						onLoadedItem = settings.onLoadedItem,
 						itemClassLoaded = sLayout.itemLoadedClass;
-				
+
 				$lazyElements.each(function(){
 					let _element = $(this),
 							dataLazy = _element.attr(settings.lazyAttr);
@@ -434,10 +434,19 @@
 					let lazyTypes = {
 
 						img: ()=> {
+
+							if(fullScreenApi.isFullScreen()) {
+								let dataLazyFs = _element.attr(settings.lazyAttrFs);
+								if(dataLazyFs !== undefined) dataLazy = dataLazyFs;
+							}
+
 							if(dataLazy !== undefined) {
 
 								$item.addClass(sLayout.itemLoadingClass);
 								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
+
+								let theSrcLoaded = _element.attr('src');
+								if (theSrcLoaded == dataLazy) return false;
 
 								_element.attr('src', dataLazy).one({
 									load: () => {
@@ -448,8 +457,9 @@
 										if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'error');
 										_cleanClass($item);
 									}
-								}).removeAttr(settings.lazyAttr);
+								});
 							}
+
 						},
 
 						video: ()=> {
@@ -458,10 +468,10 @@
 								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
 
 								if(dataLazy !== undefined) {
-									_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
+									_element.attr('src', dataLazy);
 								} else {
 									_element.find('source').each(function(){
-										$(this).attr('src', $(this).attr(settings.lazyAttr)).removeAttr(settings.lazyAttr);
+										$(this).attr('src', $(this).attr(settings.lazyAttr));
 									});
 								}
 								_element.get(0).load();
@@ -563,7 +573,6 @@
         						player.play();
 									});
 								}
-
 							} else {
 								// si el iframe es de YT
 								let theSrcIframe = _element.attr('src');
@@ -573,7 +582,6 @@
 									let player = new Vimeo.Player(_element);
 									player.play();
 								}
-								
 							}
 						},
 
@@ -658,9 +666,15 @@
 				}
 			},
 
+			getActive: function(){
+				let $activeItem = _this.find(sLayout.wrapperItems + ' .' + sLayout.itemActiveClass);
+				return {item: $activeItem, index: $activeItem.index() + 1};
+			},
+
 			goTo: function(to, configs){
-				let $activeItem = _this.find(sLayout.wrapperItems + ' .' + sLayout.itemActiveClass),
-						activeItemIndex = $activeItem.index(),
+				let $getActive = this.getActive(),
+						$activeItem = $getActive.item,
+						activeItemIndex = $getActive.index - 1,
 						itemToActive;
 
 				if (typeof to == 'string') { // puede ser next o prev, veamos
@@ -821,11 +835,9 @@
 
 				$fsElement.on('click', function(e){
 					e.preventDefault();
-					if(!fullscreen) { // no nos encontramos en Full Screen
-						fullscreen = true;
+					if(!fullScreenApi.isFullScreen()) { // no nos encontramos en Full Screen
 						fullScreenApi.requestFullScreen(_this.get(0));
 					} else { // salgamos de Full Screen
-						fullscreen = false;
 						fullScreenApi.cancelFullScreen(_this.get(0));
 					}
 				});
@@ -852,24 +864,34 @@
 				// adición y sustracción de clase indicativa y ejecución de evento interno onFullscreen
 				$(document).on(fullScreenApi.fullScreenEventName, ()=>{
 					if (fullScreenApi.isFullScreen()){ // in
+
 						_this.addClass(sLayout.fsInClass);
 						$fsElement.addClass(sLayout.fsInClass);
+
 						let inFs = configs.onFullscreenIn;
 						if(inFs !== undefined) inFs();
+
 						$(document).on('keyup', navByArrow);
+						this.loadLazy(this.getActive().item);
+
 						/*
 						$(document).on({
 							'keyup': navByArrow,
 							'mousewheel': navByArrow;
 						});
 						*/
-
+						
 					} else { // out
+
 						_this.removeClass(sLayout.fsInClass);
 						$fsElement.removeClass(sLayout.fsInClass);
+
 						let outFs = configs.onFullscreenOut;
 						if(outFs !== undefined) outFs();
+
 						$(document).off('keyup', navByArrow);
+						this.loadLazy(this.getActive().item);
+
 					}
 				});
 

@@ -5,56 +5,116 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="css/styles.css">
+    <!-- estilos solo de muestra-->
+    <style>
+      .gs-wrapper-content img {
+      	margin-left:auto;
+      	margin-right:auto;
+      	max-width: 100%;
+      	max-height: 100%;
+      	display:block;
+      }
+      
+      #example1 {
+      	margin-left:auto;
+      	margin-right:auto;
+      	width: 1280px;
+      }
+      
+      h2 {
+      	text-align:center
+      }
+      
+      .botones button {
+      	padding:10px;
+      	border:1px solid #c0c0c0;
+      	border-radius: 2px;
+      	background-color: #e7e7e7;
+      	transition: all .1s linear;
+      	font-size: 15px;
+      }
+      
+      .botones button:hover {
+      	cursor:pointer
+      }
+      
+      .botones button:active {
+      	background-color: #555555;
+      	border-color:#555555;
+      	color: #fff;
+      }
+      
+      #go {
+      	margin-right: 20px
+      }
+      
+      #prev, #stop {
+      	margin-right: 10px
+      }
+      
+      #play {
+      	margin-right: 2px
+      }
+      
+      #active, #next {
+      	margin-right: 5px
+      }
+      
+      .botones {
+      	text-align:center;
+      	margin-top:20px;
+      }
+    </style>
   </head>
   <body>
-    <h2 style="text-align:center">Slider Swipe</h2>
-    <div class="gs-container-slider" id="example1" style="margin-left:auto;margin-right:auto;">
+    <h2>Slider Swipe</h2>
+    <div class="gs-container-slider" id="example1">
       <div class="gs-container-items">
         <ul class="gs-wrapper-items">
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/1.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/1.jpg" data-lazyfs="img/naturaleza/1080/1.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/2.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/2.jpg" data-lazyfs="img/naturaleza/1080/2.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/3.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/3.jpg" data-lazyfs="img/naturaleza/1080/3.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/4.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/4.jpg" data-lazyfs="img/naturaleza/1080/4.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/5.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/5.jpg" data-lazyfs="img/naturaleza/1080/5.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/6.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/6.jpg" data-lazyfs="img/naturaleza/1080/6.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/7.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/7.jpg" data-lazyfs="img/naturaleza/1080/7.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/8.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/8.jpg" data-lazyfs="img/naturaleza/1080/8.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/9.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/9.jpg" data-lazyfs="img/naturaleza/1080/9.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/10.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/10.jpg" data-lazyfs="img/naturaleza/1080/10.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/11.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/11.jpg" data-lazyfs="img/naturaleza/1080/11.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/12.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/12.jpg" data-lazyfs="img/naturaleza/1080/12.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/13.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/13.jpg" data-lazyfs="img/naturaleza/1080/13.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/14.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/14.jpg" data-lazyfs="img/naturaleza/1080/14.jpg" alt="Text"></div>
           </li>
           <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/paisajes/15.jpg" alt="Text" style="margin-left:auto;margin-right:auto;max-width: 100%;max-height:100%;display:block"></div>
+            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/15.jpg" data-lazyfs="img/naturaleza/1080/15.jpg" alt="Text"></div>
           </li>
         </ul>
       </div>
@@ -69,15 +129,17 @@
       </div>
       <button class="gs-fs">Full Screen</button>
     </div>
-    <!--.botones(style="text-align:center;margin-top:20px;")
-    button#go(style="padding:10px;border:1px solid #c0c0c0;margin-right: 20px") ir al item 5
-    button#prev(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") &#60; Prev
-    button#play(style="padding:10px;border:1px solid #c0c0c0;margin-right: 2px") Play
-    button#stop(style="padding:10px;border:1px solid #c0c0c0;margin-right: 10px") Stop
-    button#next(style="padding:10px;border:1px solid #c0c0c0;margin-right: 5px") Next &#62;
-    
-    -->
-    <!--h2(style="text-align:center") Slider Swipe Video-->
+    <div class="botones">
+      <button id="active">el Activo</button>
+      <button id="go">ir al item 5</button>
+      <button id="prev">&#60; Prev</button>
+      <button id="play">Play</button>
+      <button id="stop">Stop</button>
+      <button id="next">Next &#62;</button>
+      <button id="fs">Full Screen</button>
+    </div>
+    <div class="cualquiera" style="display:flex; justify-content: center; align-items: center; color:red; background-color:#fff">soy un div cualquiera, anda la osa XD</div>
+    <!--h2 Slider Swipe Video-->
     <!--#example2.gs-container-slider(style="margin-left:auto;margin-right:auto;width: 850px")
     .gs-container-items
     	ul.gs-wrapper-items

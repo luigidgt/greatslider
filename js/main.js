@@ -1,8 +1,8 @@
 
 let $miSlider = $('#example1').greatSlider({
 	type: 'swipe',
-	//items: 1,
-	//slideBy: 1,
+	//items: 2,
+	//slideBy: 2,
 	nav: true,
 	//navSpeed: 500,
 	bullets: true,
@@ -39,7 +39,6 @@ let $miSlider = $('#example1').greatSlider({
 	
 });
 
-/*
 
 $('#go').click(()=>{
 	$miSlider.goTo(5);
@@ -61,7 +60,10 @@ $('#prev').click(()=>{
 	$miSlider.goTo('prev');
 });
 
-*/
+$('#fs').click(()=>{
+	fullScreenApi.requestFullScreen($('.cualquiera').get(0));
+});
+
 
 /*
 let $example2 = $('#example2').greatSlider({
