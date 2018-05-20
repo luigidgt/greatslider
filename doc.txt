@@ -77,17 +77,18 @@
 	- onLoadedItem: cuando terminó de cargar el item activo.
 		-> elemento, index, status
 
+	- onStep: cuando se realiza un pase de frame(s).
+		-> item, indexItemActivo, itemActivoPrevio, indexItemActivoPrevio
+
 	- onResized: cuando se está redimencionando la pantalla.
 		-> el ancho de la pantalla
 
 	- onLastItem: cuando se llega al último item.
+		-> item, index
 
 	- onPlay: cuando se inicializa el autoplay.
 
 	- onStop: cuando se detiene el autoplay.
-
-	- onStep: cuando se realiza un pase de frame(s).
-		-> el index de item activo.
 
 	- onFullscreenIn: cuando se entra en el modo full screen
 
@@ -153,12 +154,8 @@
 
 	Cosas en las que estoy trabajando:
 	
+	- añadir evento de inicio de pase, y final de pase
 	- anidación de navegación por la ruedita del mouse en fullscreen
 	- cambiar 'items' en fullscreen
-
-	VERIFICAR Importante: el evento anidado al documento full screen in , se ejecuta si otro elemento
-										entra en full screen, no encesariamente el slider
-
-	
 
 */

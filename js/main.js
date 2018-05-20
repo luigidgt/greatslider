@@ -12,6 +12,12 @@ let $miSlider = $('#example1').greatSlider({
 	},
 	onFullscreenOut: ()=>{
 		console.log('salí de fullScreen');
+	},
+	onStep: (item, index, itemB, indexB)=> {
+		console.log(item);
+		console.log(index);
+		console.log(itemB);
+		console.log(indexB);
 	}
 	//log: true,
 	/*
@@ -61,7 +67,8 @@ $('#prev').click(()=>{
 });
 
 $('#fs').click(()=>{
-	fullScreenApi.requestFullScreen($('.cualquiera').get(0));
+	//fullScreenApi.requestFullScreen($('.cualquiera').get(0));
+	$miSlider.fullscreen('in');
 });
 
 
