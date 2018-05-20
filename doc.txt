@@ -37,6 +37,7 @@
 
 			containerItems: '.gs-container-items', // contenedor maestro del slider
 			wrapperItems: '.gs-wrapper-items', // envoltorio de la lista de items
+			transitionClass: 'gs-in-transition', // la clase que se le adiciona al slider cuando se está haciendo un pase de frame
 
 			itemClass: '.gs-item-slider', // la clase que tendrá cada item del slider
 			itemActiveClass: 'gs-item-active', // la clase que tendrá el item activo
@@ -77,8 +78,11 @@
 	- onLoadedItem: cuando terminó de cargar el item activo.
 		-> elemento, index, status
 
-	- onStep: cuando se realiza un pase de frame(s).
-		-> item, indexItemActivo, itemActivoPrevio, indexItemActivoPrevio
+	- onStepStart: cuando se realiza un pase de frame(s).
+		-> itemActivo, indexItemActivo
+
+	- onStepEnd: cuando se termina de hacer un pase de frame(s).
+		-> itemActivo, indexItemActivo
 
 	- onResized: cuando se está redimencionando la pantalla.
 		-> el ancho de la pantalla

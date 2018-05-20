@@ -4,21 +4,10 @@ let $miSlider = $('#example1').greatSlider({
 	//items: 2,
 	//slideBy: 2,
 	nav: true,
-	//navSpeed: 500,
-	bullets: true,
+	//navSpeed: 2000,
+	//bullets: true,
 	fullscreen: true,
-	onFullscreenIn: ()=> {
-		console.log('entré a fullScreen');
-	},
-	onFullscreenOut: ()=>{
-		console.log('salí de fullScreen');
-	},
-	onStep: (item, index, itemB, indexB)=> {
-		console.log(item);
-		console.log(index);
-		console.log(itemB);
-		console.log(indexB);
-	}
+	preLoad: true
 	//log: true,
 	/*
 	breakPoints: {

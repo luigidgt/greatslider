@@ -7,6 +7,10 @@ html(lang="es")
 		link(rel="stylesheet", href="css/styles.css")
 		// estilos solo de muestra
 		style.
+			.gs-container-slider {
+				max-width: 100%;
+			}
+
 			.gs-wrapper-content img {
 				margin-left:auto;
 				margin-right:auto;
@@ -70,23 +74,22 @@ html(lang="es")
 		#example1.gs-container-slider
 
 			.gs-container-items
-
 				ul.gs-wrapper-items
 					- for (var i = 1; i <= 15; i++)
 						li.gs-item-slider
 							.gs-wrapper-content
-								img(data-lazy="img/naturaleza/720/" + i + ".jpg", data-lazyfs="img/naturaleza/1080/" + i + ".jpg", alt="Text").gs-lazy
+								//img(data-lazy="img/naturaleza/720/" + i + ".jpg", data-lazyfs="img/naturaleza/1080/" + i + ".jpg", alt="Text").gs-lazy
+								img(data-lazy="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy
 							
 			.gs-container-navs
-
 				.gs-wrapper-arrows
 					button.gs-arrow-nav.gs-prev-arrow.gs-style-prev Prev
 					button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
-
 				.gs-wrapper-bullets.gs-style-bullets
 					button.gs-bullet
 
 			button.gs-fs Full Screen
+
 		.botones
 			button#active el Activo
 			button#go ir al item 5
@@ -95,8 +98,7 @@ html(lang="es")
 			button#stop Stop
 			button#next Next &#62;
 			button#fs Full Screen
-		.cualquiera(style="display:flex; justify-content: center; align-items: center; color:red; background-color:#fff") soy un div cualquiera, anda la osa XD
-		
+
 		//h2 Slider Swipe Video
 		//#example2.gs-container-slider(style="margin-left:auto;margin-right:auto;width: 850px")
 			.gs-container-items

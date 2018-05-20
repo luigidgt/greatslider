@@ -72,7 +72,7 @@
 			items: 1,
 			slideBy: 1,
 
-			bullets: true, // true, false
+			bullets: false, // true, false
 
 			autoplay: false, // true, false
 			autoplaySpeed: 5000,
@@ -87,11 +87,16 @@
 			lazyAttr: 'data-lazy',
 			lazyAttrFs : 'data-lazyfs',
 
+			preLoad: false,
+
 			layout: {
 
 				containerItems: '.gs-container-items',
 				wrapperItems: '.gs-wrapper-items',
+				transitionClass: 'gs-in-transition',
+
 				itemClass: 'gs-item-slider',
+				itemWrapperClass: 'gs-wrapper-content',
 				itemActiveClass: 'gs-item-active',
 				itemLoadingClass: 'gs-item-loading',
 				itemLoadedClass: 'gs-item-loaded',
@@ -112,6 +117,7 @@
 
 				noneClass: 'gs-none',
 				attachedClass: 'gs-attached'
+
 			}
 		};
 		if (options !== undefined) $.extend(settings, options);
@@ -126,6 +132,7 @@
 				greatSliderInterval,
 				greatSliderBreakPoint,
 				sLayout = settings.layout,
+				$wrapperItems = _this.find(sLayout.wrapperItems),
 				items = _this.find('.' + sLayout.itemClass),
 				nItems = items.length,
 				attachedClass = sLayout.attachedClass,
@@ -163,6 +170,19 @@
 			setTimeout(() => {
 				$item.removeClass(sLayout.itemLoadingClass);
 			}, 500);
+		}
+
+		function autoHeight($item){
+			if(!actions.fullscreen('check')) {
+				let $altoContent = $item.find('.' + sLayout.itemWrapperClass).height(),
+						$altoWrapperSlider = $wrapperItems.height();
+				//if($altoWrapperSlider !== $altoContent) {
+					//if ($altoContent > $altoWrapperSlider) {
+						//$wrapperItems.height($altoContent);
+						$wrapperItems.animate({height: $altoContent + 'px'}, 250);
+					//}
+				//}
+			}	
 		}
 
 		// Acciones disponibles
@@ -255,9 +275,7 @@
 			},
 
 			items: function(configs) {
-				let _thisActions = this,
-						$wrapperItems = _this.find(sLayout.wrapperItems),
-						$theItems = $wrapperItems.find('.' + sLayout.itemClass),
+				let $theItems = $wrapperItems.find('.' + sLayout.itemClass),
 						$firstItem = $theItems.eq(0),
 						iActivePure = sLayout.itemActiveClass;
 
@@ -268,7 +286,7 @@
 						if ($wrapperItems.hasClass('gs-transition-fade')) return false;
 						$wrapperItems.addClass('gs-transition-fade');
 						$firstItem.addClass(iActivePure);
-						if (configs.lazyLoad) _thisActions.loadLazy($firstItem);
+						if (configs.lazyLoad) this.loadLazy($firstItem);
 					},
 
 					swipe: () => { // arrastre
@@ -283,9 +301,12 @@
 						if (configs.lazyLoad) {
 							let i = 0;
 							while (i < initItems) {
-								_thisActions.loadLazy($theItems.eq(i));
+								this.loadLazy($theItems.eq(i));
 								i++;
 							};
+						} else {
+							// setear el alto del UL
+							//$wrapperItems.height($item.find('.' + sLayout.itemWrapperClass).height());// SEGUIR TRABAJANDO EN ESTA PARTE.
 						}
 
 						// busca si ya se tiene activo un item
@@ -297,7 +318,7 @@
 							if ($activeItemIndex < (initItems - 1)) {
 								$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
 							} else {
-								_thisActions.goTo($activeItem.index() + 1, true);
+								this.goTo($activeItem.index() + 1, true);
 							}
 						}
 					}
@@ -353,7 +374,7 @@
 					},
 
 					active: getIndex => {
-						let itemActive = _this.find(sLayout.wrapperItems + ' .' + sLayout.itemActiveClass).index();
+						let itemActive = $wrapperItems.find('.' + sLayout.itemActiveClass).index();
 
 						let bulletToActive = (itemActive + 1) / configs.items;
 						if (bulletToActive % 1 !== 0) bulletToActive = Math.floor(bulletToActive) + 1;
@@ -417,9 +438,18 @@
 				});
 			},
 
-			loadLazy: ($item, type) => {
+			loadLazy: function($item, type) {
+				let _objThis = this;
+
 				let $lazyElements = $item.find('.' + settings.lazyClass);
-				if (!$lazyElements.length) return false;
+				if (!$lazyElements.length) {
+					// dando alto relativo al contenido si no exites lazys , y si no se está en fullscreen
+					autoHeight($item);
+					return false;
+				}
+
+				// alto temporal
+				//autoHeight($item);
 
 				let $itemIndex = $item.index(),
 						onLoadingItem = settings.onLoadingItem,
@@ -455,16 +485,23 @@
 								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
 
 								let theSrcLoaded = _element.attr('src');
-								if (theSrcLoaded == dataLazy) return false;
+								if (theSrcLoaded == dataLazy) { // si ya se cargó la imagen..
+									_cleanClass($item);
+									autoHeight($item); //.. solo adapto el alto.
+									return false;
+								}
 
 								_element.attr('src', dataLazy).one({
 									load: () => {
 										if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'success');
 										_cleanClass($item);
+										autoHeight($item);
+										_objThis.log({type: 'not', text: 'recurso lazy "' + dataLazy + '" cargado correctamente desde el item con posición ' + ($itemIndex + 1) + '.'});
 									},
 									error: () => {
 										if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'error');
 										_cleanClass($item);
+										_objThis.log({type: 'err', text: 'No fué posible cargar el recurso lazy "' + dataLazy + '" del item con posición ' + ($itemIndex + 1) + '.', required: true});
 									}
 								});
 							}
@@ -676,11 +713,13 @@
 			},
 
 			getActive: function(){
-				let $activeItem = _this.find(sLayout.wrapperItems + ' .' + sLayout.itemActiveClass);
+				let $activeItem = $wrapperItems.find('.' + sLayout.itemActiveClass);
 				return {item: $activeItem, index: $activeItem.index() + 1};
 			},
 
 			goTo: function(to, configs){
+				if (_this.hasClass(sLayout.transitionClass)) return false; // para evitar otro pase con uno yá en curso.
+
 				let $getActive = this.getActive(),
 						$activeItem = $getActive.item,
 						activeItemIndex = $getActive.index - 1,
@@ -767,15 +806,19 @@
 					let mLeft = ( (100 / configs.items) * (itemToActive + 1) ) - 100;
 					if (mLeft < 0) mLeft = 0; // si el numero es negativo, significa que yá llegó al último.
 					//_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
-					_this.find(sLayout.wrapperItems).animate({
+					_this.addClass(sLayout.transitionClass);
+
+					let onStepStart = configs.onStepStart;
+					if(onStepStart !== undefined) onStepStart($activeItem, $activeItem.index() + 1);
+
+					$wrapperItems.animate({
 						'margin-left' : '-' +  mLeft + '%'
 					}, configs.navSpeed, () => {
-						let onStep = configs.onStep;
-						if(onStep !== undefined) {
-							onStep(itemActivating, itemToActive + 1, $activeItem, $activeItem.index() + 1);
-							if(this.fullscreen('check')) {
-								this.loadLazy($activeItem, 'normal');
-							}
+						_this.removeClass(sLayout.transitionClass);
+						let onStepEnd = configs.onStepEnd;
+						if(onStepEnd !== undefined) {
+							onStepEnd(itemActivating, itemToActive + 1);
+							if(this.fullscreen('check')) this.loadLazy($activeItem, 'normal');
 						}
 					});
 				}
@@ -912,8 +955,13 @@
 							let outFs = configs.onFullscreenOut;
 							if(outFs !== undefined) outFs();
 							$(document).off('keyup', navByArrow);
-							this.loadLazy(this.getActive().item);
+							// para dar tiempo al navegador en la transición desde cuando se canceló el Fs y se completó
+							setTimeout(()=>{ //
+								this.loadLazy(this.getActive().item);
+							},500);
+							//
 							_this.removeClass(sLayout.fsInClass);
+							$fsElement.removeClass(sLayout.fsInClass);
 						}
 					}
 				});
