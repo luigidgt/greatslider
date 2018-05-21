@@ -158,7 +158,7 @@
 
 	Cosas en las que estoy trabajando:
 	
-	- añadir evento de inicio de pase, y final de pase
+	- añadir evento de inicio de pase, y final de pase en fade, y hacer el pase por JS y no por CSS3
 	- anidación de navegación por la ruedita del mouse en fullscreen
 	- cambiar 'items' en fullscreen
 

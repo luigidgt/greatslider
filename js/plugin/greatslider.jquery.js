@@ -89,6 +89,8 @@
 
 			preLoad: false,
 
+			autoHeight: false,
+
 			layout: {
 
 				containerItems: '.gs-container-items',
@@ -173,9 +175,8 @@
 		}
 
 		function autoHeight($item){
-			console.log('entre a auto height, index: ' + $item.index());
-
-			if(!actions.fullscreen('check') && (settings.items == 1)) {
+			if(!actions.fullscreen('check') && configsBk.autoHeight && (configsBk.items == 1)) {
+				//console.log('no está en FS, si se activó el autoheight de parametro y los items son 1');
 				let $altoContent = $item.find('.' + sLayout.itemWrapperClass).height(),
 						$altoWrapperSlider = $wrapperItems.height();
 				//if($altoWrapperSlider !== $altoContent) {
@@ -184,7 +185,9 @@
 						$wrapperItems.animate({height: $altoContent + 'px'}, 250);
 					//}
 				//}
-			}	
+			}	else {
+				//console.log('no comple para el autoheight');
+			}
 		}
 
 		// Acciones disponibles
@@ -193,6 +196,15 @@
 			init: function(configs){
 				let _objThis = this;
 				configsBk = configs; // relleno para consumirlo globalmente
+
+				if (!_this.hasClass(attachedClass)) {
+					let onInit = settings.onInit;
+					if (onInit !== undefined) onInit();
+					this.log({
+						type: 'not',
+						text: 'Slider Inicializandoce.'
+					});
+				}
 
 				// verificaciones de sentido comun
 				if (configs.slideBy > configs.items) {
@@ -220,16 +232,6 @@
 				// Solo una vez
 				if (_this.hasClass(attachedClass)) return false;
 				_this.addClass(attachedClass);
-				
-				// ejecutando evento nativo de inicialización
-				let onInit = settings.onInit;
-				if (onInit !== undefined) onInit();
-				//
-
-				this.log({
-					type: 'not',
-					text: 'Slider Inicializandoce.'
-				});
 				
 				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
@@ -324,14 +326,10 @@
 							}
 						}
 
-						// auto height si se cambíó a 'items: 1'
-						if (initItems == 1) {
-							console.log('solo es de 1');
-							setTimeout(()=>{
-								console.log('eltrné al sitemitemout')
-								autoHeight(this.getActive().item);
-							}, 500);
-						}
+						// auto height
+						setTimeout(()=>{
+							autoHeight(this.getActive().item);
+						}, 500);
 
 					}
 				}
@@ -969,7 +967,14 @@
 							$(document).off('keyup', navByArrow);
 							// para dar tiempo al navegador en la transición desde cuando se canceló el Fs y se completó
 							setTimeout(()=>{ //
-								this.loadLazy(this.getActive().item);
+								//this.loadLazy(this.getActive().item);
+								let i = 0;
+								while (i <= nItems) {
+									let theItem = items.eq(i);
+									if(theItem.hasClass(sLayout.itemLoadedClass)) this.loadLazy(theItem);
+									i++;
+								};
+
 							},500);
 							//
 							_this.removeClass(sLayout.fsInClass);

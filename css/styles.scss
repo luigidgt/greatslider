@@ -61,66 +61,14 @@
 	width: 100%;
 	height: 100%;
 
-	.gs-item-slider {
-		position: relative;
-		display:flex;
-		justify-content: center;
-		align-items: center;
-
-		&.gs-item-loading {
-			
-			&:before, &:after {
-				content:"";
-				position: absolute;
-				display:block;
-				transition: all .3s linear;
-			}
-
-			&:before {
-				top:0;
-				left:0;
-				z-index:2;
-				width: 100%;
-				height: 100%;
-				transition: all .3s linear;
-				background-color: #F6F6F6;
-				opacity: .8;
-			}
-
-			&:after {
-				top:50%;
-				left:50%;
-				z-index:2;
-				width: 40px;
-				height: 40px;
-				border-radius: 50%;
-				border:7px solid #f3f3f3;
-				border-top: 7px solid #555;
-				animation: spin .7s linear infinite;
-			}
-
-			@keyframes spin {
-				0% { transform: translate(-50%, -50%) rotate(0deg); }
-				100% { transform: translate(-50%, -50%) rotate(360deg); }
-			}
-		}
-
-		&.gs-item-loaded {
-			&:before, &:after {
-				opacity: 0;
-			}
-		}
-	}
-
 	&.gs-transition-fade {
 		position: relative;
 
 		.gs-item-slider {
 			position: absolute;
-			opacity: 0;
-			z-index:0;
 			top:0;
 			left:0;
+			z-index:0;
 			width: 100%;
 			height: 100%;
 			opacity:0;
@@ -134,10 +82,66 @@
 	}
 
 	&.gs-transition-swipe {
-		//transition: margin .3s;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
+	}
+}
+
+.gs-item-slider {
+	position: relative;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+
+	&.gs-item-loading {
+		
+		&:before, &:after {
+			content:"";
+			position: absolute;
+			display:block;
+			transition: all .3s linear;
+		}
+
+		&:before {
+			top:0;
+			left:0;
+			z-index:2;
+			width: 100%;
+			height: 100%;
+			transition: all .3s linear;
+			background-color: #F6F6F6;
+			opacity: .8;
+		}
+
+		&:after {
+			top:50%;
+			left:50%;
+			z-index:2;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			border:7px solid #f3f3f3;
+			border-top: 7px solid #555;
+			animation: spin .7s linear infinite;
+		}
+
+		@keyframes spin {
+			0% { transform: translate(-50%, -50%) rotate(0deg); }
+			100% { transform: translate(-50%, -50%) rotate(360deg); }
+		}
+	}
+
+	&.gs-item-loaded {
+		&:before, &:after {
+			opacity: 0;
+		}
+	}
+}
+
+.gs-wrapper-content {
+	img, video, iframe {
+		max-width: 100%;
 	}
 }
 

@@ -1,23 +1,43 @@
 
 let $miSlider = $('#example1').greatSlider({
-	type: 'swipe',
-	items: 2,
+	type: 'fade',
+	//items: 2,
 	//slideBy: 2,
-	nav: true,
-	//navSpeed: 2000,
-	//bullets: true,
-	fullscreen: true,
-	preLoad: true,
+	nav: false,
+	bullets: true,
+	//fullscreen: true,
+	//preLoad: true,
+	autoHeight: true,
+	/*
 	breakPoints: {
 
-		1280: {
-			items: 3
+		768: {
+			items: 2,
+			slideBy: 2
 		},
 
-		1440: {
-			items: 1
+		1366: {
+			items: 3,
+			slideBy: 3
+		},
+
+		1600: {
+			items: 4,
+			slideBy: 4
+		},
+
+		1850: {
+			items: 5,
+			slideBy: 1
 		}
 
+	},
+	*/
+	onInit: ()=> {
+		console.log('Iniciando el slider maestro');
+	},
+	onInited: ()=> {
+		console.log('Slider iniciado!');
 	}
 	//log: true,
 	/*
