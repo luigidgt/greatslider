@@ -173,7 +173,9 @@
 		}
 
 		function autoHeight($item){
-			if(!actions.fullscreen('check')) {
+			console.log('entre a auto height, index: ' + $item.index());
+
+			if(!actions.fullscreen('check') && (settings.items == 1)) {
 				let $altoContent = $item.find('.' + sLayout.itemWrapperClass).height(),
 						$altoWrapperSlider = $wrapperItems.height();
 				//if($altoWrapperSlider !== $altoContent) {
@@ -321,6 +323,16 @@
 								this.goTo($activeItem.index() + 1, true);
 							}
 						}
+
+						// auto height si se cambíó a 'items: 1'
+						if (initItems == 1) {
+							console.log('solo es de 1');
+							setTimeout(()=>{
+								console.log('eltrné al sitemitemout')
+								autoHeight(this.getActive().item);
+							}, 500);
+						}
+
 					}
 				}
 

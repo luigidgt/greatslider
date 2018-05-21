@@ -1,13 +1,24 @@
 
 let $miSlider = $('#example1').greatSlider({
 	type: 'swipe',
-	//items: 2,
+	items: 2,
 	//slideBy: 2,
 	nav: true,
 	//navSpeed: 2000,
 	//bullets: true,
 	fullscreen: true,
-	preLoad: true
+	preLoad: true,
+	breakPoints: {
+
+		1280: {
+			items: 3
+		},
+
+		1440: {
+			items: 1
+		}
+
+	}
 	//log: true,
 	/*
 	breakPoints: {
