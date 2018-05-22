@@ -67,7 +67,7 @@
 			type: 'fade', // fade, swipe
 
 			nav: true, // true, false
-			navSpeed: 500, // en milisegundos
+			navSpeed: 300, // en milisegundos
 
 			items: 1,
 			slideBy: 1,
@@ -290,6 +290,7 @@
 						if ($wrapperItems.hasClass('gs-transition-fade')) return false;
 						$wrapperItems.addClass('gs-transition-fade');
 						$firstItem.addClass(iActivePure);
+						items.css('transition', (configs.navSpeed / 1000) + 's linear');
 						if (configs.lazyLoad) this.loadLazy($firstItem);
 					},
 
@@ -298,7 +299,10 @@
 
 						// items
 						let initItems = configs.items;
-						$wrapperItems.css('width', ((nItems * 100) / initItems) + '%');
+						$wrapperItems.css({
+							'width' : ((nItems * 100) / initItems) + '%',
+							'transition': (configs.navSpeed / 1000) + 's linear'
+						})
 						items.css('width', (100 / nItems) + '%');
 
 						// cargando los elementos 'lazy'
@@ -800,43 +804,37 @@
 				};
 
 				// El item a activar
-				let itemActivating = items.eq(itemToActive),
+				let $itemActivating = items.eq(itemToActive),
 						itemActiveClass = sLayout.itemActiveClass;
 				
 				$activeItem.removeClass(itemActiveClass);
-				itemActivating.addClass(itemActiveClass);
+				$itemActivating.addClass(itemActiveClass);
 
-				if (configs.type == 'fade') {
-					let onStep = configs.onStep;
-					if(onStep !== undefined) onStep(itemActivating, itemToActive + 1, $activeItem, $activeItem.index() + 1);
-				}
+				_this.addClass(sLayout.transitionClass);
+				let onStepStart = configs.onStepStart;
+				if(onStepStart !== undefined) onStepStart($activeItem, $activeItem.index() + 1);
 
-				// el tipo de pase
-				if (configs.type == 'swipe') {
+				if(configs.type == 'swipe') {
 					let mLeft = ( (100 / configs.items) * (itemToActive + 1) ) - 100;
-					if (mLeft < 0) mLeft = 0; // si el numero es negativo, significa que yá llegó al último.
-					//_this.find(sLayout.wrapperItems).css('margin-left', '-' +  mLeft + '%');
-					_this.addClass(sLayout.transitionClass);
-
-					let onStepStart = configs.onStepStart;
-					if(onStepStart !== undefined) onStepStart($activeItem, $activeItem.index() + 1);
-
-					$wrapperItems.animate({
-						'margin-left' : '-' +  mLeft + '%'
-					}, configs.navSpeed, () => {
-						_this.removeClass(sLayout.transitionClass);
-						let onStepEnd = configs.onStepEnd;
-						if(onStepEnd !== undefined) {
-							onStepEnd(itemActivating, itemToActive + 1);
-							if(this.fullscreen('check')) this.loadLazy($activeItem, 'normal');
-						}
-					});
+					if (mLeft < 0) mLeft = 0; 
+					$wrapperItems.css('margin-left', '-' +  mLeft + '%')
 				}
+
+				setTimeout(()=>{
+
+					_this.removeClass(sLayout.transitionClass);
+
+					let onStep = configs.onStep;
+					if(onStep !== undefined) onStepEnd($itemActivating, itemToActive + 1);
+
+					if(this.fullscreen('check')) this.loadLazy($activeItem, 'normal');
+
+				}, configs.navSpeed);
 
 				// OnLlega al último XD
 				if(itemToActive == (nItems - 1)) {
 					let lastItem = settings.onLastItem;
-					if (lastItem !== undefined) lastItem(itemActivating, itemToActive);
+					if (lastItem !== undefined) lastItem($itemActivating, itemToActive);
 				};
 
 				// Cargando los elements 'lazy'
