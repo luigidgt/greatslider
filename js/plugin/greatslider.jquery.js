@@ -284,13 +284,19 @@
 						iActivePure = sLayout.itemActiveClass;
 
 				// Los Items
-				let sliderType = {
+				let gsStyles = '',
+						transPrefix = ['-webkit-transition', '-o-transition', 'transition'],
+						sliderType = {
 
 					fade: () => { // desaparecimiento
 						if ($wrapperItems.hasClass('gs-transition-fade')) return false;
 						$wrapperItems.addClass('gs-transition-fade');
 						$firstItem.addClass(iActivePure);
-						items.css('transition', (configs.navSpeed / 1000) + 's linear');
+						let transStyle = '';
+						transPrefix.forEach(thePrefix => {
+							transStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's linear 0s;';
+						});
+						gsStyles = '.' + sLayout.itemClass + '{' + transStyle + '}';
 						if (configs.lazyLoad) this.loadLazy($firstItem);
 					},
 
@@ -299,11 +305,12 @@
 
 						// items
 						let initItems = configs.items;
-						$wrapperItems.css({
-							'width' : ((nItems * 100) / initItems) + '%',
-							'transition': (configs.navSpeed / 1000) + 's linear'
-						})
-						items.css('width', (100 / nItems) + '%');
+						let transStyle = 'width: ' + ((nItems * 100) / initItems) + '%;';
+						transPrefix.forEach(thePrefix => {
+							transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's linear 0s;';
+						});
+						gsStyles += sLayout.wrapperItems + '{' + transStyle + '}';
+						gsStyles += '.' + sLayout.itemClass + '{width: ' + (100 / nItems) + '%}';
 
 						// cargando los elementos 'lazy'
 						if (configs.lazyLoad) {
@@ -334,12 +341,19 @@
 						setTimeout(()=>{
 							autoHeight(this.getActive().item);
 						}, 500);
-
 					}
 				}
 
 				let typeRun = sliderType[configs.type];
-				(typeRun !== undefined) ? typeRun(configs) : this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
+				if (typeRun !== undefined) {
+					typeRun(configs);
+
+					$('body').append('<style id="gs-styles">' + gsStyles + '</style>');
+
+				} else {
+					this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
+				}
+
 			},
 
 			bullets: function(configs, action) {

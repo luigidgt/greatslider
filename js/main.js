@@ -1,16 +1,17 @@
 
 let $miSlider = $('#example1').greatSlider({
-	type: 'fade',
+	type: 'swipe',
 	//items: 2,
 	//slideBy: 2,
 	nav: true,
 	//bullets: true,
-	//fullscreen: true,
+	fullscreen: true,
 	//preLoad: true,
 	autoHeight: true,
-	/*
+	
 	breakPoints: {
 
+		/*
 		768: {
 			items: 2,
 			slideBy: 2
@@ -25,14 +26,16 @@ let $miSlider = $('#example1').greatSlider({
 			items: 4,
 			slideBy: 4
 		},
+		*/
 
-		1850: {
-			items: 5,
-			slideBy: 1
+		1600: {
+			items: 2,
+			slideBy: 2,
+			navSpeed: 600
 		}
 
 	},
-	*/
+	
 	onInit: ()=> {
 		console.log('Iniciando el slider maestro');
 	},
