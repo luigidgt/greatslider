@@ -17,6 +17,10 @@ html(lang="es")
 				max-width: 100%;
 			}
 
+			.gs-wrapper-content img {
+				display :block;
+			}
+
 			/*
 			.gs-wrapper-content img {
 				margin-left:auto;
@@ -72,7 +76,7 @@ html(lang="es")
 			}
 	body
 
-		h2 Slider Swipe
+		//h2 Slider Swipe
 		#example1.gs-container-slider
 
 			.gs-container-items
@@ -81,7 +85,7 @@ html(lang="es")
 						li.gs-item-slider
 							.gs-wrapper-content
 								img(data-lazy="img/naturaleza/720/" + i + ".jpg", data-lazyfs="img/naturaleza/1080/" + i + ".jpg", alt="Text").gs-lazy
-								//img(data-lazy="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy
+								//img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy
 							
 			.gs-container-navs
 				.gs-wrapper-arrows
@@ -92,7 +96,7 @@ html(lang="es")
 
 			button.gs-fs Full Screen
 
-		.botones
+		//.botones
 			button#active el Activo
 			button#go ir al item 5
 			button#prev &#60; Prev
@@ -131,6 +135,9 @@ html(lang="es")
 					button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
 				.gs-wrapper-bullets.gs-style-bullets
 					button.gs-bullet
+
+		//h2 Slider render
+		//#example3
 
 		script(src="js/lib/jquery-3.3.1.min.js")
 		script(src="js/plugin/greatslider.jquery.js")

@@ -128,15 +128,19 @@
 
 		- Auto Play:
 
-			Iniciar: slider.play();
-			Detener: slider.stop();
+			Iniciar: slider.autoplay('play');
+			Detener: slider.autoplay('stop');
 
 
 	- Full Screen:
 
-		- Entrar: slider.fullscreen('in'); 
+		- Entrar: OJO: solo funciona si se es accionado por el usuario, más no directamente.
 
-		- Salir: slider.fullscreen('out');
+			slider.fullscreen('in'); 
+
+		- Salir:
+
+			slider.fullscreen('out');
 
 		- Chekear si se está en FS:
 
@@ -152,14 +156,17 @@
 
 	Cosas por hacer:
 
-	- agregar metodo destroy.
-	- agregar linea de tiempo restante para el pase entre frames abajo
-	- que el auto play pueda desactivarce por breakpoint
+		- agregar metodo destroy.
+		- agregar linea de tiempo restante para el pase entre frames abajo
+		- que el auto play pueda desactivarce por breakpoint
+		- agregar preload
 
 	Cosas en las que estoy trabajando:
+
+		- cambiar 'items' en fullscreen
 	
-	- añadir evento de inicio de pase, y final de pase en fade, y hacer el pase por JS y no por CSS3
-	- anidación de navegación por la ruedita del mouse en fullscreen
-	- cambiar 'items' en fullscreen
+	Cosas posibles a agregar:
+
+		- anidación de navegación por la ruedita del mouse en fullscreen
 
 */

@@ -82,7 +82,7 @@
 			//startPosition: 0, parametro fantasma, solo si es solicitado
 			fullscreen: false,
 
-			lazyLoad: true,
+			lazyLoad: false,
 			lazyClass: 'gs-lazy',
 			lazyAttr: 'data-lazy',
 			lazyAttrFs : 'data-lazyfs',
@@ -176,17 +176,9 @@
 
 		function autoHeight($item){
 			if(!actions.fullscreen('check') && configsBk.autoHeight && (configsBk.items == 1)) {
-				//console.log('no está en FS, si se activó el autoheight de parametro y los items son 1');
 				let $altoContent = $item.find('.' + sLayout.itemWrapperClass).height(),
 						$altoWrapperSlider = $wrapperItems.height();
-				//if($altoWrapperSlider !== $altoContent) {
-					//if ($altoContent > $altoWrapperSlider) {
-						//$wrapperItems.height($altoContent);
-						$wrapperItems.animate({height: $altoContent + 'px'}, 250);
-					//}
-				//}
-			}	else {
-				//console.log('no comple para el autoheight');
+						$wrapperItems.css('height', $altoContent + 'px')
 			}
 		}
 
@@ -194,6 +186,7 @@
 		let actions = {
 
 			init: function(configs){
+				
 				let _objThis = this;
 				configsBk = configs; // relleno para consumirlo globalmente
 
@@ -274,8 +267,9 @@
 
 				// Si se determinó un auto pase del slider
 				if(configs.autoplay) {
-					this.play(configs);
+					this.autoPlay('play', configs);
 				}
+
 			},
 
 			items: function(configs) {
@@ -290,24 +284,30 @@
 
 					fade: () => { // desaparecimiento
 						if ($wrapperItems.hasClass('gs-transition-fade')) return false;
+
 						$wrapperItems.addClass('gs-transition-fade');
 						$firstItem.addClass(iActivePure);
-						let transStyle = '';
+
+						let itemsStyle = '',
+								wrapperStyle = '';
 						transPrefix.forEach(thePrefix => {
-							transStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's linear 0s;';
+							itemsStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's linear 0s;';
+							wrapperStyle += thePrefix + ': height .3s linear 0s;';
 						});
-						gsStyles = '.' + sLayout.itemClass + '{' + transStyle + '}';
+						gsStyles = '.' + sLayout.itemClass + '{' + itemsStyle + '}; ' + sLayout.wrapperItems + '{' + wrapperStyle + '}';
+
 						if (configs.lazyLoad) this.loadLazy($firstItem);
+
 					},
 
 					swipe: () => { // arrastre
 						if (!$wrapperItems.hasClass('gs-transition-swipe')) $wrapperItems.addClass('gs-transition-swipe');
 
 						// items
-						let initItems = configs.items;
-						let transStyle = 'width: ' + ((nItems * 100) / initItems) + '%;';
+						let initItems = configs.items,
+								transStyle = 'width: ' + ((nItems * 100) / initItems) + '%;';
 						transPrefix.forEach(thePrefix => {
-							transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's linear 0s;';
+							transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's linear 0s, height .3s linear 0s;'
 						});
 						gsStyles += sLayout.wrapperItems + '{' + transStyle + '}';
 						gsStyles += '.' + sLayout.itemClass + '{width: ' + (100 / nItems) + '%}';
@@ -319,9 +319,6 @@
 								this.loadLazy($theItems.eq(i));
 								i++;
 							};
-						} else {
-							// setear el alto del UL
-							//$wrapperItems.height($item.find('.' + sLayout.itemWrapperClass).height());// SEGUIR TRABAJANDO EN ESTA PARTE.
 						}
 
 						// busca si ya se tiene activo un item
@@ -338,22 +335,22 @@
 						}
 
 						// auto height
-						setTimeout(()=>{
-							autoHeight(this.getActive().item);
-						}, 500);
+						if (!configs.lazyLoad) {
+							setTimeout(()=>{
+								autoHeight(this.getActive().item);
+							}, 500);
+						}
+
 					}
 				}
 
 				let typeRun = sliderType[configs.type];
 				if (typeRun !== undefined) {
 					typeRun(configs);
-
 					$('body').append('<style id="gs-styles">' + gsStyles + '</style>');
-
 				} else {
 					this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
 				}
-
 			},
 
 			bullets: function(configs, action) {
@@ -475,9 +472,6 @@
 					autoHeight($item);
 					return false;
 				}
-
-				// alto temporal
-				//autoHeight($item);
 
 				let $itemIndex = $item.index(),
 						onLoadingItem = settings.onLoadingItem,
@@ -805,15 +799,12 @@
 				if($iframes.length) {
 					$iframes.each(function(){
 						let $iframeSrc = $(this).attr('src');
-
 						if($iframeSrc.indexOf('youtu') !== -1) {
 							$(this).get(0).contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
-
 						} else if ($iframeSrc.indexOf('vimeo') !== -1) {
 							let player = new Vimeo.Player($(this));
 							player.pause();
 						}
-
 					});
 				};
 
@@ -834,15 +825,15 @@
 					$wrapperItems.css('margin-left', '-' +  mLeft + '%')
 				}
 
-				setTimeout(()=>{
-
+				setTimeout( () => {
 					_this.removeClass(sLayout.transitionClass);
-
 					let onStep = configs.onStep;
 					if(onStep !== undefined) onStepEnd($itemActivating, itemToActive + 1);
-
-					if(this.fullscreen('check')) this.loadLazy($activeItem, 'normal');
-
+					if(this.fullscreen('check')) {
+						if (configs.lazyLoad) this.loadLazy($activeItem, 'normal'); // para cargar la versión FS
+					} else {
+						if (!configs.lazyLoad) autoHeight($itemActivating)
+					}
 				}, configs.navSpeed);
 
 				// OnLlega al último XD
@@ -865,21 +856,21 @@
 				this.bullets(configs, 'active');
 			},
 
-			play: function(configs) {
+			autoPlay: function(action, configs) {
 				if (configs == undefined) configs = configsBk;
-				if (typeof greatSliderInterval == 'undefined' || typeof greatSliderInterval == 'number') {
-					greatSliderInterval = setInterval(()=>{
-						this.goTo('next');
-					}, configs.autoplaySpeed);
+				if(action == 'play') {
+					if (typeof greatSliderInterval == 'undefined' || typeof greatSliderInterval == 'number') {
+						greatSliderInterval = setInterval(()=>{
+							this.goTo('next');
+						}, configs.autoplaySpeed);
+					}
+					let playAP = configs.onPlay;
+					if (playAP !== undefined) playAP();
+				} else if (action == 'stop'){
+					clearInterval(greatSliderInterval);
+					let stopAP = configs.onStop;
+					if (stopAP !== undefined) stopAP();
 				}
-				let playAP = configsBk.onPlay;
-				if (playAP !== undefined) playAP();
-			},
-
-			stop: () => {
-				clearInterval(greatSliderInterval);
-				let stopAP = configsBk.onStop;
-				if (stopAP !== undefined) stopAP();
 			},
 
 			fullscreen: function(configs) {
@@ -979,15 +970,18 @@
 							$(document).off('keyup', navByArrow);
 							// para dar tiempo al navegador en la transición desde cuando se canceló el Fs y se completó
 							setTimeout(()=>{ //
-								//this.loadLazy(this.getActive().item);
-								let i = 0;
-								while (i <= nItems) {
-									let theItem = items.eq(i);
-									if(theItem.hasClass(sLayout.itemLoadedClass)) this.loadLazy(theItem);
-									i++;
-								};
 
-							},500);
+								if (configs.lazyLoad && configs.items == 1) {
+									let i = 0;
+									while (i <= nItems) {
+										let theItem = items.eq(i);
+										if(theItem.hasClass(sLayout.itemLoadedClass)) this.loadLazy(theItem);
+										i++;
+									};
+								}
+								if (!configs.lazyLoad) autoHeight(this.getActive().item);
+
+							}, 700);
 							//
 							_this.removeClass(sLayout.fsInClass);
 							$fsElement.removeClass(sLayout.fsInClass);
