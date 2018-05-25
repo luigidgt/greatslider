@@ -74,101 +74,122 @@
       	text-align:center;
       	margin-top:20px;
       }
+      
+      /* Estilos para los testimonios */
+      #testimonios {
+      	width: 100%;
+      	max-width: 700px;
+      	padding: 20px;
+      	margin-right: auto;
+      	margin-left: auto;
+      }
+      
+      .testimonio {
+      	padding:0 40px;
+      	position: relative;
+      }
+      
+      .testimonio:before, .testimonio:after {
+      	content: "";
+      	width: 22px;
+      	height: 22px;
+      	background-image:url('../img/comilla.png');
+      	background-repeat: no-repeat;
+      	position: absolute;
+      }
+      
+      .testimonio:before {
+      	top:0;
+      	left:0;
+      }
+      
+      .testimonio:after {
+      	bottom:22px;
+      	right: 0;
+      	transform: rotate(-180deg)
+      }
+      
+      .testimonio p {
+      	text-align: justify;
+      	line-height: 1.5;
+      	font-family: "calibri";
+      	font-size: 15px;
+      	margin-top: 0;
+      	margin-bottom: 10px;
+      }
+      
+      .testimonio p:last-child {
+      	margin-bottom: 0;
+      }
+      
+      .autor {
+      	margin-top: 15px;
+      	display: block;
+      	text-align: left;
+      	font-weight: bold;
+      	color: #DFAA57;
+      }
     </style>
   </head>
   <body>
-    <!--h2 Slider Swipe-->
-    <div class="gs-container-slider" id="example1">
-      <div class="gs-container-items">
-        <ul class="gs-wrapper-items">
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/1.jpg" data-lazyfs="img/naturaleza/1080/1.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/2.jpg" data-lazyfs="img/naturaleza/1080/2.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/3.jpg" data-lazyfs="img/naturaleza/1080/3.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/4.jpg" data-lazyfs="img/naturaleza/1080/4.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/5.jpg" data-lazyfs="img/naturaleza/1080/5.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/6.jpg" data-lazyfs="img/naturaleza/1080/6.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/7.jpg" data-lazyfs="img/naturaleza/1080/7.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/8.jpg" data-lazyfs="img/naturaleza/1080/8.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/9.jpg" data-lazyfs="img/naturaleza/1080/9.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/10.jpg" data-lazyfs="img/naturaleza/1080/10.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/11.jpg" data-lazyfs="img/naturaleza/1080/11.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/12.jpg" data-lazyfs="img/naturaleza/1080/12.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/13.jpg" data-lazyfs="img/naturaleza/1080/13.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/14.jpg" data-lazyfs="img/naturaleza/1080/14.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-          <li class="gs-item-slider">
-            <div class="gs-wrapper-content"><img class="gs-lazy" data-lazy="img/naturaleza/720/15.jpg" data-lazyfs="img/naturaleza/1080/15.jpg" alt="Text">
-              <!--img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy-->
-            </div>
-          </li>
-        </ul>
+    <h2>Slider Testimonials</h2>
+    <div class="gs-container-slider" id="testimonios">
+      <div class="testimonio">
+        <div class="parrafos">
+          <p>muy agradecidos con Ruddy y Andrés por toda la ayuda que nos dieron para la compra de una propiedad en Miami. Nos guiaron y apoyaron en el proceso de negociación de principio a fin, al tiempo que fueron muy pacientes y estuvieron siempre disponibles a contestar nuestras dudas. Lograron darnos confianza y hacer todo el proceso más simple. Son personas extremadamente profesionales, con excelente conocimiento del mercado local y con una red de contactos que hacen que el proceso de compra sea más ágil y eficiente. Por último, solo podemos decir que son personas con una gran calidad humana y por lo tanto los recomendamos para cualquier persona interesada en adquirir una propiedad en la Florida.</p>
+        </div><span class="autor">AHNY</span>
       </div>
-      <div class="gs-container-navs">
-        <div class="gs-wrapper-arrows">
-          <button class="gs-arrow-nav gs-prev-arrow gs-style-prev">Prev</button>
-          <button class="gs-arrow-nav gs-next-arrow gs-style-next">Next</button>
-        </div>
-        <div class="gs-wrapper-bullets gs-style-bullets">
-          <button class="gs-bullet"></button>
-        </div>
+      <div class="testimonio">
+        <div class="parrafos">
+          <p>Ruddy y Andrés hicieron un excelente trabajo. Siempre muy atentos y dispuestos en atender todas nuestras peticiones y requerimientos antes y después de haber comprado el apartamento. Nos ayudaron a negociar un mejor precio. Sin duda alguna los volvería a contactar para comprar cualquier otra propiedad.</p>
+        </div><span class="autor">RFDAYANA</span>
       </div>
-      <button class="gs-fs">Full Screen</button>
+      <div class="testimonio">
+        <div class="parrafos">
+          <p>Ruddy y Andrés son el tipo de agentes de bienes raíces que realmente te escuchan, entienden fácilmente lo que necesitas, son agente de bienes raíces a tiempo completo, siempre dispuestos a ayudar, con un verdadero compromiso de hacer una transacción sin problemas para todas las partes, ellos tienen las habilidades de negociación necesarias para representarme como un cliente feliz, ellos siempre contestan el teléfono y solucionan cualquier problema, yo le recomiendo altamente a Ruddy y Andrés a cualquier persona que necesita un agente de bienes raíces.</p>
+        </div><span class="autor">RFDAYANA</span>
+      </div>
+      <div class="testimonio">
+        <div class="parrafos">
+          <p>Trabajar con Ruddy Arévalo ha sido increíble; ella es muy honesta, ingeniosa y creativa, súper rápido para responder a mis preguntas, ella y el hacen un trabajo excepcional, realmente siento que Ruddy es un gran agente y yo la recomiendo para cualquier persona que lo necesite.</p>
+        </div><span class="autor">XPOSEFASHION1</span>
+      </div>
+      <div class="testimonio">
+        <div class="parrafos">
+          <p>Mi esposo y yo nos encontramos en una propiedad de Ruddy y nos conectamos de inmediato ella era amable y escucharon todas mis preocupaciones. Ella era súper profesional y nos ayudo mucho sobre la zona que estábamos buscando! Ella fue muy agradable durante todo nuestro tiempo. Realmente la recomiendo a cualquiera que esté buscando un agente de bienes raíces.</p>
+        </div><span class="autor">VENZA1970</span>
+      </div>
+      <div class="testimonio">
+        <div class="parrafos">
+          <p>En mi experiencia personal trabajar con Andrés Campos fue de vital importancia el asesoramiento y la educación que me brindo al explicarme como funciona el mercado de renta de Bienes Raíces en Miami, el área que mejor me convenía de acuerdo a lo que yo estaba buscando, darme la información para comprobar los datos y las ganancias de acuerdo al valor de mi inversión y el comparable de mercado, tuve un apoyo 100% efectivo en cuanto a videos de las propiedades y datos de comparación de mercado, la negociación fue clave en mi transacción, realmente muy complacido y definitivamente volvería a buscar de su asesoría en una futura compra o venta de Bienes Raíces.</p>
+        </div><span class="autor">CIFU-RICAR</span>
+      </div>
+      <div class="testimonio">
+        <div class="parrafos">
+          <p>Ruddy y Andrés tuvieron una atención personalizada y siempre han estado a nuestra disposición. Nos han ayudado mucho también con la logística, bancos, etc. y con todo el proceso de la compra.</p>
+        </div><span class="autor">POMA-EUG</span>
+      </div>
     </div>
+    <!--h2 Slider Swipe-->
+    <!--#example1.gs-container-slider
+    .gs-container-items
+    	ul.gs-wrapper-items
+    		- for (var i = 1; i <= 15; i++)
+    			li.gs-item-slider
+    				.gs-wrapper-content
+    					img(data-lazy="img/naturaleza/720/" + i + ".jpg", data-lazyfs="img/naturaleza/1080/" + i + ".jpg", alt="Text").gs-lazy
+    					//img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy
+    				
+    .gs-container-navs
+    	.gs-wrapper-arrows
+    		button.gs-arrow-nav.gs-prev-arrow.gs-style-prev Prev
+    		button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
+    	.gs-wrapper-bullets.gs-style-bullets
+    		button.gs-bullet
+    
+    button.gs-fs Full Screen
+    
+    -->
     <!--.botones
     button#active el Activo
     button#go ir al item 5
@@ -211,8 +232,6 @@
     		button.gs-bullet
     
     -->
-    <!--h2 Slider render-->
-    <!--#example3-->
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/plugin/greatslider.jquery.js"></script>
     <script src="js/main.js"></script>
