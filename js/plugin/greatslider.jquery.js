@@ -93,39 +93,49 @@
 
 			layout: {
 
-				containerItems: '.gs-container-items',
-				wrapperItems: '.gs-wrapper-items',
+				containerItemsTag: 'div',
+				containerItemsClass: 'gs-container-items',
+				wrapperItemsTag: 'ul',
+				wrapperItemsClass: 'gs-wrapper-items',
+				wrapperMouseEnterClass: 'gs-mouse-enter',
+				wrapperMouseDownClass: 'gs-mouse-down',
 				transitionClass: 'gs-in-transition',
 
+				itemTag: 'li',
 				itemClass: 'gs-item-slider',
+				itemWrapperTag: 'div',
 				itemWrapperClass: 'gs-wrapper-content',
 				itemActiveClass: 'gs-item-active',
 				itemLoadingClass: 'gs-item-loading',
 				itemLoadedClass: 'gs-item-loaded',
 
-				containerNavs: '.gs-container-navs',
+				containerNavsTag: 'div',
+				containerNavsClass: 'gs-container-navs',
 
 				wrapperArrows: '.gs-wrapper-arrows',
 				arrowPrev: '.gs-prev-arrow',
 				arrowNext: '.gs-next-arrow',
 
-				wrapperBullets: '.gs-wrapper-bullets',
+				wrapperBulletsTag: 'div',
+				wrapperBulletsClass: 'gs-wrapper-bullets',
+				bulletTag: 'button',
 				bulletClass: 'gs-bullet',
 				bulletActiveClass: 'gs-bullet-active',
+				bulletDefaultStyles: true,
 
 				fsButton: '.gs-fs',
 				fsInClass: 'gs-infs',
 				fsOutClass: 'gs-outfs',
 
 				noneClass: 'gs-none',
-				attachedClass: 'gs-attached'
-
+				attachedClass: 'gs-attached',
+				builtClass: 'gs-builded'
 			}
 		};
-		if (options !== undefined) $.extend(settings, options);
+		if (options !== undefined) $.extend(true, settings, options);
 		if (settings.type == 'fade') delete settings['breakPoints']; // si el slider es fade no debe a ver breakpoints
 
-		let settingsBk = $.extend({}, settings);
+		let settingsBk = $.extend(true, {}, settings);
 		delete settingsBk['breakPoints'];
 		delete settingsBk['layout'];
 
@@ -133,16 +143,14 @@
 		let breakPoint = 0,
 				greatSliderInterval,
 				greatSliderBreakPoint,
+				$wrapperItems,
+				items,
+				nItems,
 				sLayout = settings.layout,
-				$wrapperItems = _this.find(sLayout.wrapperItems),
-				items = _this.find('.' + sLayout.itemClass),
-				nItems = items.length,
 				attachedClass = sLayout.attachedClass,
 				displayNodeClass = sLayout.noneClass,
 				log = [],
 				configsBk;
-
-		if (!nItems) return console.error('* Great Slider [Logger] : No existen items para crear el slider :V');
 
 		// Funciones útiles
 		let checkVideoTimes = 0;
@@ -190,7 +198,8 @@
 				let _objThis = this;
 				configsBk = configs; // relleno para consumirlo globalmente
 
-				if (!_this.hasClass(attachedClass)) {
+				// Si aun no se construye el slider
+				if (!_this.hasClass(sLayout.builtClass)) {
 					let onInit = settings.onInit;
 					if (onInit !== undefined) onInit();
 					this.log({
@@ -223,8 +232,8 @@
 				this.fullscreen(configs);
 
 				// Solo una vez
-				if (_this.hasClass(attachedClass)) return false;
-				_this.addClass(attachedClass);
+				if (_this.hasClass(sLayout.builtClass)) return false;
+				_this.addClass(sLayout.builtClass);
 				
 				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
@@ -269,10 +278,28 @@
 				if(configs.autoplay) {
 					this.autoPlay('play', configs);
 				}
-
 			},
 
 			items: function(configs) {
+
+				// Construcción del slider
+				if (!_this.hasClass(sLayout.builtClass)) {
+
+					let $existingItems = _this.find('> *');
+					if(!$existingItems.length) return this.log({type: 'err', text: 'No existen items para crear el slider :V', required: true});
+
+					let lis = '';
+					$existingItems.each(function(i, e){
+						lis += '<' + sLayout.itemTag + ' class="' + sLayout.itemClass + '"><' + sLayout.itemWrapperTag + ' class="' + sLayout.itemWrapperClass + '">' + $(this).get(0).outerHTML + '</' + sLayout.itemWrapperTag + '></' + sLayout.itemTag + '>';
+					});
+
+					_this.html('<' + sLayout.containerItemsTag + ' class="' + sLayout.containerItemsClass + '"><' + sLayout.wrapperItemsTag + ' class="' + sLayout.wrapperItemsClass + '">' + lis + '</' + sLayout.wrapperItemsTag + '></' + sLayout.containerItemsTag + '>');
+
+					$wrapperItems = _this.find('.' + sLayout.wrapperItemsClass);
+					items = _this.find('.' + sLayout.itemClass);
+					nItems = items.length;
+				}
+
 				let $theItems = $wrapperItems.find('.' + sLayout.itemClass),
 						$firstItem = $theItems.eq(0),
 						iActivePure = sLayout.itemActiveClass;
@@ -294,7 +321,7 @@
 							itemsStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's linear 0s;';
 							wrapperStyle += thePrefix + ': height .3s linear 0s;';
 						});
-						gsStyles = '.' + sLayout.itemClass + '{' + itemsStyle + '}; ' + sLayout.wrapperItems + '{' + wrapperStyle + '}';
+						gsStyles = '.' + sLayout.itemClass + '{' + itemsStyle + '}; ' + ' .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
 
 						if (configs.lazyLoad) this.loadLazy($firstItem);
 
@@ -309,7 +336,7 @@
 						transPrefix.forEach(thePrefix => {
 							transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's linear 0s, height .3s linear 0s;'
 						});
-						gsStyles += sLayout.wrapperItems + '{' + transStyle + '}';
+						gsStyles += '.' + sLayout.wrapperItemsClass + '{' + transStyle + '}';
 						gsStyles += '.' + sLayout.itemClass + '{width: ' + (100 / nItems) + '%}';
 
 						// cargando los elementos 'lazy'
@@ -347,7 +374,61 @@
 				let typeRun = sliderType[configs.type];
 				if (typeRun !== undefined) {
 					typeRun(configs);
+
+					/*
+					// Anidando la navegación por mouse
+					let $containerItems = _this.find('.' + sLayout.containerItemsClass);
+					if (!$containerItems.hasClass(attachedClass)) {
+						let gsMouseX = null;
+						$containerItems.on({
+
+							mousedown: function(e) {
+								//console.log('mouse down');
+								$(this).addClass(sLayout.wrapperMouseDownClass);
+								gsMouseX = e.clientX;
+							},
+
+							mousemove: function(e){
+								//msg += e.pageX + ", " + e.pageY;
+								let _theElement = $(this);
+								if(_theElement.hasClass(sLayout.wrapperMouseDownClass)) {
+									let marginLeft = Number(_theElement.css('margin-left').replace('-', '').replace('px', '').replace('%', '')); // CONTINUAR TRABAJANDO EN ESTO.
+									if (e.pageX > gsMouseX) { // vas a la derecha
+										console.log('derecha');
+										gsMouseX = e.pageX;
+									} else { // izquierda
+										console.log('izquierda');
+										gsMouseX = e.pageX;
+									}
+								}
+							},
+
+							mouseup: function(e){
+								//console.log('mouse up')
+								$(this).removeClass(sLayout.wrapperMouseDownClass);
+								gsMouseX = null;
+							},
+
+							mouseenter: function(e){
+								//console.log('mouse enter');
+								$(this).addClass(sLayout.wrapperMouseEnterClass);
+							},
+
+							mouseleave: function(e){
+								//console.log('mouse leave');
+								$(this).removeClass(sLayout.wrapperMouseEnterClass);
+								if($(this).hasClass(sLayout.wrapperMouseDownClass)) $(this).removeClass(sLayout.wrapperMouseDownClass);
+							}
+
+						}).addClass(attachedClass);
+					}
+					*/
+
+					// Indicando su construcción total
+					if (_this.hasClass(sLayout.builtClass)) return false;
 					$('body').append('<style id="gs-styles">' + gsStyles + '</style>');
+					_this.addClass(sLayout.builtClass);
+
 				} else {
 					this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
 				}
@@ -356,7 +437,17 @@
 			bullets: function(configs, action) {
 				let _objThis = this;
 
-				let $wrapperBullets = _this.find(sLayout.wrapperBullets)
+				// creando el warpper de navs
+				if(!_this.find('.' + sLayout.containerNavsClass).length) _this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>')
+
+				// creando el wrapper de bullets
+				let $wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+				if(!$wrapperBullets.length) {
+
+					_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
+					$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass)
+				}
+
 				if (!configs.bullets) {
 					if (!$wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.addClass(displayNodeClass);
 					return false;	
@@ -370,32 +461,29 @@
 
 					constructor: function(){
 						// calculando de acuerdo a los items a mostrar.
-						let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass).eq(0),
-								bulletTag = $theBullets.prop('tagName').toLowerCase(),
+						let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass),
 								bulletsHtml = '';
 
-
 						let maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
-						//maxBullets = ((nItems - configs.items) / configs.slideBy) + 1;
 						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
 
+						// activando el item correspondiente si los bullets existentes son iguales a los que crearemos
 						if ($theBullets.length == maxBullets) {
-							// activando el item correspondiente
 							this.active();
 							return false;
 						}
 
 						// Creo los bullets que faltan
 						let i = 0,
-								itemToActive = this.active(true);
-
+								itemToActive = this.active(true),
+								bulletTag = sLayout.bulletTag;
 						while(i < maxBullets){
 							let bulletClassActive = (i !== itemToActive) ? '' : ' ' + classBulletActive;
 							bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bulletClass + bulletClassActive + '"></' + bulletTag + '>';
 							i++;
 						}
-
 						$wrapperBullets.html(bulletsHtml);
+
 					},
 
 					active: getIndex => {

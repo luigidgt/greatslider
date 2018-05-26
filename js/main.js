@@ -43,7 +43,10 @@
 // Slider de testimonios
 $('#testimonios').greatSlider({
 	type: 'swipe',
-	//autoHeight: true;
 	nav: false,
-	bullets: true
+	bullets: true,
+	autoHeight: true,
+	layout: {
+		bulletDefaultStyles: false
+	}
 });
