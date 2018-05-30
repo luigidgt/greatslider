@@ -76,7 +76,7 @@ html(lang="es")
 			}
 
 			/* Estilos para los testimonios */
-			#testimonios {
+			.lostestimonios {
 				width: 100%;
 				max-width: 700px;
 				padding: 20px;
@@ -84,21 +84,21 @@ html(lang="es")
 				margin-left: auto;
 			}
 
-			#testimonios .gs-container-navs {
+			.lostestimonios .gs-container-navs {
 				margin-top: 10px;
 			}
 
-			#testimonios .gs-container-items {
+			.lostestimonios .gs-container-items {
 				background-color: #fff;
 			}
 
-			#testimonios .gs-wrapper-bullets {
+			.lostestimonios .gs-wrapper-bullets {
 				display:flex;
 				justify-content: center;
 				align-items: center;
 			}
 
-			#testimonios .gs-wrapper-bullets .gs-bullet {
+			.lostestimonios .gs-wrapper-bullets .gs-bullet {
 				width: 15px;
 				height: 15px;
 				background-color: #c0c0c0;
@@ -106,15 +106,15 @@ html(lang="es")
 				margin-right: 7px;
 			}
 
-			#testimonios .gs-wrapper-bullets .gs-bullet:hover {
+			.lostestimonios .gs-wrapper-bullets .gs-bullet:hover {
 				cursor: pointer;
 			}
 
-			#testimonios .gs-wrapper-bullets .gs-bullet.gs-bullet-active {
+			.lostestimonios .gs-wrapper-bullets .gs-bullet.gs-bullet-active {
 				background-color: #DFAA57;
 			}
 
-			#testimonios .gs-wrapper-bullets .gs-bullet:last-child {
+			.lostestimonios .gs-wrapper-bullets .gs-bullet:last-child {
 				margin-right: 0;
 			}
 
@@ -163,10 +163,22 @@ html(lang="es")
 				font-weight: bold;
 				color: #DFAA57;
 			}
+
+			/* Slider de fotos */
+			#fotos {	
+				width: 720px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.img-slider {
+				width: 100%;
+			}
+
 	body
 
-		h2 Slider Testimonials
-		#testimonios.gs-container-slider
+		h2 Slider de testimonios
+		.lostestimonios.gs-container-slider
 
 			.testimonio
 				.parrafos
@@ -205,6 +217,13 @@ html(lang="es")
 
 
 
+		h2 Slider de Fotos
+		#fotos.gs-container-slider
+			img(src="img/naturaleza/720/1.jpg").img-slider
+			img(src="img/naturaleza/720/2.jpg").img-slider
+			img(src="img/naturaleza/720/3.jpg").img-slider
+			img(src="img/naturaleza/720/4.jpg").img-slider
+			img(src="img/naturaleza/720/5.jpg").img-slider
 
 		//h2 Slider Swipe
 		//#example1.gs-container-slider

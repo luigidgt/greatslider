@@ -41,7 +41,7 @@
 */
 
 // Slider de testimonios
-$('#testimonios').greatSlider({
+$('.lostestimonios').greatSlider({
 	type: 'swipe',
 	nav: false,
 	bullets: true,
@@ -49,4 +49,13 @@ $('#testimonios').greatSlider({
 	layout: {
 		bulletDefaultStyles: false
 	}
+});
+
+// Slider de fotos
+
+$('#fotos').greatSlider({
+	type: 'swipe',
+	nav: true,
+	bullets: false,
+	fullscreen: true
 });

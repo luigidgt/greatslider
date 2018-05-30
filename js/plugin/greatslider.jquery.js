@@ -112,9 +112,12 @@
 				containerNavsTag: 'div',
 				containerNavsClass: 'gs-container-navs',
 
-				wrapperArrows: '.gs-wrapper-arrows',
-				arrowPrev: '.gs-prev-arrow',
-				arrowNext: '.gs-next-arrow',
+				wrapperArrowsClass: 'gs-wrapper-arrows',
+				wrapperArrowsTag: 'div',
+				arrowsTag: 'button',
+				arrowPrevClass: 'gs-prev-arrow',
+				arrowNextClass: 'gs-next-arrow',
+				arrowDefaultStyles: true,
 
 				wrapperBulletsTag: 'div',
 				wrapperBulletsClass: 'gs-wrapper-bullets',
@@ -124,6 +127,7 @@
 				bulletDefaultStyles: true,
 
 				fsButton: '.gs-fs',
+				fsButtonTag: 'button',
 				fsInClass: 'gs-infs',
 				fsOutClass: 'gs-outfs',
 
@@ -150,6 +154,7 @@
 				attachedClass = sLayout.attachedClass,
 				displayNodeClass = sLayout.noneClass,
 				log = [],
+				$idThis,
 				configsBk;
 
 		// Funciones útiles
@@ -190,6 +195,13 @@
 			}
 		}
 
+		function makeid() {
+			let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+					text = "";
+			for (var i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+			return text.toLowerCase();
+		}
+
 		// Acciones disponibles
 		let actions = {
 
@@ -200,12 +212,21 @@
 
 				// Si aun no se construye el slider
 				if (!_this.hasClass(sLayout.builtClass)) {
+
+					// Evento de inicialización
 					let onInit = settings.onInit;
 					if (onInit !== undefined) onInit();
 					this.log({
 						type: 'not',
 						text: 'Slider Inicializandoce.'
 					});
+
+					// Asignandole un ID si no lo tiene
+					$idThis = _this.attr('id');
+					if($idThis == undefined) {
+						$idThis = 'gs-slider-' + makeid();
+						_this.attr('id', $idThis);
+					}
 				}
 
 				// verificaciones de sentido comun
@@ -218,6 +239,7 @@
 					return false;
 				}
 				//
+
 
 				// Constructor de los Items
 				this.items(configs);
@@ -234,7 +256,8 @@
 				// Solo una vez
 				if (_this.hasClass(sLayout.builtClass)) return false;
 				_this.addClass(sLayout.builtClass);
-				
+
+				// Break Points
 				let theBreakPoints = configs.breakPoints;
 				if(theBreakPoints !== undefined) {
 					_objThis.breakPoints(theBreakPoints, window.innerWidth)
@@ -321,7 +344,7 @@
 							itemsStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's linear 0s;';
 							wrapperStyle += thePrefix + ': height .3s linear 0s;';
 						});
-						gsStyles = '.' + sLayout.itemClass + '{' + itemsStyle + '}; ' + ' .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
+						gsStyles = '#' + $idThis + '.' + sLayout.itemClass + '{' + itemsStyle + '}; ' + '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
 
 						if (configs.lazyLoad) this.loadLazy($firstItem);
 
@@ -336,8 +359,8 @@
 						transPrefix.forEach(thePrefix => {
 							transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's linear 0s, height .3s linear 0s;'
 						});
-						gsStyles += '.' + sLayout.wrapperItemsClass + '{' + transStyle + '}';
-						gsStyles += '.' + sLayout.itemClass + '{width: ' + (100 / nItems) + '%}';
+						gsStyles += '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + transStyle + '}';
+						gsStyles += '#' + $idThis + ' .' + sLayout.itemClass + '{width: ' + (100 / nItems) + '%}';
 
 						// cargando los elementos 'lazy'
 						if (configs.lazyLoad) {
@@ -392,12 +415,15 @@
 								//msg += e.pageX + ", " + e.pageY;
 								let _theElement = $(this);
 								if(_theElement.hasClass(sLayout.wrapperMouseDownClass)) {
-									let marginLeft = Number(_theElement.css('margin-left').replace('-', '').replace('px', '').replace('%', '')); // CONTINUAR TRABAJANDO EN ESTO.
+									let marginLeft = Number(_this.find('.' + sLayout.wrapperItemsClass).css('margin-left').replace('-', '').replace('px', '').replace('%', '')); // CONTINUAR TRABAJANDO EN ESTO.
 									if (e.pageX > gsMouseX) { // vas a la derecha
-										console.log('derecha');
+										//console.clear();
+										console.log('derecha', (gsMouseX - e.pageX));
+										//_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', marginLeft + (gsMouseX - e.pageX));
 										gsMouseX = e.pageX;
 									} else { // izquierda
-										console.log('izquierda');
+										//console.clear();
+										console.log('izquierda', (gsMouseX - e.pageX), marginLeft);
 										gsMouseX = e.pageX;
 									}
 								}
@@ -410,12 +436,10 @@
 							},
 
 							mouseenter: function(e){
-								//console.log('mouse enter');
 								$(this).addClass(sLayout.wrapperMouseEnterClass);
 							},
 
 							mouseleave: function(e){
-								//console.log('mouse leave');
 								$(this).removeClass(sLayout.wrapperMouseEnterClass);
 								if($(this).hasClass(sLayout.wrapperMouseDownClass)) $(this).removeClass(sLayout.wrapperMouseDownClass);
 							}
@@ -424,10 +448,10 @@
 					}
 					*/
 
-					// Indicando su construcción total
-					if (_this.hasClass(sLayout.builtClass)) return false;
-					$('body').append('<style id="gs-styles">' + gsStyles + '</style>');
-					_this.addClass(sLayout.builtClass);
+					// Verificando su estilaje
+					let theIdSlider = 'gs-styles-' + $idThis.replace('gs-slider-', ''),
+							$stylesSlider = $('#' + theIdSlider);
+					($stylesSlider.length) ? $stylesSlider.html(gsStyles) : $('body').append('<style id="' + theIdSlider + '">' + gsStyles + '</style>');
 
 				} else {
 					this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
@@ -530,23 +554,39 @@
 				let _objThis = this;
 
 				// verificación
-				let $wrapperArrows = _this.find(sLayout.wrapperArrows);
+				let $wrapperArrows = _this.find('.' + sLayout.wrapperArrowsClass);
 				if (!configsBk.nav) {
-					if (!$wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.addClass(displayNodeClass);
+					if($wrapperArrows.length) {
+						if (!$wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.addClass(displayNodeClass);
+					}
 				} else {
-					if ($wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.removeClass(displayNodeClass);
+					if(!$wrapperArrows.length) { // hay q crearlas
+						let elementContainerNavs = '.' + sLayout.containerNavsClass,
+								$containerNavs = _this.find(elementContainerNavs),
+								defaultStylesArrow = (sLayout.arrowDefaultStyles) ? ' gs-style-arrow' : '',
+								arrowsHtml = '<' + sLayout.wrapperArrowsTag + ' class="' +  sLayout.wrapperArrowsClass + defaultStylesArrow + '"><' + sLayout.arrowsTag + ' class="' + sLayout.arrowPrevClass + '"><' + sLayout.arrowsTag + ' class="' + sLayout.arrowNextClass + '"></' + sLayout.wrapperArrowsTag + '>';
+						if($containerNavs.length) {
+							_this.find(elementContainerNavs).append(arrowsHtml)
+						} else {
+							_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '>' + arrowsHtml + '</' + sLayout.containerNavsTag + '>');
+						}
+
+						$wrapperArrows = _this.find('.' + sLayout.wrapperArrowsClass); // selección rectificada por creación
+					} else {
+						if ($wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.removeClass(displayNodeClass);
+					}
 				}
 
 				if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
 				$wrapperArrows.addClass(attachedClass);
 
 				// haciendo click PREV
-				_this.find(sLayout.arrowPrev).on('click', function(){
+				_this.find('.' + sLayout.arrowPrevClass).on('click', function(){
 					_objThis.goTo('prev', configsBk);
 				});
 
 				// haciendo click NEXT
-				_this.find(sLayout.arrowNext).on('click', function(){
+				_this.find('.' + sLayout.arrowNextClass).on('click', function(){
 					_objThis.goTo('next', configsBk);
 				});
 			},
@@ -741,7 +781,7 @@
 							}
 						},
 
-						script: function(theSrc, done){
+						script: function(theSrc, done, id){
 							let r = false,
 									s = document.createElement('script');
 									s.type = 'text/javascript';
@@ -1001,7 +1041,15 @@
 				// no es invocación del metodo con orden, es el flujo normal
 				if (configs.fullscreen) {
 					if (!fullScreenApi.supportsFullScreen) return this.log({type: 'war', text: 'El dispositivo actual no soporta Full Screen.', required: true});
-					if ($fsElement.hasClass(displayNodeClass)) $fsElement.removeClass(displayNodeClass)
+
+					// construcción del boton
+					if(!$fsElement.length) {
+						_this.append('<' + sLayout.fsButtonTag + ' ' + ((sLayout.fsButton.indexOf('#') !== -1) ? 'id' : 'class') + '="' + sLayout.fsButton.substr(1) + '"></' + sLayout.fsButtonTag + '>');
+						$fsElement = _this.find(sLayout.fsButton);
+					} else {
+						if ($fsElement.hasClass(displayNodeClass)) $fsElement.removeClass(displayNodeClass)
+					}
+					
 				} else {
 					if (!$fsElement.hasClass(displayNodeClass)) $fsElement.addClass(displayNodeClass);
 				}

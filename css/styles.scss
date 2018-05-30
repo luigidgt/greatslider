@@ -54,6 +54,14 @@
 	height: 100%;
 	overflow: hidden;
 	background-color: #F6F6F6;
+
+	&.gs-mouse-enter {
+		cursor:grab;
+
+		&.gs-mouse-down {
+			cursor: grabbing;
+		}
+	}
 }
 
 .gs-wrapper-items {
@@ -143,6 +151,13 @@
 	img, video, iframe {
 		max-width: 100%;
 	}
+
+	* {
+		-webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select:none;
+	}
 }
 
 // ARROWS
@@ -157,66 +172,68 @@
 	display:flex;
 	justify-content: space-between;
 	align-items: center;
+
+	&.gs-style-arrow { // Opcionales, para remover si es el caso//
+		.gs-prev-arrow, .gs-next-arrow {
+			background-color: #000;
+			opacity: .45;
+			overflow: hidden;
+			text-indent: -999px;
+			transition: margin .1s linear, opacity .2s linear;
+			position: relative;
+
+			&:before {
+				content: "";
+				position: absolute;
+				top:0;
+				left:0;
+				right:0;
+				bottom: 0;
+				margin: auto;
+				background-image: url('../img/arrow.png');
+				background-position: center center;
+				background-repeat: no-repeat;
+				background-position: center center;
+				width: 16px;
+				height: 25px;
+				transition: all .1s linear;
+			}
+
+			&:hover {
+				opacity: .8;
+				cursor:pointer;
+
+				&:before {
+					right: -2px;
+				}
+			}
+
+			&:active {
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+				opacity: 1;
+			}
+		}
+
+		.gs-prev-arrow {
+			transform: rotateY(180deg);
+
+			&:active {
+				margin-left: -5px;
+				
+			}
+		}
+		.gs-next-arrow:active {
+			margin-right: -5px;	
+		}
+	}
 }
 
 .gs-prev-arrow, .gs-next-arrow {
 	height: 60px;
 	width: 45px;
-	background-color:red;
 }
 
-// Opcionales, para remover si es el caso//
-.gs-style-prev, .gs-style-next {
-	background-color: #000;
-	opacity: .45;
-	overflow: hidden;
-	text-indent: -999px;
-	transition: margin .1s linear, opacity .2s linear;
-	position: relative;
-
-	&:before {
-		content: "";
-		position: absolute;
-		top:0;
-		left:0;
-		right:0;
-		bottom: 0;
-		margin: auto;
-		background-image: url('../img/arrow.png');
-		background-position: center center;
-		background-repeat: no-repeat;
-		background-position: center center;
-		width: 16px;
-		height: 25px;
-		transition: all .1s linear;
-	}
-
-	&:hover {
-		opacity: .8;
-		cursor:pointer;
-
-		&:before {
-			right: -2px;
-		}
-	}
-
-	&:active {
-		border-top-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-		opacity: 1;
-	}
-}
-.gs-style-prev {
-	transform: rotateY(180deg);
-
-	&:active {
-		margin-left: -5px;
-		
-	}
-}
-.gs-style-next:active {
-	margin-right: -5px;	
-}
 
 
 // BULLETS

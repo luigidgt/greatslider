@@ -76,7 +76,7 @@
       }
       
       /* Estilos para los testimonios */
-      #testimonios {
+      .lostestimonios {
       	width: 100%;
       	max-width: 700px;
       	padding: 20px;
@@ -84,21 +84,21 @@
       	margin-left: auto;
       }
       
-      #testimonios .gs-container-navs {
+      .lostestimonios .gs-container-navs {
       	margin-top: 10px;
       }
       
-      #testimonios .gs-container-items {
+      .lostestimonios .gs-container-items {
       	background-color: #fff;
       }
       
-      #testimonios .gs-wrapper-bullets {
+      .lostestimonios .gs-wrapper-bullets {
       	display:flex;
       	justify-content: center;
       	align-items: center;
       }
       
-      #testimonios .gs-wrapper-bullets .gs-bullet {
+      .lostestimonios .gs-wrapper-bullets .gs-bullet {
       	width: 15px;
       	height: 15px;
       	background-color: #c0c0c0;
@@ -106,15 +106,15 @@
       	margin-right: 7px;
       }
       
-      #testimonios .gs-wrapper-bullets .gs-bullet:hover {
+      .lostestimonios .gs-wrapper-bullets .gs-bullet:hover {
       	cursor: pointer;
       }
       
-      #testimonios .gs-wrapper-bullets .gs-bullet.gs-bullet-active {
+      .lostestimonios .gs-wrapper-bullets .gs-bullet.gs-bullet-active {
       	background-color: #DFAA57;
       }
       
-      #testimonios .gs-wrapper-bullets .gs-bullet:last-child {
+      .lostestimonios .gs-wrapper-bullets .gs-bullet:last-child {
       	margin-right: 0;
       }
       
@@ -163,11 +163,23 @@
       	font-weight: bold;
       	color: #DFAA57;
       }
+      
+      /* Slider de fotos */
+      #fotos {	
+      	width: 720px;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .img-slider {
+      	width: 100%;
+      }
+      
     </style>
   </head>
   <body>
-    <h2>Slider Testimonials</h2>
-    <div class="gs-container-slider" id="testimonios">
+    <h2>Slider de testimonios</h2>
+    <div class="lostestimonios gs-container-slider">
       <div class="testimonio">
         <div class="parrafos">
           <p>Ruddy y Andrés hicieron un excelente trabajo. Siempre muy atentos y dispuestos en atender todas nuestras peticiones y requerimientos antes y después de haber comprado el apartamento. Nos ayudaron a negociar un mejor precio. Sin duda alguna los volvería a contactar para comprar cualquier otra propiedad.</p>
@@ -204,6 +216,8 @@
         </div><span class="autor">POMA-EUG</span>
       </div>
     </div>
+    <h2>Slider de Fotos</h2>
+    <div class="gs-container-slider" id="fotos"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div>
     <!--h2 Slider Swipe-->
     <!--#example1.gs-container-slider
     .gs-container-items
