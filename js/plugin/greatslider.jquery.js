@@ -146,6 +146,7 @@
 		let breakPoint = 0,
 				greatSliderInterval,
 				greatSliderBreakPoint,
+				greatSliderAutoHeight,
 				$wrapperItems,
 				items,
 				nItems,
@@ -226,6 +227,18 @@
 						$idThis = 'gs-slider-' + makeid();
 						_this.attr('id', $idThis);
 					}
+
+					// anidando functión autoHeight en redimencionamiento de ventana si el slider es fade o se definió el autoheight
+					if(configs.autoHeight || configs.type =='fade') {
+						greatSliderAutoHeight = false;
+						$(window).resize(() => {
+							if (greatSliderAutoHeight !== false) clearTimeout(greatSliderAutoHeight);
+							greatSliderAutoHeight = setTimeout(() => {
+								autoHeight(this.getActive().item);
+							}, 750);
+						});
+					}
+					
 				}
 
 				// verificaciones de sentido comun
@@ -237,8 +250,6 @@
 					});
 					return false;
 				}
-				//
-
 
 				// Constructor de los Items
 				this.items(configs);
