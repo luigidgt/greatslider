@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="css/styles.css">
     <!-- estilos solo de muestra-->
     <style>
-      #example1 {
+      #breakpoints {
       	margin-left:auto;
       	margin-right:auto;
-      	/*width: 1280px;*/
       }
       
       .gs-container-slider {
@@ -245,42 +244,20 @@
         </div><span class="autor">POMA-EUG</span>
       </div>
     </div>
+    <p></p><br>
+    <p></p><br>
     <h2>Slider de Fotos uniformes</h2>
     <div class="gs-container-slider" id="fotos"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div>
+    <p></p><br>
+    <p></p><br>
     <h2>Slider de Fotos no uniformes</h2>
     <div class="gs-container-slider" id="fotosb"><img class="img-slider" src="img/naturaleza/diferentes/1.jpg"><img class="img-slider" src="img/naturaleza/diferentes/2.jpg"><img class="img-slider" src="img/naturaleza/diferentes/3.jpg"><img class="img-slider" src="img/naturaleza/diferentes/4.jpg"><img class="img-slider" src="img/naturaleza/diferentes/5.jpg"></div>
+    <p></p><br>
+    <p></p><br>
     <h2>Slider de Fotos uniformes con fullscreen y lazy diferente en fullscreen</h2>
     <div class="gs-container-slider" id="fotosc"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg" data-lazyfs="img/naturaleza/1080/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg" data-lazyfs="img/naturaleza/1080/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg" data-lazyfs="img/naturaleza/1080/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg" data-lazyfs="img/naturaleza/1080/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg" data-lazyfs="img/naturaleza/1080/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg" data-lazyfs="img/naturaleza/1080/6.jpg"></div>
-    <!--h2 Slider Swipe-->
-    <!--#example1.gs-container-slider
-    .gs-container-items
-    	ul.gs-wrapper-items
-    		- for (var i = 1; i <= 15; i++)
-    			li.gs-item-slider
-    				.gs-wrapper-content
-    					img(data-lazy="img/naturaleza/720/" + i + ".jpg", data-lazyfs="img/naturaleza/1080/" + i + ".jpg", alt="Text").gs-lazy
-    					//img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy
-    				
-    .gs-container-navs
-    	.gs-wrapper-arrows
-    		button.gs-arrow-nav.gs-prev-arrow.gs-style-prev Prev
-    		button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
-    	.gs-wrapper-bullets.gs-style-bullets
-    		button.gs-bullet
-    
-    button.gs-fs Full Screen
-    
-    -->
-    <!--.botones
-    button#active el Activo
-    button#go ir al item 5
-    button#prev &#60; Prev
-    button#play Play
-    button#stop Stop
-    button#next Next &#62;
-    button#fs Full Screen
-    
-    -->
+    <p></p><br>
+    <p></p><br>
     <h2>Slider Swipe Video</h2>
     <div class="gs-container-slider" id="videos"><img class="gs-lazy img-slider" data-lazy="img/naturaleza/720/1.jpg" alt="Text">
       <video class="gs-lazy" width="100%" data-lazy="videos/devstories.mp4"></video>
@@ -292,6 +269,19 @@
       <iframe class="gs-lazy" width="100%" height="478px" data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&amp;t=13s&amp;rel=0&amp;showinfo=0&amp;iv_load_policy=3" frameborder="0" allowfullscreen></iframe>
       <iframe class="gs-lazy" width="100%" height="478px" data-lazy="https://vimeo.com/270221211#&amp;autoplay=1" frameborder="0" allowfullscreen></iframe>
     </div>
+    <p></p><br>
+    <p></p><br>
+    <h2>Slider de fotos con breakpoints y botones de acción</h2>
+    <div class="gs-container-slider" id="breakpoints"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/7.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/9.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/10.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/11.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/12.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/13.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/14.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/15.jpg"></div>
+    <div class="botones">
+      <button id="go">ir al item 5</button>
+      <button id="prev">&#60; Prev</button>
+      <button id="play">Play</button>
+      <button id="stop">Stop</button>
+      <button id="next">Next &#62;</button>
+    </div>
+    <p></p><br>
+    <p></p><br>
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/plugin/greatslider.jquery.js"></script>
     <script src="js/main.js"></script>

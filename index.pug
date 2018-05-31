@@ -7,10 +7,9 @@ html(lang="es")
 		link(rel="stylesheet", href="css/styles.css")
 		// estilos solo de muestra
 		style.
-			#example1 {
+			#breakpoints {
 				margin-left:auto;
 				margin-right:auto;
-				/*width: 1280px;*/
 			}
 
 			.gs-container-slider {
@@ -244,6 +243,11 @@ html(lang="es")
 					p Ruddy y Andrés tuvieron una atención personalizada y siempre han estado a nuestra disposición. Nos han ayudado mucho también con la logística, bancos, etc. y con todo el proceso de la compra.
 				span.autor POMA-EUG
 
+		p
+		br
+		p
+		br
+
 		h2 Slider de Fotos uniformes
 		#fotos.gs-container-slider
 			img(src="img/naturaleza/720/1.jpg").img-slider
@@ -252,6 +256,11 @@ html(lang="es")
 			img(src="img/naturaleza/720/4.jpg").img-slider
 			img(src="img/naturaleza/720/5.jpg").img-slider
 
+		p
+		br
+		p
+		br
+
 		h2 Slider de Fotos no uniformes
 		#fotosb.gs-container-slider
 			img(src="img/naturaleza/diferentes/1.jpg").img-slider
@@ -259,6 +268,11 @@ html(lang="es")
 			img(src="img/naturaleza/diferentes/3.jpg").img-slider
 			img(src="img/naturaleza/diferentes/4.jpg").img-slider
 			img(src="img/naturaleza/diferentes/5.jpg").img-slider
+
+		p
+		br
+		p
+		br
 
 		h2 Slider de Fotos uniformes con fullscreen y lazy diferente en fullscreen
 		#fotosc.gs-container-slider
@@ -269,34 +283,10 @@ html(lang="es")
 			img(data-lazy="img/naturaleza/720/5.jpg", data-lazyfs="img/naturaleza/1080/5.jpg").img-slider.gs-lazy
 			img(data-lazy="img/naturaleza/720/6.jpg", data-lazyfs="img/naturaleza/1080/6.jpg").img-slider.gs-lazy
 
-		//h2 Slider Swipe
-		//#example1.gs-container-slider
-
-			.gs-container-items
-				ul.gs-wrapper-items
-					- for (var i = 1; i <= 15; i++)
-						li.gs-item-slider
-							.gs-wrapper-content
-								img(data-lazy="img/naturaleza/720/" + i + ".jpg", data-lazyfs="img/naturaleza/1080/" + i + ".jpg", alt="Text").gs-lazy
-								//img(src="img/naturaleza/diferentes/" + i + ".jpg", alt="Text").gs-lazy
-							
-			.gs-container-navs
-				.gs-wrapper-arrows
-					button.gs-arrow-nav.gs-prev-arrow.gs-style-prev Prev
-					button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
-				.gs-wrapper-bullets.gs-style-bullets
-					button.gs-bullet
-
-			button.gs-fs Full Screen
-
-		//.botones
-			button#active el Activo
-			button#go ir al item 5
-			button#prev &#60; Prev
-			button#play Play
-			button#stop Stop
-			button#next Next &#62;
-			button#fs Full Screen
+		p
+		br
+		p
+		br
 
 		h2 Slider Swipe Video
 		#videos.gs-container-slider
@@ -313,6 +303,40 @@ html(lang="es")
 			iframe(width="100%", height="478px", data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&t=13s&rel=0&showinfo=0&iv_load_policy=3", frameborder="0", allowfullscreen).gs-lazy
 			
 			iframe(width="100%", height="478px", data-lazy="https://vimeo.com/270221211#&autoplay=1", frameborder="0", allowfullscreen).gs-lazy
+
+		p
+		br
+		p
+		br
+
+		h2 Slider de fotos con breakpoints y botones de acción
+		#breakpoints.gs-container-slider
+			img(data-lazy="img/naturaleza/720/1.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/2.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/3.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/4.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/5.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/6.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/7.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/8.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/9.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/10.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/11.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/12.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/13.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/14.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/15.jpg").img-slider.gs-lazy
+
+		.botones
+			button#go ir al item 5
+			button#prev &#60; Prev
+			button#play Play
+			button#stop Stop
+			button#next Next &#62;
+		p
+		br
+		p
+		br
 		
 		script(src="js/lib/jquery-3.3.1.min.js")
 		script(src="js/plugin/greatslider.jquery.js")
