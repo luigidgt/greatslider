@@ -341,10 +341,20 @@
 							itemsStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's linear 0s;';
 							wrapperStyle += thePrefix + ': height .3s linear 0s;';
 						});
-						gsStyles = '#' + $idThis + '.' + sLayout.itemClass + '{' + itemsStyle + '}; ' + '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
+						gsStyles += '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
+						gsStyles += '#' + $idThis + ' .' + sLayout.itemClass + '{' + itemsStyle + '};';
 
-						if (configs.lazyLoad) this.loadLazy($firstItem);
+						// si el lazy está activado
+						if (configs.lazyLoad) {
+							this.loadLazy($firstItem);
+						}
 
+						configsBk.autoHeight = true;
+
+						// auto height
+						setTimeout(()=>{
+							autoHeight(this.getActive().item);
+						}, 500);
 					},
 
 					swipe: () => { // arrastre
@@ -387,7 +397,6 @@
 								autoHeight(this.getActive().item);
 							}, 500);
 						}
-
 					}
 				}
 

@@ -1,4 +1,3 @@
-
 let $miSlider = $('#breakpoints').greatSlider({
 	type: 'swipe',
 	nav: false,
@@ -42,7 +41,7 @@ $('#prev').click(()=>{
 	$miSlider.goTo('prev');
 });
 
-// Slider de testimonios
+// Slider Swipe de testimonios
 let $losTestimonios = $('.lostestimonios').greatSlider({
 	type: 'swipe',
 	nav: false,
@@ -54,22 +53,30 @@ let $losTestimonios = $('.lostestimonios').greatSlider({
 });
 
 
-// Slider de fotos
-$('#fotos').greatSlider({
+// Slider Swipe de Fotos uniformes con Full Screen
+$('#fotoswipe').greatSlider({
 	type: 'swipe',
 	nav: true,
 	bullets: false,
 	fullscreen: true
 });
 
-// Slider de fotos no uniformes
+//Slider Fade de Fotos uniformes
+$('#fotos').greatSlider({
+	type: 'fade',
+	nav: true,
+	bullets: false
+});
+
+
+// Slider Swipe de Fotos no uniformes
 $('#fotosb').greatSlider({
 	type: 'swipe',
 	nav: true,
 	autoHeight: true
 });
 
-// Slider de fotos no uniformes
+// Slider Swipe de Fotos uniformes con fullscreen y lazy diferente en fullscreen
 $('#fotosc').greatSlider({
 	type: 'swipe',
 	nav: true,
@@ -77,7 +84,7 @@ $('#fotosc').greatSlider({
 	fullscreen: true
 });
 
-// Slider de videos con lazy
+// Slider Swipe de foto y Videos con lazy
 $('#videos').greatSlider({
 	type: 'swipe',
 	nav: true,
