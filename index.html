@@ -150,6 +150,7 @@
       	font-size: 15px;
       	margin-top: 0;
       	margin-bottom: 10px;
+      	text-align-last: center;
       }
       
       .testimonio p:last-child {
@@ -172,6 +173,34 @@
       }
       
       .img-slider {
+      	width: 100%;
+      }
+      
+      /* Slider de fotos no uniformes */
+      
+      #fotosb {
+      	width: 1280px;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      #fotosc {
+      	width: 1000px;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      #videos {
+      	width: 850px;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      #videos video, #videos iframe{
+      	width: 100%;
+      }
+      
+      #videos .gs-wrapper-content {
       	width: 100%;
       }
       
@@ -216,8 +245,12 @@
         </div><span class="autor">POMA-EUG</span>
       </div>
     </div>
-    <h2>Slider de Fotos</h2>
+    <h2>Slider de Fotos uniformes</h2>
     <div class="gs-container-slider" id="fotos"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div>
+    <h2>Slider de Fotos no uniformes</h2>
+    <div class="gs-container-slider" id="fotosb"><img class="img-slider" src="img/naturaleza/diferentes/1.jpg"><img class="img-slider" src="img/naturaleza/diferentes/2.jpg"><img class="img-slider" src="img/naturaleza/diferentes/3.jpg"><img class="img-slider" src="img/naturaleza/diferentes/4.jpg"><img class="img-slider" src="img/naturaleza/diferentes/5.jpg"></div>
+    <h2>Slider de Fotos uniformes con fullscreen y lazy diferente en fullscreen</h2>
+    <div class="gs-container-slider" id="fotosc"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg" data-lazyfs="img/naturaleza/1080/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg" data-lazyfs="img/naturaleza/1080/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg" data-lazyfs="img/naturaleza/1080/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg" data-lazyfs="img/naturaleza/1080/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg" data-lazyfs="img/naturaleza/1080/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg" data-lazyfs="img/naturaleza/1080/6.jpg"></div>
     <!--h2 Slider Swipe-->
     <!--#example1.gs-container-slider
     .gs-container-items
@@ -248,38 +281,17 @@
     button#fs Full Screen
     
     -->
-    <!--h2 Slider Swipe Video-->
-    <!--#example2.gs-container-slider(style="margin-left:auto;margin-right:auto;width: 850px")
-    .gs-container-items
-    	ul.gs-wrapper-items
-    
-    		li.gs-item-slider
-    			img(data-lazy="img/paisajes/1.jpg", alt="Text", style="width: 100%").gs-lazy
-    
-    		li.gs-item-slider
-    			video(width="100%", data-lazy="videos/devstories.mp4").gs-lazy
-    
-    		li.gs-item-slider
-    			video(width="100%").gs-lazy
-    				source(data-lazy="videos/big_buck_bunny.mp4", type="video/mp4")
-    				source(data-lazy="videos/big_buck_bunny.ogg", type="video/ogg")
-    				source(data-lazy="videos/big_buck_bunny.webm", type="video/webm")
-    				| Your browser doesn't support HTML5 video tag.
-    
-    		li.gs-item-slider
-    			iframe(width="100%", height="478px", data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&t=13s&rel=0&showinfo=0&iv_load_policy=3", frameborder="0", allowfullscreen).gs-lazy
-    
-    		li.gs-item-slider
-    			iframe(width="100%", height="478px", data-lazy="https://vimeo.com/270221211#&autoplay=1", frameborder="0", allowfullscreen).gs-lazy#algo
-    
-    .gs-container-navs
-    	.gs-wrapper-arrows
-    		button.gs-arrow-nav.gs-prev-arrow.gs-style-prev Prev
-    		button.gs-arrow-nav.gs-next-arrow.gs-style-next Next
-    	.gs-wrapper-bullets.gs-style-bullets
-    		button.gs-bullet
-    
-    -->
+    <h2>Slider Swipe Video</h2>
+    <div class="gs-container-slider" id="videos"><img class="gs-lazy img-slider" data-lazy="img/naturaleza/720/1.jpg" alt="Text">
+      <video class="gs-lazy" width="100%" data-lazy="videos/devstories.mp4"></video>
+      <video class="gs-lazy" width="100%">
+        <source data-lazy="videos/big_buck_bunny.mp4" type="video/mp4">
+        <source data-lazy="videos/big_buck_bunny.ogg" type="video/ogg">
+        <source data-lazy="videos/big_buck_bunny.webm" type="video/webm">Your browser doesn't support HTML5 video tag.
+      </video>
+      <iframe class="gs-lazy" width="100%" height="478px" data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&amp;t=13s&amp;rel=0&amp;showinfo=0&amp;iv_load_policy=3" frameborder="0" allowfullscreen></iframe>
+      <iframe class="gs-lazy" width="100%" height="478px" data-lazy="https://vimeo.com/270221211#&amp;autoplay=1" frameborder="0" allowfullscreen></iframe>
+    </div>
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/plugin/greatslider.jquery.js"></script>
     <script src="js/main.js"></script>

@@ -41,7 +41,7 @@
 */
 
 // Slider de testimonios
-$('.lostestimonios').greatSlider({
+let $losTestimonios = $('.lostestimonios').greatSlider({
 	type: 'swipe',
 	nav: false,
 	bullets: true,
@@ -51,6 +51,7 @@ $('.lostestimonios').greatSlider({
 	}
 });
 
+
 // Slider de fotos
 
 $('#fotos').greatSlider({
@@ -58,4 +59,26 @@ $('#fotos').greatSlider({
 	nav: true,
 	bullets: false,
 	fullscreen: true
+});
+
+// Slider de fotos no uniformes
+$('#fotosb').greatSlider({
+	type: 'swipe',
+	nav: true,
+	autoHeight: true
+});
+
+// Slider de fotos no uniformes
+$('#fotosc').greatSlider({
+	type: 'swipe',
+	nav: true,
+	lazyLoad: true,
+	fullscreen: true
+});
+
+// Slider de videos con lazy
+$('#videos').greatSlider({
+	type: 'swipe',
+	nav: true,
+	lazyLoad: true
 });

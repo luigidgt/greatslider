@@ -23,6 +23,8 @@
 		autoplay: false, // true, false : activa o desactiva el autoplay
 		autoplaySpeed: 5000, // tiempo de espera entre cada paso
 
+		autoHeight: false, // redimenciona automáticamente el alto del slider, dependiendo del contenido del item
+
 		log: false, // true, false: para registrar en consola toda acción o incidente ocurrido.
 		
 		startPosition: 0, // la posición del item que estará activo por defecto
@@ -32,11 +34,16 @@
 		lazyLoad: true, // true, false : habilita la carga por demanda
 		lazyClass: 'gs-lazy', // la clase que tendrá el o los items a cargar por demanda
 		lazyAttr: 'data-lazy', // el atributo que tendrá el o los items para cargar por demanda
+		lazyAttrFs : 'data-lazyfs', // el atributo que contendrá el enlace para el recurso para pantalla completa
 
 		layout: {
 
-			containerItems: '.gs-container-items', // contenedor maestro del slider
+			containerItemsTag: 'div', // el tag del contenedor d elos items
+			containerItemsClass: 'gs-container-items', // la clase del contenedor de los sliders
 			wrapperItems: '.gs-wrapper-items', // envoltorio de la lista de items
+
+			wrapperItemsTag: 'ul', // el tag del wrapper de los items
+			wrapperItemsClass: 'gs-wrapper-items', // la clase del wrapper de los items
 			transitionClass: 'gs-in-transition', // la clase que se le adiciona al slider cuando se está haciendo un pase de frame
 
 			itemClass: '.gs-item-slider', // la clase que tendrá cada item del slider
@@ -44,21 +51,39 @@
 			itemLoadingClass: 'gs-item-loading', // la clase que tendrán los items cuando estén cargando
 			itemLoadedClass: 'gs-item-loaded', // la clase que tendrá el item cuando terminó de cargar
 
-			containerNavs: '.gs-container-navs', // el contenedor de la navegación (flechas y bullets)
+			itemTag: 'li', // el tag de los items a construir
+			itemClass: 'gs-item-slider', // la clase de los items a construir
+			itemWrapperTag: 'div', // el tag del wrapper interno dle item
+			itemWrapperClass: 'gs-wrapper-content', // la clase del wrapper interno del item
+			itemActiveClass: 'gs-item-active', // la clase cuando un item está activo
+			itemLoadingClass: 'gs-item-loading', // la clase cuando el item tiene algún contenido lazy y se le agrega mientras el recurso lazy carga
+			itemLoadedClass: 'gs-item-loaded', // la clase cuando terminó de cargar el contenido lazy que tenga el item
 
-			wrapperArrows: '.gs-wrapper-arrows', // el envoltorio de las flechas de navegación
-			arrowPrev: '.gs-prev-arrow', // flecha izquierda
-			arrowNext: '.gs-next-arrow', // flecha derecha
+			containerNavsTag: 'div', // el tag del container de los botones de navegación (flechas y bullets)
+			containerNavsClass: 'gs-container-navs', // la clase del contenedor de navegación
 
-			wrapperBullets: '.gs-wrapper-bullets', // envoltorio de los bullets
-			bulletClass: 'gs-bullet', // clase que tendrá el primer bullets y los bullets restantes
-			bulletActiveClass: 'gs-bullet-active', // clase que tendrá el bullet activo
+			wrapperArrowsTag: 'div', // el tag del contenedor de las flechas
+			wrapperArrowsClass: 'gs-wrapper-arrows', // la clase del contenedor de las flechas
+			arrowsTag: 'button', // el tag de una flecha
+			arrowPrevClass: 'gs-prev-arrow', // la clase de la flecha 'anterior'
+			arrowNextClass: 'gs-next-arrow', // la clase de la flecha 'siguiente'
+			arrowDefaultStyles: true, // estilos por defecto que le dá el slider a las flechas
 
-			fsButton: '.gs-fs', // boton que activa y desactiva el fullscreen
-			fsInClass: 'gs-infs', // clase que se le agregará al boton de fullscreen y el contenedor maestro del slider cuando se encuentre en fullscreen
+			wrapperBulletsTag: 'div', // tag del wrapper de los bullets
+			wrapperBulletsClass: 'gs-wrapper-bullets', // clase del envoltorio de los bullets
+			bulletTag: 'button', // tag de un bullet
+			bulletClass: 'gs-bullet', // clase de un bullet
+			bulletActiveClass: 'gs-bullet-active', // clase de un bullet cuando se encuentra activo
+			bulletDefaultStyles: true, // estilos por defecto que le dá el slider a los bullets
+
+			fsButton: '.gs-fs', // elemento que abrirá el fullscreen
+			fsButtonTag: 'button', // el tag del boton que abre el Full screen, si es que no existe, lo crea.
+			fsInClass: 'gs-infs', // la clase que se le agregará al slider y al boton cuando se ingrese al full screen
 
 			noneClass: 'gs-none', // clase general que desaparece del DOM a varios elementos
-			attachedClass: 'gs-attached' // clase general indicativa de anidación de eventos sobre un elemento.
+			attachedClass: 'gs-attached', // clase general indicativa de anidación de eventos sobre un elemento.
+			builtClass: 'gs-builded' // clase que se agrega al slider cuando fué construido la estructura
+
 		}
 
 	}
@@ -152,21 +177,16 @@
 		- Saber que item está activo: slider.getActive();
 			-> {item, index}
 
+	- Acciones varias:
+
+		- Destruir el slider: slider.destroy();
+
 /*
 
-	Cosas por hacer:
+	Cosas para hacer posiblemente:
 
-		- agregar metodo destroy.
-		- agregar linea de tiempo restante para el pase entre frames abajo
 		- que el auto play pueda desactivarce por breakpoint
 		- agregar preload
-
-	Cosas en las que estoy trabajando:
-
-		- cambiar 'items' en fullscreen
-	
-	Cosas posibles a agregar:
-
 		- anidación de navegación por la ruedita del mouse en fullscreen
 
 */

@@ -129,7 +129,6 @@
 				fsButton: '.gs-fs',
 				fsButtonTag: 'button',
 				fsInClass: 'gs-infs',
-				fsOutClass: 'gs-outfs',
 
 				noneClass: 'gs-none',
 				attachedClass: 'gs-attached',
@@ -298,9 +297,7 @@
 				}
 
 				// Si se determinó un auto pase del slider
-				if(configs.autoplay) {
-					this.autoPlay('play', configs);
-				}
+				if(configs.autoplay) this.autoPlay('play', configs);
 			},
 
 			items: function(configs) {
@@ -763,7 +760,7 @@
 									if (parameters.indexOf('&&') !== -1) parameters = parameters.replace('&&','');
 									dataLazy = 'https://player.vimeo.com/video/' + idVideo + '#' + parameters;
 									_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
-									lazyTypes.script('https://player.vimeo.com/api/player.js', ()=>{
+									lazyTypes.script('vimeoplayer', 'https://player.vimeo.com/api/player.js', ()=>{
 										_cleanClass($item);
 										let player = new Vimeo.Player(_element);
         						player.play();
@@ -781,21 +778,23 @@
 							}
 						},
 
-						script: function(theSrc, done, id){
+						script: function(id, theSrc, done){
+							if($('#' + id).length) { // ya se cargó el script
+								if (done !== undefined && typeof done == 'function') done();
+							}
 							let r = false,
 									s = document.createElement('script');
 									s.type = 'text/javascript';
 									s.src = theSrc;
+									s.id = id;
 									s.onload = s.onreadystatechange = function() {
 										if ( !r && (!this.readyState || this.readyState == 'complete') ) {
 											r = true;
-											let theDone = done;
-											if (typeof theDone == 'function') theDone(done);
+											if (done !== undefined && typeof done == 'function') done();
 										}
 									};
 							document.body.appendChild(s);
 						}
-
 					}
 
 					let typeLazy = lazyTypes[_element.prop('tagName').toLowerCase()];
@@ -1124,8 +1123,16 @@
 						}
 					}
 				});
-			}
+			},
 
+			destroy: () => {
+				let htmlPure = '';
+				_this.find('.' + sLayout.itemWrapperClass).each( function() {
+					htmlPure += $(this).html();
+				});
+				_this.html(htmlPure).removeClass('builtClass');
+				if(_this.attr('id').indexOf('gs-slider-') !== -1) _this.removeAttr('id');
+			}
 		}
 
 		// Inicializando
