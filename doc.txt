@@ -45,6 +45,7 @@
 			wrapperItemsTag: 'ul', // el tag del wrapper de los items
 			wrapperItemsClass: 'gs-wrapper-items', // la clase del wrapper de los items
 			transitionClass: 'gs-in-transition', // la clase que se le adiciona al slider cuando se está haciendo un pase de frame
+			transitionMode: 'ease', // el tipo de selección que tendrá el slider, tipos: ease, linear, ease-in, ease-out, ease-in-out, cubic-bezier(n,n,n,n)
 
 			itemClass: '.gs-item-slider', // la clase que tendrá cada item del slider
 			itemActiveClass: 'gs-item-active', // la clase que tendrá el item activo
@@ -66,7 +67,9 @@
 			wrapperArrowsClass: 'gs-wrapper-arrows', // la clase del contenedor de las flechas
 			arrowsTag: 'button', // el tag de una flecha
 			arrowPrevClass: 'gs-prev-arrow', // la clase de la flecha 'anterior'
+			arrowPrevContent: '', // string, el contenido que tendrá la flecha PREV.
 			arrowNextClass: 'gs-next-arrow', // la clase de la flecha 'siguiente'
+			arrowNextContent: '', // string, el contenido que tendrá la flecha NEXT.
 			arrowDefaultStyles: true, // estilos por defecto que le dá el slider a las flechas
 
 			wrapperBulletsTag: 'div', // tag del wrapper de los bullets

@@ -67,7 +67,7 @@
 			type: 'fade', // fade, swipe
 
 			nav: true, // true, false
-			navSpeed: 300, // en milisegundos
+			navSpeed: 500, // en milisegundos
 
 			items: 1,
 			slideBy: 1,
@@ -100,6 +100,7 @@
 				wrapperMouseEnterClass: 'gs-mouse-enter',
 				wrapperMouseDownClass: 'gs-mouse-down',
 				transitionClass: 'gs-in-transition',
+				transitionMode: 'ease',
 
 				itemTag: 'li',
 				itemClass: 'gs-item-slider',
@@ -116,7 +117,9 @@
 				wrapperArrowsTag: 'div',
 				arrowsTag: 'button',
 				arrowPrevClass: 'gs-prev-arrow',
+				arrowPrevContent: '',
 				arrowNextClass: 'gs-next-arrow',
+				arrowNextContent: '',
 				arrowDefaultStyles: true,
 
 				wrapperBulletsTag: 'div',
@@ -255,7 +258,7 @@
 				this.items(configs);
 
 				// Constructor de Bullets y anidación de eventos click
-				this.bullets(configs); 
+				this.bullets(configs);
 
 				// Anidando evento click a los Arrows
 				this.navs(configs);
@@ -349,16 +352,14 @@
 						let itemsStyle = '',
 								wrapperStyle = '';
 						transPrefix.forEach(thePrefix => {
-							itemsStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's linear 0s;';
-							wrapperStyle += thePrefix + ': height .3s linear 0s;';
+							itemsStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's ' + sLayout.transitionMode + ' 0s;';
+							wrapperStyle += thePrefix + ': height .3s ' + sLayout.transitionMode + ' 0s;';
 						});
 						gsStyles += '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
 						gsStyles += '#' + $idThis + ' .' + sLayout.itemClass + '{' + itemsStyle + '};';
 
 						// si el lazy está activado
-						if (configs.lazyLoad) {
-							this.loadLazy($firstItem);
-						}
+						if (configs.lazyLoad) this.loadLazy($firstItem);
 
 						configsBk.autoHeight = true;
 
@@ -375,7 +376,7 @@
 						let initItems = configs.items,
 								transStyle = 'width: ' + ((nItems * 100) / initItems) + '%;';
 						transPrefix.forEach(thePrefix => {
-							transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's linear 0s, height .3s linear 0s;'
+							transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's ' + sLayout.transitionMode + ' 0s, height .3s linear 0s;'
 						});
 						gsStyles += '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + transStyle + '}';
 						gsStyles += '#' + $idThis + ' .' + sLayout.itemClass + '{width: ' + (100 / nItems) + '%}';
@@ -477,27 +478,29 @@
 
 			bullets: function(configs, action) {
 				let _objThis = this;
-
-				// creando el warpper de navs
-				if(!_this.find('.' + sLayout.containerNavsClass).length) _this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>')
-
-				// creando el wrapper de bullets
 				let $wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
-				if(!$wrapperBullets.length) {
 
-					_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
-					$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass)
-				}
-
-				if (!configs.bullets) {
-					if (!$wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.addClass(displayNodeClass);
-					return false;	
-				} else {
-					if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass)
+				if (configs.bullets) {
+					// creando el container navs
+					if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
+						_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>');
+					}
+					// creando el wrapper de bullets
+					if(!$wrapperBullets.length) {
+						_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
+						$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+					} else { // si yá existe, verifico que no esté oculto
+						if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass);
+					}
+				} else { // se determinó false
+					$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+					if($wrapperBullets.length) { // verifico si existe
+						if (!$wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.addClass(displayNodeClass);
+						return false;	
+					} 
 				}
 
 				let classBulletActive = sLayout.bulletActiveClass;
-
 				let actions = {
 
 					constructor: function(){
@@ -567,12 +570,12 @@
 				actions[theAction]();	
 			},
 
-			navs: function() {
+			navs: function(configs) {
 				let _objThis = this;
 
 				// verificación
 				let $wrapperArrows = _this.find('.' + sLayout.wrapperArrowsClass);
-				if (!configsBk.nav) {
+				if (!configs.nav) {
 					if($wrapperArrows.length) {
 						if (!$wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.addClass(displayNodeClass);
 					}
@@ -581,13 +584,15 @@
 						let elementContainerNavs = '.' + sLayout.containerNavsClass,
 								$containerNavs = _this.find(elementContainerNavs),
 								defaultStylesArrow = (sLayout.arrowDefaultStyles) ? ' gs-style-arrow' : '',
-								arrowsHtml = '<' + sLayout.wrapperArrowsTag + ' class="' +  sLayout.wrapperArrowsClass + defaultStylesArrow + '"><' + sLayout.arrowsTag + ' class="' + sLayout.arrowPrevClass + '"><' + sLayout.arrowsTag + ' class="' + sLayout.arrowNextClass + '"></' + sLayout.wrapperArrowsTag + '>';
+								arrowsHtml = '<' + sLayout.wrapperArrowsTag + ' class="' +  sLayout.wrapperArrowsClass + defaultStylesArrow + '">';
+								arrowsHtml += '<' + sLayout.arrowsTag + ' class="' + sLayout.arrowPrevClass + '">' + sLayout.arrowPrevContent + '</' + sLayout.arrowsTag + '>';
+								arrowsHtml += '<' + sLayout.arrowsTag + ' class="' + sLayout.arrowNextClass + '">' + sLayout.arrowNextContent + '</' + sLayout.arrowsTag + '>';
+								arrowsHtml += '</' + sLayout.wrapperArrowsTag + '>';
 						if($containerNavs.length) {
 							_this.find(elementContainerNavs).append(arrowsHtml)
 						} else {
-							_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '>' + arrowsHtml + '</' + sLayout.containerNavsTag + '>');
+							_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '">' + arrowsHtml + '</' + sLayout.containerNavsTag + '>');
 						}
-
 						$wrapperArrows = _this.find('.' + sLayout.wrapperArrowsClass); // selección rectificada por creación
 					} else {
 						if ($wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.removeClass(displayNodeClass);
@@ -599,12 +604,12 @@
 
 				// haciendo click PREV
 				_this.find('.' + sLayout.arrowPrevClass).on('click', function(){
-					_objThis.goTo('prev', configsBk);
+					_objThis.goTo('prev', configs);
 				});
 
 				// haciendo click NEXT
 				_this.find('.' + sLayout.arrowNextClass).on('click', function(){
-					_objThis.goTo('next', configsBk);
+					_objThis.goTo('next', configs);
 				});
 			},
 
