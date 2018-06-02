@@ -9,7 +9,6 @@ $('.lostestimonios').greatSlider({
 	}
 });
 
-
 // Slider Swipe de Fotos uniformes con Full Screen
 $('#fotoswipe').greatSlider({
 	type: 'swipe',

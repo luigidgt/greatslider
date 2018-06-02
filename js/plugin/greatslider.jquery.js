@@ -66,18 +66,20 @@
 		let settings = {
 			type: 'fade', // fade, swipe
 
-			nav: true, // true, false
+			nav: true, 
 			navSpeed: 500, // en milisegundos
 
 			items: 1,
 			slideBy: 1,
 
-			bullets: false, // true, false
+			touch: true, 
 
-			autoplay: false, // true, false
-			autoplaySpeed: 5000,
+			bullets: false, 
 
-			log: false,
+			autoplay: false, 
+			autoplaySpeed: 5000, // en milisegundos
+
+			log: false, 
 			
 			//startPosition: 0, parametro fantasma, solo si es solicitado
 			fullscreen: false,
@@ -138,6 +140,7 @@
 				builtClass: 'gs-builded'
 			}
 		};
+
 		if (options !== undefined) $.extend(true, settings, options);
 		if (settings.type == 'fade') delete settings['breakPoints']; // si el slider es fade no debe a ver breakpoints
 
@@ -241,7 +244,6 @@
 							}, 750);
 						});
 					}
-					
 				}
 
 				// verificaciones de sentido comun
@@ -265,6 +267,9 @@
 
 				// Full Screen
 				this.fullscreen(configs);
+
+				// Anidando el desplazamiento por touch
+				this.touch(configs.touch);
 
 				// Solo una vez
 				if (_this.hasClass(sLayout.builtClass)) return false;
@@ -979,8 +984,8 @@
 
 				setTimeout( () => {
 					_this.removeClass(sLayout.transitionClass);
-					let onStep = configs.onStep;
-					if(onStep !== undefined) onStepEnd($itemActivating, itemToActive + 1);
+					let onStepEnd = configs.onStepEnd;
+					if(onStepEnd !== undefined) onStepEnd($itemActivating, itemToActive + 1);
 					if(this.fullscreen('check')) {
 						if (configs.lazyLoad) this.loadLazy($activeItem, 'normal'); // para cargar la versión FS
 					} else {
@@ -1157,6 +1162,49 @@
 				});
 				_this.html(htmlPure).removeClass('builtClass');
 				if(_this.attr('id').indexOf('gs-slider-') !== -1) _this.removeAttr('id');
+			},
+
+			touch: function(estado) {
+
+				let $theContainerItems = _this.find('.' + sLayout.containerItemsClass),
+						sliderTouchStart, sliderTouchMove;
+
+				if (!estado) {
+					if ($theContainerItems.hasClass(sLayout.attachedClass)) {
+						$theContainerItems.off('touchstart', sliderTouchStart);
+						$theContainerItems.off('touchmove', sliderTouchMove);
+						$theContainerItems.removeClass(sLayout.attachedClass);
+					}
+				} else {
+
+					if ($theContainerItems.hasClass(sLayout.attachedClass)) return false; // xq yá se anidó
+			
+					var xDown = null;
+					var yDown = null;
+
+					sliderTouchStart = evt => {
+						xDown = evt.touches[0].clientX;
+						yDown = evt.touches[0].clientY;
+					}
+					sliderTouchMove = evt => {
+						if ( ! xDown || ! yDown ) return false;
+						var xUp = evt.touches[0].clientX;
+						var yUp = evt.touches[0].clientY;
+						var xDiff = xDown - xUp;
+						var yDiff = yDown - yUp;
+						if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+							evt.preventDefault();
+							(xDiff > 0) ? this.goTo('next') : this.goTo('prev');
+						}
+						xDown = null;
+						yDown = null;
+					}
+					//finalmente anidando el touch
+					$theContainerItems.on({
+						touchstart : sliderTouchStart,
+						touchmove: sliderTouchMove
+					}).addClass(sLayout.attachedClass);
+				}
 			}
 		}
 

@@ -18,6 +18,8 @@
 		items: 1, // numero de items a mostrar en pantalla
 		slideBy: 1, // numero de items entre cada pase
 
+		touch: true, // true, false: habilita o deshabilita la navegación por touch.
+
 		bullets: true, // true, false : aparece o desaparece los bullets
 
 		autoplay: false, // true, false : activa o desactiva el autoplay
@@ -27,7 +29,7 @@
 
 		log: false, // true, false: para registrar en consola toda acción o incidente ocurrido.
 		
-		startPosition: 0, // la posición del item que estará activo por defecto
+		startPosition: 0, // la posición del item que estará activo al iniciar el slider.
 
 		fullScreen: false, // false, true : habilita o deshabilita la pantalla completa
 
