@@ -128,6 +128,8 @@
 
 	- onFullscreenOut: cuando se sale del modo full screen
 
+	- onDestroyed: cuando se destruye el slider
+
 
 * Metodos disponibles:
 
@@ -161,6 +163,10 @@
 			Iniciar: slider.autoplay('play');
 			Detener: slider.autoplay('stop');
 
+		- Desplasamiento por touch (por defecto viene activado)
+
+			Activar: slider.touch(true);
+			Desactivar: slider.touch(false);
 
 	- Full Screen:
 

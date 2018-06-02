@@ -1,5 +1,7 @@
 // mini reset
 .gs-container-slider {
+	box-sizing: border-box;
+	
 	img {
 		border: 0;
 		outline: 0;
@@ -250,6 +252,7 @@
 	left: 50%;
 	transform: translateX(-50%);
 	z-index:4;
+	max-width: 100%;
 	
 	padding: 10px 15px;
 	background-color: rgba(#000, .5);
@@ -257,6 +260,7 @@
 	display:flex;
 	justify-content: center;
 	align-items: center;
+	flex-wrap: wrap;
 
 	.gs-bullet {
 		border-radius: 50%;

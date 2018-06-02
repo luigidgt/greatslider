@@ -643,17 +643,8 @@
 						img: ()=> {
 
 							// si se está en full screen, cargo la imagen en HD
-							if(fullScreenApi.isFullScreen()) {
+							if(actions.fullscreen('check')) {
 								if(dataLazyFs !== undefined) dataLazy = dataLazyFs;
-							}
-
-							// se determinó cargar un tipo de lazy en específico
-							if (type !== undefined) {
-								if (type == 'normal') {
-									dataLazy = _element.attr(settings.lazyAttr);
-								} else if (type == 'fs') {
-									dataLazy = dataLazyFs;
-								}
 							}
 
 							if(dataLazy !== undefined) {
@@ -982,13 +973,21 @@
 					$wrapperItems.css('margin-left', '-' +  mLeft + '%')
 				}
 
+				// Cargando los elements 'lazy'
+				if (configs.lazyLoad) {
+					let indexsToLoad = itemToActive;
+					while(indexsToLoad > (itemToActive - configs.items)) {
+						this.loadLazy(items.eq(indexsToLoad));
+						indexsToLoad--;
+					}
+				}
+
+				// ejecutando evento onStepEnd
 				setTimeout( () => {
 					_this.removeClass(sLayout.transitionClass);
 					let onStepEnd = configs.onStepEnd;
 					if(onStepEnd !== undefined) onStepEnd($itemActivating, itemToActive + 1);
-					if(this.fullscreen('check')) {
-						if (configs.lazyLoad) this.loadLazy($activeItem, 'normal'); // para cargar la versión FS
-					} else {
+					if(!this.fullscreen('check')) {
 						if (!configs.lazyLoad) autoHeight($itemActivating)
 					}
 				}, configs.navSpeed);
@@ -999,18 +998,8 @@
 					if (lastItem !== undefined) lastItem($itemActivating, itemToActive);
 				};
 
-				// Cargando los elements 'lazy'
-				if (configs.lazyLoad) {
-					let indexsToLoad = itemToActive;
-					while(indexsToLoad > (itemToActive - configs.items)) {
-						this.loadLazy(items.eq(indexsToLoad));
-						indexsToLoad--;
-					}
-				}
-
 				// Activando el Bullet correspondiente
-				if(!configs.bullets) return false;
-				this.bullets(configs, 'active');
+				if(configs.bullets) this.bullets(configs, 'active');
 			},
 
 			autoPlay: function(action, configs) {
@@ -1162,6 +1151,8 @@
 				});
 				_this.html(htmlPure).removeClass('builtClass');
 				if(_this.attr('id').indexOf('gs-slider-') !== -1) _this.removeAttr('id');
+				let eventDestroyed = configsBk.onDestroyed;
+				if(eventDestroyed !== undefined) eventDestroyed();
 			},
 
 			touch: function(estado) {
