@@ -1149,7 +1149,7 @@
 				_this.find('.' + sLayout.itemWrapperClass).each( function() {
 					htmlPure += $(this).html();
 				});
-				_this.html(htmlPure).removeClass('builtClass');
+				_this.html(htmlPure).removeClass(sLayout.builtClass);
 				if(_this.attr('id').indexOf('gs-slider-') !== -1) _this.removeAttr('id');
 				let eventDestroyed = configsBk.onDestroyed;
 				if(eventDestroyed !== undefined) eventDestroyed();
