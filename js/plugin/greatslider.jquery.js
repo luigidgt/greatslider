@@ -82,6 +82,8 @@
 				autoplaySpeed: 5000, // en milisegundos
 
 				log: false, 
+
+				dataParam : 'data-gs',
 				
 				//startPosition: 0, parametro fantasma, solo si es solicitado
 				fullscreen: false,
@@ -143,8 +145,14 @@
 				}
 			};
 
+			// extendiendo los parametros de configuración desde objeto pasado
 			if (options !== undefined) $.extend(true, settings, options);
-			if (settings.type == 'fade') delete settings['breakPoints']; // si el slider es fade no debe a ver breakpoints
+
+			// extendiendo los parametros de configuración desde parametro data
+			let $dataGs = _this.attr(settings.dataParam);
+			if($dataGs !== undefined) $.extend(true, settings, JSON.parse($dataGs));
+
+			//if (settings.type == 'fade') delete settings['breakPoints']; // si el slider es fade no debe a ver breakpoints
 
 			let settingsBk = $.extend(true, {}, settings);
 			delete settingsBk['breakPoints'];

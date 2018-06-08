@@ -183,7 +183,7 @@
       	margin-right: auto;
       }
       
-      #videos {
+      #videos, #fotosdata {
       	max-width: 850px;
       	margin-left: auto;
       	margin-right: auto;
@@ -195,6 +195,10 @@
       
       #videos .gs-wrapper-content {
       	width: 100%;
+      }
+      
+      #fotosdata {
+      	max-width: 1200px;
       }
       
     </style>
@@ -269,7 +273,7 @@
     </div>
     <p></p><br>
     <p></p><br>
-    <h2>Slider de fotos con breakpoints y botones de acción</h2>
+    <h2>Slider Swipe de fotos con breakpoints y botones de acción</h2>
     <div class="gs-container-slider" id="breakpoints"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/7.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/9.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/10.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/11.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/12.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/13.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/14.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/15.jpg"></div>
     <div class="botones">
       <button id="go">ir al item 5</button>
@@ -278,6 +282,10 @@
       <button id="stop">Stop</button>
       <button id="next">Next &#62;</button>
     </div>
+    <p></p><br>
+    <p></p><br>
+    <h2>Slider Swipe de Fotos uniformes con parametros de configuración en atributo data</h2>
+    <div class="gs-container-slider" id="fotosdata" data-gs="{&quot;type&quot;: &quot;swipe&quot;, &quot;bullets&quot;: true, &quot;nav&quot;: false, &quot;layout&quot;: {&quot;transitionMode&quot;: &quot;linear&quot;} }"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div>
     <p></p><br>
     <p></p><br>
     <script src="js/lib/jquery-3.3.1.min.js"></script>

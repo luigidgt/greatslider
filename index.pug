@@ -183,7 +183,7 @@ html(lang="es")
 				margin-right: auto;
 			}
 
-			#videos {
+			#videos, #fotosdata {
 				max-width: 850px;
 				margin-left: auto;
 				margin-right: auto;
@@ -195,6 +195,10 @@ html(lang="es")
 
 			#videos .gs-wrapper-content {
 				width: 100%;
+			}
+
+			#fotosdata {
+				max-width: 1200px;
 			}
 
 	body
@@ -316,7 +320,7 @@ html(lang="es")
 		p
 		br
 
-		h2 Slider de fotos con breakpoints y botones de acción
+		h2 Slider Swipe de fotos con breakpoints y botones de acción
 		#breakpoints.gs-container-slider
 			img(data-lazy="img/naturaleza/720/1.jpg").img-slider.gs-lazy
 			img(data-lazy="img/naturaleza/720/2.jpg").img-slider.gs-lazy
@@ -344,6 +348,20 @@ html(lang="es")
 		br
 		p
 		br
+
+		h2 Slider Swipe de Fotos uniformes con parametros de configuración en atributo data
+		#fotosdata.gs-container-slider(data-gs='{"type": "swipe", "bullets": true, "nav": false, "layout": {"transitionMode": "linear"} }')
+			img(src="img/naturaleza/720/1.jpg").img-slider
+			img(src="img/naturaleza/720/2.jpg").img-slider
+			img(src="img/naturaleza/720/3.jpg").img-slider
+			img(src="img/naturaleza/720/4.jpg").img-slider
+			img(src="img/naturaleza/720/5.jpg").img-slider
+
+		p
+		br
+		p
+		br
+
 		
 		script(src="js/lib/jquery-3.3.1.min.js")
 		script(src="js/plugin/greatslider.jquery.js")

@@ -89,3 +89,6 @@ $('#next').click(()=>{
 $('#prev').click(()=>{
 	$miSlider.goTo('prev');
 });
+
+// Slider Swipe de Fotos uniformes con parametros de configuración en atributo data
+$('#fotosdata').greatSlider();
