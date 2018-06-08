@@ -53,7 +53,7 @@ let $miSlider = $('#breakpoints').greatSlider({
 	navSpeed: 500,
 	lazyLoad: true,
 	bullets: true,
-	items: 1
+	items: 1,
 	breakPoints: {
 		768: {
 			items: 2
