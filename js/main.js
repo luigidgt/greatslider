@@ -21,11 +21,7 @@ $('#fotoswipe').greatSlider({
 $('#fotos').greatSlider({
 	type: 'fade',
 	nav: true,
-	bullets: false,
-	layout: {
-		arrowPrevContent: 'ANTERIOR',
-		arrowNextContent: 'SIGUIENTE'
-	}
+	bullets: false
 });
 
 // Slider Swipe de Fotos no uniformes
@@ -57,7 +53,7 @@ let $miSlider = $('#breakpoints').greatSlider({
 	navSpeed: 500,
 	lazyLoad: true,
 	bullets: true,
-	items: 1,
+	items: 1
 	breakPoints: {
 		768: {
 			items: 2
