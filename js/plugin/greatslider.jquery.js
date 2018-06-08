@@ -141,7 +141,9 @@
 
 					noneClass: 'gs-none',
 					attachedClass: 'gs-attached',
-					builtClass: 'gs-builded'
+					builtClass: 'gs-builded',
+					resizeClass: 'gs-resize',
+					resizedClass: 'gs-resized'
 				}
 			};
 
@@ -296,11 +298,26 @@
 						greatSliderBreakPoint = false;
 						// para los breakpoints
 						$(window).resize(() => {
+							//para que el reacomodo de los items en resize no sea tan brusco
+							if(!_this.hasClass(sLayout.resizeClass)) _this.addClass(sLayout.resizeClass);
+
 							if (greatSliderBreakPoint !== false) clearTimeout(greatSliderBreakPoint);
 							greatSliderBreakPoint = setTimeout(() => {
 								let wWindow = window.innerWidth;
 								let onResized = settings.onResized;
 								if (onResized !== undefined) onResized(wWindow);
+
+								//para que el reacomodo de los items en resize no sea tan brusco
+								if(!_this.hasClass(sLayout.resizedClass)) {
+									setTimeout(()=>{
+										 _this.addClass(sLayout.resizedClass);
+									}, 500);
+								}
+
+								setTimeout(()=>{
+									_this.removeClass(sLayout.resizeClass).removeClass(sLayout.resizedClass);
+								}, 1000);
+
 								//
 								_objThis.breakPoints(theBreakPoints, wWindow);
 							}, 750);

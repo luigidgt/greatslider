@@ -21,7 +21,11 @@ $('#fotoswipe').greatSlider({
 $('#fotos').greatSlider({
 	type: 'fade',
 	nav: true,
-	bullets: false
+	bullets: false,
+	layout: {
+		arrowPrevContent: 'ANTERIOR',
+		arrowNextContent: 'SIGUIENTE'
+	}
 });
 
 // Slider Swipe de Fotos no uniformes

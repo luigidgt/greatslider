@@ -89,9 +89,44 @@
 
 			noneClass: 'gs-none', // clase general que desaparece del DOM a varios elementos
 			attachedClass: 'gs-attached', // clase general indicativa de anidación de eventos sobre un elemento.
-			builtClass: 'gs-builded' // clase que se agrega al slider cuando fué construido la estructura
+			builtClass: 'gs-builded', // clase que se agrega al slider cuando fué construido la estructura
+			resizeClass: 'gs-resize' // clase que se agrega cuando se está redimencionando la ventana.
+		},
 
-		}
+		breakPoints: {}
+		/* éste objeto es netamente opcional y se usa para determinar una configuración diferente dependiendo el ancho de la pantalla, éste contendrá a su vez más objetos, en donde la propiedad de cada objeto será el ancho de la pantalla que como mínimo debe cumplirse para los nuevos parametros de configuración que se darán.
+
+			* Ejemplo:
+
+				cuando la pantalla tenga...
+
+					- 768 de ancho como mínimo, los items serán 2
+
+					- 1280 las flechas se activarán y mostrarán, y los bullets desaparecerán
+
+					- 1440 los items a mostrar serán de 3 y cada pase será de 3 en 3.
+
+
+
+			breakPoints: {
+
+				768: {
+					items: 2
+				},
+
+				1280: {
+					nav: true, 
+					bullets: false
+				},
+
+				1440: {
+					items: 3,
+					slideBy: 3
+				}
+
+			}
+		*/
+
 
 	}
 
@@ -116,7 +151,7 @@
 	- onStepEnd: cuando se termina de hacer un pase de frame(s).
 		-> itemActivo, indexItemActivo
 
-	- onResized: cuando se está redimencionando la pantalla.
+	- onResized: cuando ya se redimencionó la pantalla.
 		-> el ancho de la pantalla
 
 	- onLastItem: cuando se llega al último item.
