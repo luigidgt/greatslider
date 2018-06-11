@@ -91,6 +91,7 @@
 			attachedClass: 'gs-attached', // clase general indicativa de anidación de eventos sobre un elemento.
 			builtClass: 'gs-builded', // clase que se agrega al slider cuando fué construido la estructura
 			resizeClass: 'gs-resize' // clase que se agrega cuando se está redimencionando la ventana.
+			resizedClass: 'gs-resized', // clase que se le agrega cuando el redimencionamiento a concluido, ésta clase es temporal, y desaparece en 1 segundo.
 		},
 
 		breakPoints: {}

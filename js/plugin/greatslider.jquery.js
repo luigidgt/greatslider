@@ -59,11 +59,13 @@
 	
 	$.fn.greatSlider = function(options){
 
-		let actions;
+		let selections = this.length,
+				returns = [],
+				optionsBk = options;
 
 		this.each(function(){ // para el tratado de multiples slider con la misma clase
 			let _this = $(this);
-			if (!_this.length) return console.error('* Great Slider [Logger] : No existe el contenedor maestro para hacer el slider.');
+			if (!selections) return console.error('* Great Slider [Logger] : No existe el contenedor maestro para hacer el slider.');
 
 			let settings = {
 				type: 'fade', // fade, swipe
@@ -225,7 +227,7 @@
 			}
 
 			// Acciones disponibles
-			actions = {
+			let actions = {
 
 				init: function(configs){
 					
@@ -397,7 +399,8 @@
 							// si el lazy está activado
 							if (configs.lazyLoad) this.loadLazy($firstItem);
 
-							configsBk.autoHeight = true;
+							// si no se declaro un autoHeight de le asigna automáticamente
+							if(optionsBk.autoHeight == undefined) configs.autoHeight = true;
 
 							// auto height
 							setTimeout(()=>{
@@ -1231,11 +1234,12 @@
 			}
 
 			// Inicializando
-			actions.init(settings);	
+			actions.init(settings);
+			(selections == 1) ? returns = actions : returns.push(actions);
 
 		});
-
-		return actions;
+		
+		return returns;
 	}
 
 }(jQuery));
