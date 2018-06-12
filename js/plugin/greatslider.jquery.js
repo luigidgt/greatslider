@@ -643,12 +643,12 @@
 
 					// haciendo click PREV
 					_this.find('.' + sLayout.arrowPrevClass).on('click', function(){
-						_objThis.goTo('prev', configs);
+						_objThis.goTo('prev');
 					});
 
 					// haciendo click NEXT
 					_this.find('.' + sLayout.arrowNextClass).on('click', function(){
-						_objThis.goTo('next', configs);
+						_objThis.goTo('next');
 					});
 				},
 
