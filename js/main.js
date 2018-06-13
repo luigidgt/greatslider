@@ -10,11 +10,18 @@ $('.lostestimonios').greatSlider({
 });
 
 // Slider Swipe de Fotos uniformes con Full Screen
-$('#fotoswipe').greatSlider({
+const $sliderFs = $('#fotoswipe').greatSlider({
 	type: 'swipe',
 	nav: true,
 	bullets: false,
-	fullscreen: true
+	fullscreen: true,
+	onFullscreenIn: ()=>{
+		console.log('entré a FS');
+	}
+});
+
+$('#fsBtn').click(()=>{
+	$sliderFs.fullscreen('in');
 });
 
 //Slider Fade de Fotos uniformes
