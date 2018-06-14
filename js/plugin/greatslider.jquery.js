@@ -353,6 +353,13 @@
 				},
 
 				items: function(configs) {
+					/*
+					if (typeof configs == 'number') {
+						configs = $.extend(configsBk, {items: configs});
+						this.bullets(configs);
+						console.log('configs es un numero');
+					}
+					*/
 
 					// Construcción del slider
 					if (!_this.hasClass(sLayout.builtClass)) {
@@ -1136,7 +1143,6 @@
 					// adición y sustracción de clase indicativa y ejecución de evento interno onFullscreen
 					$(document).on(fullScreenApi.fullScreenEventName, ()=>{
 						if (fullScreenApi.isFullScreen()){ // in
-
 							if (_this.hasClass(sLayout.fsInClass)) {
 								let inFs = configs.onFullscreenIn;
 								if(inFs !== undefined) inFs();

@@ -61,6 +61,7 @@ let $miSlider = $('#breakpoints').greatSlider({
 	lazyLoad: true,
 	bullets: true,
 	items: 1,
+	fullscreen: true,
 	breakPoints: {
 		768: {
 			items: 2
@@ -74,6 +75,13 @@ let $miSlider = $('#breakpoints').greatSlider({
 			items: 4,
 			bullets: true
 		}
+	},
+	onFullscreenIn: ()=>{
+		console.log('entré a FULL SCREEN');
+		//$miSlider.items(1);
+	},
+	onFullscreenOut: ()=>{
+		console.log('salí de FULL SCREEN');
 	}
 });
 
