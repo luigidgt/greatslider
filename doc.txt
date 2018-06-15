@@ -226,16 +226,48 @@
 		- Saber que item está activo: slider.getActive();
 			-> {item, index}
 
+	- Bullets:
+
+		- Activar los bullets: slider.bullets(true), o desactivarlos slider.bullets(false)
+		- Refrescar los bullets slider.bullets('refresh'), normalmente esto se usa para recrearlos.
+
+	- Flechas:
+
+		- Activar o desactivar las flechas: slider.navs(true) o slider.navs(false)
+
+	- Items:
+
+		- Cambiar los items a mostrar:
+
+			- Mostrar 1 item a la vez: slider.items(1)
+			- Mostrar 3 item a la vez: slider.items(3)
+			- Mostrar 4 item a la vez: slider.items(4)
+
 	- Acciones varias:
 
 		- Destruir el slider: slider.destroy();
 
+		
+
 
 * NOTAS IMPORTANTES:
 	
-	- el parametro 'autoHeight' solo aplica cuando el parametro de configuración 'items' es igual a 1, cuando no se está en 'Full Screen' y obviamente cuando el 'autoHeight' es igual a 'true', a menos que el tipo de slider sea 'fade', en ese caso el 'autoHeight' se aplicará automáticamente.
+	- el parametro 'autoHeight' solo aplica cuando el parametro de configuración 'items' es igual a 1, cuando no se está en 'Full Screen' y obviamente cuando el 'autoHeight' es igual a 'true', a menos que el tipo de slider sea 'fade', en ese caso el 'autoHeight' se aplicará automáticamente, amenos que explicitamente se determine en 'false'.
 
-	- Cuando se crean multiples sliders con una selección multiple, EJM: $('.sliders').greatSlider(), solo será posible acceder a los métodos del último slider creado.
+	- Cuando se crean multiples sliders con una selección multiple:
+
+			EJM: $('.sliders').greatSlider()
+		
+			-> para acceder a sus métodos hace falta que primero se guarde en una variable el llamado del slider:
+
+				EJM: var misSliders = $('.sliders').greatSlider()
+
+				para luego acceder a éstos deacuerdo al orden de creación, digamos que se crearón 5 sliders con el inicializador de arriba, para acceder al metodo "goTo('next')" (para ir al siguiente item), se debe hacer así:
+
+				misSliders[4].goTo('next'); (OJO: pongo 4, xq el indice es 0)
+
+
+
 
 /*
 

@@ -78,7 +78,6 @@ let $miSlider = $('#breakpoints').greatSlider({
 	},
 	onFullscreenIn: ()=>{
 		console.log('entré a FULL SCREEN');
-		//$miSlider.items(1);
 	},
 	onFullscreenOut: ()=>{
 		console.log('salí de FULL SCREEN');
@@ -103,6 +102,28 @@ $('#next').click(()=>{
 
 $('#prev').click(()=>{
 	$miSlider.goTo('prev');
+});
+
+// Break points simples
+let $bksimples = $('#bpsimples').greatSlider({
+	type: 'swipe',
+	nav: true,
+	navSpeed: 800,
+	lazyLoad: true,
+	items: 1,
+	fullscreen: true,
+	breakPoints: {
+		1024: {
+			items: 2,
+			slideBy: 2
+		}
+	},
+	onFullscreenIn: ()=>{
+		console.log('DDD entré a FULL SCREEN');
+	},
+	onFullscreenOut: ()=>{
+		console.log('DDD salí de FULL SCREEN');
+	}
 });
 
 // Slider Swipe de Fotos uniformes con parametros de configuración en atributo data

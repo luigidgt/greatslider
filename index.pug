@@ -7,9 +7,13 @@ html(lang="es")
 		link(rel="stylesheet", href="css/styles.css")
 		// estilos solo de muestra
 		style.
-			#breakpoints {
+			#breakpoints, #bpsimples {
 				margin-left:auto;
 				margin-right:auto;
+			}
+
+			#bpsimples {
+				max-width: 1024px;
 			}
 
 			.gs-container-slider {
@@ -323,6 +327,24 @@ html(lang="es")
 			iframe(width="100%", height="487px", data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&t=13s&rel=0&showinfo=0&iv_load_policy=3", frameborder="0", allowfullscreen).gs-lazy
 			
 			iframe(width="100%", height="487px", data-lazy="https://vimeo.com/270221211#&autoplay=1", frameborder="0", allowfullscreen).gs-lazy
+
+		p
+		br
+		p
+		br
+
+		h2 Slider Swipe de fotos con breakpoints simples
+		#bpsimples.gs-container-slider
+			img(data-lazy="img/naturaleza/720/1.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/2.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/3.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/4.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/5.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/6.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/7.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/8.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/9.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/10.jpg").img-slider.gs-lazy
 
 		p
 		br
