@@ -95,7 +95,8 @@
 			resizedClass: 'gs-resized', // clase que se le agrega cuando el redimencionamiento a concluido, ésta clase es temporal, y desaparece en 1 segundo.
 		},
 
-		breakPoints: {}
+		
+		breakPoints: {},
 		/* éste objeto es netamente opcional y se usa para determinar una configuración diferente dependiendo el ancho de la pantalla, éste contendrá a su vez más objetos, en donde la propiedad de cada objeto será el ancho de la pantalla que como mínimo debe cumplirse para los nuevos parametros de configuración que se darán.
 
 			* Ejemplo:
@@ -129,6 +130,16 @@
 			}
 		*/
 
+		destroy: true,
+		/*
+		 éste parametro es netamente opcional, y se usa normalmente en un breakpoint, digamos que queremos que en la dimención de 1280 se destruya el slider, lo agregamos así:
+
+				breakPoints: {
+					1280: {
+						destroy: true
+					}
+				}
+		*/
 
 	}
 
@@ -277,7 +288,7 @@
 	Cosas en las que tengo que trabajar:
 
 	- carga condicionada por parametro de configuración del mini reset interno.
-	- agregar la funcionalidad de ejecución del metodo destroyed bajo un breakpoint.
+	- agregar la funcionalidad de ejecución del metodo destroyed bajo un breakpoint. - LISTO!
 	- agreagar metodo de inicializacion del slider, tmb en breakpoint, como el de arriba.
 
 

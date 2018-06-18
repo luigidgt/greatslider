@@ -166,9 +166,10 @@
 
 			// variables globales
 			let breakPoint = 0,
-					greatSliderInterval,
-					greatSliderBreakPoint,
-					greatSliderAutoHeight,
+					gsInterval,
+					gsBreakPoint,
+					gsAutoHeight,
+					gsIntervalSet,
 					$wrapperItems,
 					items,
 					nItems,
@@ -237,6 +238,15 @@
 					let _objThis = this;
 					configsBk = configs; // relleno para consumirlo globalmente
 
+					// verificamos si se desea destruir (por BreakPoint)
+					if (configs.destroy) {
+						this.destroy();
+						return false;
+					}
+
+					// Si se determinó un auto pase del slider
+					(configs.autoplay) ? this.autoPlay('play', configs) : this.autoPlay('stop', configs);
+
 					// Si aun no se construye el slider
 					if (!_this.hasClass(sLayout.builtClass)) {
 
@@ -257,10 +267,10 @@
 
 						// anidando functión autoHeight en redimencionamiento de ventana si el slider es fade o se definió el autoheight
 						if(configs.autoHeight || configs.type =='fade') {
-							greatSliderAutoHeight = false;
+							gsAutoHeight = false;
 							$(window).resize(() => {
-								if (greatSliderAutoHeight !== false) clearTimeout(greatSliderAutoHeight);
-								greatSliderAutoHeight = setTimeout(() => {
+								if (gsAutoHeight !== false) clearTimeout(gsAutoHeight);
+								gsAutoHeight = setTimeout(() => {
 									autoHeight(this.getActive().item);
 								}, 750);
 							});
@@ -300,14 +310,14 @@
 					let theBreakPoints = configs.breakPoints;
 					if(theBreakPoints !== undefined) {
 						_objThis.breakPoints(theBreakPoints, window.innerWidth)
-						greatSliderBreakPoint = false;
+						gsBreakPoint = false;
 						// para los breakpoints
 						$(window).resize(() => {
 							//para que el reacomodo de los items en resize no sea tan brusco
 							if(!_this.hasClass(sLayout.resizeClass)) _this.addClass(sLayout.resizeClass);
 
-							if (greatSliderBreakPoint !== false) clearTimeout(greatSliderBreakPoint);
-							greatSliderBreakPoint = setTimeout(() => {
+							if (gsBreakPoint !== false) clearTimeout(gsBreakPoint);
+							gsBreakPoint = setTimeout(() => {
 								let wWindow = window.innerWidth;
 								let onResized = settings.onResized;
 								if (onResized !== undefined) onResized(wWindow);
@@ -350,9 +360,6 @@
 						}
 						this.goTo(startPosition, true);
 					}
-
-					// Si se determinó un auto pase del slider
-					if(configs.autoplay) this.autoPlay('play', configs);
 				},
 
 				items: function(configs) {
@@ -1067,15 +1074,19 @@
 				autoPlay: function(action, configs) {
 					if (configs == undefined) configs = configsBk;
 					if(action == 'play') {
-						if (typeof greatSliderInterval == 'undefined' || typeof greatSliderInterval == 'number') {
-							greatSliderInterval = setInterval(()=>{
+
+						if(gsIntervalSet !== undefined) return false; // por si se detuvo previamente
+						gsIntervalSet = true;
+
+						if (typeof gsInterval == 'undefined' || typeof gsInterval == 'number') {
+							gsInterval = setInterval(()=>{
 								this.goTo('next');
 							}, configs.autoplaySpeed);
 						}
 						let playAP = configs.onPlay;
 						if (playAP !== undefined) playAP();
 					} else if (action == 'stop'){
-						clearInterval(greatSliderInterval);
+						clearInterval(gsInterval);
 						let stopAP = configs.onStop;
 						if (stopAP !== undefined) stopAP();
 					}
@@ -1211,6 +1222,7 @@
 				},
 
 				destroy: () => {
+					if(!_this.hasClass(sLayout.builtClass)) return false;
 					let htmlPure = '';
 					_this.find('.' + sLayout.itemWrapperClass).each( function() {
 						htmlPure += $(this).html();
