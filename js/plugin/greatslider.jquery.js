@@ -1124,8 +1124,10 @@
 								let outFs = configs.onFullscreenOut;
 								if(outFs !== undefined) outFs();
 								//volviendo a los items que tenía
-								let itemsCurrent = this.getItems();
-								if(itemsCurrent !== lastItems) this.items(lastItems);
+								if(lastItems !== undefined) {
+									let itemsCurrent = this.getItems();
+									if(itemsCurrent !== lastItems) this.items(lastItems);
+								}
 								//
 								$(document).off('keyup', navByArrow);
 								setTimeout(()=>{ //

@@ -70,7 +70,6 @@ let $miSlider = $('#breakpoints').greatSlider({
 	lazyLoad: true,
 	bullets: true,
 	items: 1,
-	itemsInFs: 2,
 	fullscreen: true,
 	breakPoints: {
 		768: {

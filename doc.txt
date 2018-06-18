@@ -251,8 +251,6 @@
 
 		- Destruir el slider: slider.destroy();
 
-		
-
 
 * NOTAS IMPORTANTES:
 	
@@ -271,8 +269,6 @@
 				misSliders[4].goTo('next'); (OJO: pongo 4, xq el indice es 0)
 
 	- Cuando se pasa a full Screen, el slider automáticamente cambia a 'mostrar 1 solo item'.
-
-
 
 
 /*
