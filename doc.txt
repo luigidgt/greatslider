@@ -16,6 +16,7 @@
 		navSpeed: 500, // en milisegundos
 
 		items: 1, // numero de items a mostrar en pantalla
+		itemsInFs: 1, // los items que se mostrarán cuando se pase a Full Screen.
 		slideBy: 1, // numero de items entre cada pase
 
 		touch: true, // true, false: habilita o deshabilita la navegación por touch.
@@ -226,6 +227,9 @@
 		- Saber que item está activo: slider.getActive();
 			-> {item, index}
 
+		- Saber cuantos items se están mostrando: slider.getItems();
+			-> numero
+
 	- Bullets:
 
 		- Activar los bullets: slider.bullets(true), o desactivarlos slider.bullets(false)
@@ -265,6 +269,8 @@
 				para luego acceder a éstos deacuerdo al orden de creación, digamos que se crearón 5 sliders con el inicializador de arriba, para acceder al metodo "goTo('next')" (para ir al siguiente item), se debe hacer así:
 
 				misSliders[4].goTo('next'); (OJO: pongo 4, xq el indice es 0)
+
+	- Cuando se pasa a full Screen, el slider automáticamente cambia a 'mostrar 1 solo item'.
 
 
 

@@ -75,6 +75,7 @@
 				navSpeed: 500, // en milisegundos
 
 				items: 1,
+				itemsInFs: 1,
 				slideBy: 1,
 
 				touch: true, 
@@ -171,6 +172,7 @@
 					$wrapperItems,
 					items,
 					nItems,
+					currentItems,
 					sLayout = settings.layout,
 					attachedClass = sLayout.attachedClass,
 					displayNodeClass = sLayout.noneClass,
@@ -409,13 +411,13 @@
 							// si el lazy está activado
 							if (configs.lazyLoad) this.loadLazy($firstItem);
 
-							// si no se declaro un autoHeight de le asigna automáticamente
-							if(optionsBk.autoHeight == undefined) configs.autoHeight = true;
-
-							// auto height
-							setTimeout(()=>{
-								autoHeight(this.getActive().item);
-							}, 500);
+							// si no se declaro en las 'opciones' un autoHeight de le asigna automáticamente por la naturaleza del slider
+							if(optionsBk.autoHeight == undefined) {
+								configs.autoHeight = true;
+								setTimeout(()=>{
+									autoHeight(this.getActive().item);
+								}, 500);
+							}
 						},
 
 						swipe: () => { // arrastre
@@ -424,6 +426,7 @@
 							// items
 							let initItems = configs.items,
 									transStyle = 'width: ' + ((nItems * 100) / initItems) + '%;';
+							currentItems = initItems; // para consumir globalmente.
 							transPrefix.forEach(thePrefix => {
 								transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's ' + sLayout.transitionMode + ' 0s, height .3s linear 0s;'
 							});
@@ -523,6 +526,10 @@
 					} else {
 						this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
 					}
+				},
+
+				getItems: ()=>{
+					return currentItems;
 				},
 
 				bullets: function(action, configs) {
@@ -964,7 +971,7 @@
 								itemToActive = (leftItems < configs.slideBy) ? activeItemIndex + leftItems : activeItemIndex + configs.slideBy;
 							}	
 						} else { // es prev
-							if(activeItemIndex == (configs.slideBy - 1)) {
+							if(activeItemIndex == (configs.items - 1)) {
 								itemToActive = items.length - 1;
 							} else {
 								let leftItems = (activeItemIndex + 1) - configs.slideBy;
@@ -1076,11 +1083,11 @@
 
 				fullscreen: function(configs) {
 					let _objThis = this,
-							$fsElement = _this.find(sLayout.fsButton);
+							$fsElement = _this.find(sLayout.fsButton),
+							lastItems;
 
 					// funciones útiles
 					let navByArrow = event => {
-
 						if (event.type == 'keyup') {
 							switch(event.which){
 								case 37:
@@ -1098,23 +1105,29 @@
 					}
 
 					let envOnFullScreen = event => {
+						configs = configsBk;
 						if (fullScreenApi.isFullScreen()){ // in
 							if (_this.hasClass(sLayout.fsInClass)) {
 								let inFs = configs.onFullscreenIn;
 								if(inFs !== undefined) inFs();
 								$(document).on('keyup', navByArrow);
 								this.loadLazy(this.getActive().item);
-								// seguir trabajando aca, agregar:
-								/*
-									poner condicional no por si tiene breakpoints, xq pueda ser que por defecto sean 2 items, y hay q convertir a item
-								*/
+								// cambiando a 1 items visibles
+								let itemsCurrent = this.getItems();
+								if(itemsCurrent !== 1) {
+									lastItems = itemsCurrent;
+									this.items(configs.itemsInFs);
+								}
 							}
 						} else { // out
 							if (_this.hasClass(sLayout.fsInClass)) {
 								let outFs = configs.onFullscreenOut;
 								if(outFs !== undefined) outFs();
+								//volviendo a los items que tenía
+								let itemsCurrent = this.getItems();
+								if(itemsCurrent !== lastItems) this.items(lastItems);
+								//
 								$(document).off('keyup', navByArrow);
-								
 								setTimeout(()=>{ //
 									if (configs.lazyLoad && configs.items == 1) {
 										let i = 0;
@@ -1124,7 +1137,7 @@
 											i++;
 										};
 									}
-									if (!configs.lazyLoad) autoHeight(this.getActive().item);
+									if (!configs.lazyLoad && configs.autoHeight) autoHeight(this.getActive().item);
 								}, 700); // para dar tiempo al navegador en la transición desde cuando se canceló el Fs y se completó
 								//
 								_this.removeClass(sLayout.fsInClass);
@@ -1142,7 +1155,7 @@
 										_objThis.log({type: 'not', text: 'Ya nos encontramos en fullscreen.', required: true});
 									} else {
 										_this.addClass(sLayout.fsInClass);
-										$fsElement.addClass(sLayout.fsInClass)
+										$fsElement.addClass(sLayout.fsInClass);
 										fullScreenApi.requestFullScreen(_this.get(0));
 										$(document).on(fullScreenApi.fullScreenEventName, envOnFullScreen);
 									}
@@ -1191,9 +1204,8 @@
 						this.fullscreen((!this.fullscreen('check')) ? 'in' : 'out');
 					});
 
-				
+					// anidación antigua
 					//$(document).on(fullScreenApi.fullScreenEventName, envOnFullScreen);
-
 				},
 
 				destroy: () => {

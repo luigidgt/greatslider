@@ -16,7 +16,10 @@ const $sliderFs = $('#fotoswipe').greatSlider({
 	bullets: false,
 	fullscreen: true,
 	onFullscreenIn: ()=>{
-		console.log('entré a FS');
+		console.log('entré a FULL SCREEN: #fotoswipe');
+	},
+	onFullscreenOut: ()=>{
+		console.log('salí de FULL SCREEN: #fotoswipe');
 	}
 });
 
@@ -39,11 +42,17 @@ $('#fotosb').greatSlider({
 });
 
 // Slider Swipe de Fotos uniformes con fullscreen y lazy diferente en fullscreen
-$('#fotosc').greatSlider({
+const $fotosc = $('#fotosc').greatSlider({
 	type: 'swipe',
 	nav: true,
 	lazyLoad: true,
-	fullscreen: true
+	fullscreen: true,
+	onFullscreenIn: ()=>{
+		console.log('entré a FULL SCREEN: #fotosc');
+	},
+	onFullscreenOut: ()=>{
+		console.log('salí de FULL SCREEN: #fotosc');
+	}
 });
 
 // Slider Swipe de foto y Videos con lazy
@@ -61,6 +70,7 @@ let $miSlider = $('#breakpoints').greatSlider({
 	lazyLoad: true,
 	bullets: true,
 	items: 1,
+	itemsInFs: 2,
 	fullscreen: true,
 	breakPoints: {
 		768: {
@@ -77,10 +87,10 @@ let $miSlider = $('#breakpoints').greatSlider({
 		}
 	},
 	onFullscreenIn: ()=>{
-		console.log('entré a FULL SCREEN');
+		console.log('entré a FULL SCREEN: #breakpoints');
 	},
 	onFullscreenOut: ()=>{
-		console.log('salí de FULL SCREEN');
+		console.log('salí de FULL SCREEN: #breakpoints');
 	}
 });
 
@@ -119,10 +129,10 @@ let $bksimples = $('#bpsimples').greatSlider({
 		}
 	},
 	onFullscreenIn: ()=>{
-		console.log('DDD entré a FULL SCREEN');
+		console.log('DDD entré a FULL SCREEN: #bpsimples');
 	},
 	onFullscreenOut: ()=>{
-		console.log('DDD salí de FULL SCREEN');
+		console.log('DDD salí de FULL SCREEN: #bpsimples');
 	}
 });
 
