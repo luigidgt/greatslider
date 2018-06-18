@@ -59,26 +59,21 @@ let $miSlider = $('#breakpoints').greatSlider({
 	bullets: true,
 	items: 1,
 	fullscreen: true,
-	autoplay: true,
-	autoplaySpeed: 3000,
 	breakPoints: {
 		768: {
 			items: 2
 		},
-		1280: {
+		1024: {
 			items: 3,
 			bullets: false,
-			nav: true,
-			autoplay: false
+			nav: true
 		},
-		1366: {
+		1280: {
 			items: 4,
-			bullets: true,
-			autoplay: true
+			bullets: true
 		},
-		1600: {
-			bullets: false,
-			autoplay: false
+		1440: {
+			bullets: false
 		}
 	},
 	onPlay: ()=>{

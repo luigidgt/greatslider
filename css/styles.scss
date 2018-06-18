@@ -325,7 +325,7 @@
 }
 
 // Full Screen
-.gs-fs {
+.gs-style-btnfs {
 	display:block;
 	width: 40px;
 	height: 40px;
@@ -364,7 +364,6 @@
 		transform: rotate(-45deg);
 	}
 
-	
 	&:hover {
 		cursor: pointer;
 		opacity: 1;
@@ -393,6 +392,5 @@
 			right: 9px;
 			transform: rotate(135deg);
 		}
-
 	}
 }

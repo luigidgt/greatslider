@@ -139,8 +139,9 @@
 					bulletActiveClass: 'gs-bullet-active',
 					bulletDefaultStyles: true,
 
-					fsButton: '.gs-fs',
 					fsButtonTag: 'button',
+					fsButtonClass: 'gs-fs',
+					fsButtonDefaultStyles: true,
 					fsInClass: 'gs-infs',
 
 					noneClass: 'gs-none',
@@ -1075,7 +1076,7 @@
 					if (configs == undefined) configs = configsBk;
 					if(action == 'play') {
 
-						if(gsIntervalSet !== undefined) return false; // por si se detuvo previamente
+						if(gsIntervalSet !== undefined) return false; // por si se seteó el intervalo previamente
 						gsIntervalSet = true;
 
 						if (typeof gsInterval == 'undefined' || typeof gsInterval == 'number') {
@@ -1089,12 +1090,13 @@
 						clearInterval(gsInterval);
 						let stopAP = configs.onStop;
 						if (stopAP !== undefined) stopAP();
+						gsIntervalSet = undefined;
 					}
 				},
 
 				fullscreen: function(configs) {
 					let _objThis = this,
-							$fsElement = _this.find(sLayout.fsButton),
+							$fsElement = _this.find('.' + sLayout.fsButtonClass),
 							lastItems;
 
 					// funciones útiles
@@ -1199,7 +1201,7 @@
 						if (!fullScreenApi.supportsFullScreen) return this.log({type: 'war', text: 'El dispositivo actual no soporta Full Screen.', required: true});
 						// construcción del boton
 						if(!$fsElement.length) {
-							_this.append('<' + sLayout.fsButtonTag + ' ' + ((sLayout.fsButton.indexOf('#') !== -1) ? 'id' : 'class') + '="' + sLayout.fsButton.substr(1) + '"></' + sLayout.fsButtonTag + '>');
+							_this.append('<' + sLayout.fsButtonTag + ' class="' + sLayout.fsButtonClass + ((sLayout.fsButtonDefaultStyles) ? ' gs-style-btnfs' : '') + '"></' + sLayout.fsButtonTag + '>');
 							$fsElement = _this.find(sLayout.fsButton);
 						} else {
 							if ($fsElement.hasClass(displayNodeClass)) $fsElement.removeClass(displayNodeClass)

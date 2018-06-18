@@ -288,13 +288,9 @@
 	Cosas en las que tengo que trabajar:
 
 	- carga condicionada por parametro de configuración del mini reset interno.
-	- agregar la funcionalidad de ejecución del metodo destroyed bajo un breakpoint. - LISTO!
-	- agreagar metodo de inicializacion del slider, tmb en breakpoint, como el de arriba.
-
 
 	Cosas para hacer posiblemente:
 
-		- que el auto play pueda desactivarce por breakpoint
 		- agregar preload
 		- anidación de navegación por la ruedita del mouse en fullscreen
 
