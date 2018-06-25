@@ -270,6 +270,7 @@
 						if(configs.autoHeight || configs.type =='fade') {
 							gsAutoHeight = false;
 							$(window).resize(() => {
+
 								if (gsAutoHeight !== false) clearTimeout(gsAutoHeight);
 								gsAutoHeight = setTimeout(() => {
 									autoHeight(this.getActive().item);
@@ -314,6 +315,8 @@
 						gsBreakPoint = false;
 						// para los breakpoints
 						$(window).resize(() => {
+
+							if (_this.hasClass(sLayout.fsInClass)) return false;
 							//para que el reacomodo de los items en resize no sea tan brusco
 							if(!_this.hasClass(sLayout.resizeClass)) _this.addClass(sLayout.resizeClass);
 
@@ -1121,8 +1124,10 @@
 						configs = configsBk;
 						if (fullScreenApi.isFullScreen()){ // in
 							if (_this.hasClass(sLayout.fsInClass)) {
+								// evento
 								let inFs = configs.onFullscreenIn;
 								if(inFs !== undefined) inFs();
+								//
 								$(document).on('keyup', navByArrow);
 								this.loadLazy(this.getActive().item);
 								// cambiando a 1 items visibles
