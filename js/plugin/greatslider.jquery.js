@@ -1216,6 +1216,8 @@
 						return false;
 					}
 
+					$fsElement = _this.find('.' + sLayout.fsButtonClass); // volviendolo a declarar por su creación
+
 					if ($fsElement.hasClass(attachedClass)) return false; // ya se adjunto el evento click
 					$fsElement.addClass(attachedClass);
 

@@ -75,12 +75,6 @@ let $miSlider = $('#breakpoints').greatSlider({
 		1440: {
 			bullets: false
 		}
-	},
-	onPlay: ()=>{
-		console.log('en onPlay');
-	},
-	onStop: ()=> {
-		console.log('en Stop');
 	}
 });
 
@@ -117,12 +111,6 @@ let $bksimples = $('#bpsimples').greatSlider({
 			items: 2,
 			slideBy: 2
 		}
-	},
-	onFullscreenIn: ()=>{
-		console.log('DDD entré a FULL SCREEN: #bpsimples');
-	},
-	onFullscreenOut: ()=>{
-		console.log('DDD salí de FULL SCREEN: #bpsimples');
 	}
 });
 
