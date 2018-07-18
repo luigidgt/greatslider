@@ -552,10 +552,25 @@
 					}
 					//
 
-					let _objThis = this;
-					let $wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+					let _objThis = this,
+							maxBullets,
+							$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
 
 					if (configs.bullets) {
+
+						// Verificando si realmente debo crear bullets
+						maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
+						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
+
+						// si solo se necesita un bullet, entonces lo escondo, xq no tiene sentido mostrar solo 1
+						if (maxBullets == 1) {
+							if (!$wrapperBullets.hasClass(displayNodeClass)) {
+								$wrapperBullets.addClass(displayNodeClass);									
+							}
+							_objThis.log({type: 'not', text: 'No es necesario mostrar y/o crear los bullets.'});
+							return false;
+						}
+
 						// creando el container navs
 						if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
 							_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>');
@@ -582,9 +597,6 @@
 							// calculando de acuerdo a los items a mostrar.
 							let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass),
 									bulletsHtml = '';
-
-							let maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
-							if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
 
 							// activando el item correspondiente si los bullets existentes son iguales a los que crearemos
 							if ($theBullets.length == maxBullets) {
