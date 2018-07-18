@@ -100,6 +100,7 @@
 				preLoad: false,
 
 				autoHeight: false,
+				autoDestroy: false,
 
 				layout: {
 
@@ -166,7 +167,8 @@
 			delete settingsBk['layout'];
 
 			// variables globales
-			let breakPoint = 0,
+			let $existingItems = _this.find('> *'),
+					breakPoint = 0,
 					gsInterval,
 					gsBreakPoint,
 					gsAutoHeight,
@@ -367,6 +369,7 @@
 				},
 
 				items: function(configs) {
+
 					// si se llama como método indicando un cambio de items a mostrar.
 					if (typeof configs == 'number') {
 						let itemsToShow = configs;
@@ -380,7 +383,6 @@
 					// Construcción del slider
 					if (!_this.hasClass(sLayout.builtClass)) {
 
-						let $existingItems = _this.find('> *');
 						if(!$existingItems.length) return this.log({type: 'err', text: 'No existen items para crear el slider :V', required: true});
 
 						let lis = '';
@@ -533,7 +535,6 @@
 						let theIdSlider = 'gs-styles-' + $idThis.replace('gs-slider-', ''),
 								$stylesSlider = $('#' + theIdSlider);
 						($stylesSlider.length) ? $stylesSlider.html(gsStyles) : $('body').append('<style id="' + theIdSlider + '">' + gsStyles + '</style>');
-
 					} else {
 						this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
 					}
@@ -543,7 +544,8 @@
 					return currentItems;
 				},
 
-				bullets: function(action, configs) {
+				bullets: function(action, configs) { // this.bullets('active', configs);
+
 					// si la invocación del método es por una acción.
 					if (configs == undefined) configs = configsBk;
 					if (typeof action == 'boolean') {
@@ -562,7 +564,7 @@
 						maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
 						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
 
-						// si solo se necesita un bullet, entonces lo escondo, xq no tiene sentido mostrar solo 1
+						// si solo se mostrará 1 bullet, lo escondo, xq no tiene sentido mostrarlo.
 						if (maxBullets == 1) {
 							if (!$wrapperBullets.hasClass(displayNodeClass)) {
 								$wrapperBullets.addClass(displayNodeClass);									
@@ -571,17 +573,6 @@
 							return false;
 						}
 
-						// creando el container navs
-						if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
-							_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>');
-						}
-						// creando el wrapper de bullets
-						if(!$wrapperBullets.length) {
-							_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
-							$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
-						} else { // si yá existe, verifico que no esté oculto
-							if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass);
-						}
 					} else { // se determinó false
 						$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
 						if($wrapperBullets.length) { // verifico si existe
@@ -594,6 +585,19 @@
 					let actions = {
 
 						constructor: function(){
+
+							// creando el container navs
+							if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
+								_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>');
+							}
+							// creando el wrapper de bullets
+							if(!$wrapperBullets.length) {
+								_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
+								$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+							} else { // si yá existe, verifico que no esté oculto
+								if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass);
+							}
+
 							// calculando de acuerdo a los items a mostrar.
 							let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass),
 									bulletsHtml = '';
@@ -618,7 +622,6 @@
 
 						active: getIndex => {
 							let itemActive = $wrapperItems.find('.' + sLayout.itemActiveClass).index();
-
 							let bulletToActive = (itemActive + 1) / configs.items;
 							if (bulletToActive % 1 !== 0) bulletToActive = Math.floor(bulletToActive) + 1;
 							bulletToActive -= 1;
@@ -704,13 +707,18 @@
 				},
 
 				loadLazy: function($item, type) {
-					let _objThis = this;
+					let _objThis = this,
+							$lazyElements;
 
-					let $lazyElements = $item.find('.' + settings.lazyClass);
-					if (!$lazyElements.length) {
-						// dando alto relativo al contenido si no exites lazys , y si no se está en fullscreen
-						autoHeight($item);
-						return false;
+					if ($item.hasClass(settings.lazyClass)) {
+						$lazyElements = $item;
+					} else {
+						$lazyElements = $item.find('.' + settings.lazyClass);
+						if (!$lazyElements.length) {
+							// dando alto relativo al contenido si no exites lazys , y si no se está en fullscreen
+							autoHeight($item);
+							return false;
+						}
 					}
 
 					let $itemIndex = $item.index(),
@@ -758,7 +766,6 @@
 										}
 									});
 								}
-
 							},
 
 							video: ()=> {
@@ -905,7 +912,6 @@
 
 						let typeLazy = lazyTypes[_element.prop('tagName').toLowerCase()];
 						if(typeLazy !== undefined) typeLazy();
-
 					});
 				},
 
@@ -957,6 +963,16 @@
 						if (breakPoint !== finalBp) {
 							breakPoint = finalBp;
 							bkOptions = $.extend({}, settingsBk, bkOptions);
+							// verificamos si yá no es necesario el slider
+							if (settings.autoDestroy) {
+								let itemsExits = $existingItems.length;
+								if(itemsExits <= bkOptions.items) {
+									this.log({type: 'not', text: 'El slider se destruye xq ya no es necesario, la cantidad de items (' + itemsExits + ') es la misma que la de items a mostrar (' + bkOptions.items + ').', required: true});
+									this.destroy(true);
+									return false;
+								}
+							}
+							//
 							_objThis.init(bkOptions);
 						}
 					} else {
@@ -1084,7 +1100,10 @@
 					};
 
 					// Activando el Bullet correspondiente
-					if(configs.bullets) this.bullets('active', configs);
+					if(_this.hasClass(sLayout.builtClass)) {
+						if(configs.bullets) this.bullets('active', configs);
+					}
+					
 				},
 
 				autoPlay: function(action, configs) {
@@ -1242,14 +1261,30 @@
 					//$(document).on(fullScreenApi.fullScreenEventName, envOnFullScreen);
 				},
 
-				destroy: () => {
+				destroy: function(loadLazys) {
+					let _objThis = this;
 					if(!_this.hasClass(sLayout.builtClass)) return false;
+					// devolviendo items como hijos directos de su wrapper inicial
 					let htmlPure = '';
 					_this.find('.' + sLayout.itemWrapperClass).each( function() {
 						htmlPure += $(this).html();
 					});
 					_this.html(htmlPure).removeClass(sLayout.builtClass);
 					if(_this.attr('id').indexOf('gs-slider-') !== -1) _this.removeAttr('id');
+					// destruyendo navegación, si existe.
+					let $theNav = _this.find('.' + sLayout.containerNavsClass);
+					if($theNav.length) $theNav.remove();
+
+					// cargando elementos lazy, si existen
+					if (loadLazys && settings.lazyLoad) {
+						let $itemsToLoad = _this.find('.' + settings.lazyClass);
+						if($itemsToLoad.length) {
+							$itemsToLoad.each(function(){
+								_objThis.loadLazy($(this));
+							});
+						}
+					}
+					//
 					let eventDestroyed = configsBk.onDestroyed;
 					if(eventDestroyed !== undefined) eventDestroyed();
 				},
