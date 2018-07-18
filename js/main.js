@@ -116,3 +116,33 @@ let $bksimples = $('#bpsimples').greatSlider({
 
 // Slider Swipe de Fotos uniformes con parametros de configuración en atributo data
 $('#fotosdata').greatSlider();
+
+
+// Slider con auto Destroy
+$('#autodestroy').greatSlider({
+	type: 'swipe',
+	nav: false,
+	navSpeed: 500,
+	lazyLoad: true,
+	bullets: true,
+	items: 1,
+	fullscreen: true,
+	autoDestroy: true,
+	breakPoints: {
+		768: {
+			items: 2
+		},
+		1024: {
+			items: 3,
+			bullets: false,
+			nav: true
+		},
+		1280: {
+			items: 4,
+			bullets: true
+		},
+		1440: {
+			bullets: false
+		}
+	}
+});

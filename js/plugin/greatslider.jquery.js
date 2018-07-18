@@ -558,66 +558,66 @@
 							maxBullets,
 							$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
 
-					if (configs.bullets) {
-
-						// Verificando si realmente debo crear bullets
-						maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
-						if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
-
-						// si solo se mostrará 1 bullet, lo escondo, xq no tiene sentido mostrarlo.
-						if (maxBullets == 1) {
-							if (!$wrapperBullets.hasClass(displayNodeClass)) {
-								$wrapperBullets.addClass(displayNodeClass);									
-							}
-							_objThis.log({type: 'not', text: 'No es necesario mostrar y/o crear los bullets.'});
-							return false;
-						}
-
-					} else { // se determinó false
-						$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
-						if($wrapperBullets.length) { // verifico si existe
-							if (!$wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.addClass(displayNodeClass);
-							return false;	
-						} 
-					}
-
 					let classBulletActive = sLayout.bulletActiveClass;
 					let actions = {
 
 						constructor: function(){
+							if (configs.bullets) {
 
-							// creando el container navs
-							if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
-								_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>');
-							}
-							// creando el wrapper de bullets
-							if(!$wrapperBullets.length) {
-								_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
+								// Verificando si realmente debo crear bullets
+								maxBullets = (configs.type == 'fade') ? nItems : nItems / configs.items;
+								if (maxBullets % 1 !== 0) maxBullets = Math.floor(maxBullets) + 1; // si sale decimal, aumento 1
+
+								// si solo se mostrará 1 bullet, lo escondo, xq no tiene sentido mostrarlo.
+								if (maxBullets == 1) {
+									if (!$wrapperBullets.hasClass(displayNodeClass)) {
+										$wrapperBullets.addClass(displayNodeClass);									
+									}
+									_objThis.log({type: 'not', text: 'No es necesario mostrar y/o crear los bullets.'});
+									return false;
+								}
+
+
+								// creando el container navs
+								if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
+									_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>');
+								}
+								// creando el wrapper de bullets
+								if(!$wrapperBullets.length) {
+									_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
+									$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+								} else { // si yá existe, verifico que no esté oculto
+									if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass);
+								}
+
+								// calculando de acuerdo a los items a mostrar.
+								let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass),
+										bulletsHtml = '';
+
+								// activando el item correspondiente si los bullets existentes son iguales a los que crearemos
+								if ($theBullets.length == maxBullets) {
+									this.active();
+									return false;
+								}
+
+								// Creo los bullets que faltan
+								let i = 0,
+										itemToActive = this.active(true),
+										bulletTag = sLayout.bulletTag;
+								while(i < maxBullets){
+									let bulletClassActive = (i !== itemToActive) ? '' : ' ' + classBulletActive;
+									bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bulletClass + bulletClassActive + '"></' + bulletTag + '>';
+									i++;
+								}
+								$wrapperBullets.html(bulletsHtml);
+
+							} else { // se determinó false
 								$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
-							} else { // si yá existe, verifico que no esté oculto
-								if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass);
+								if($wrapperBullets.length) { // verifico si existe
+									if (!$wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.addClass(displayNodeClass);
+									return false;	
+								}
 							}
-
-							// calculando de acuerdo a los items a mostrar.
-							let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass),
-									bulletsHtml = '';
-
-							// activando el item correspondiente si los bullets existentes son iguales a los que crearemos
-							if ($theBullets.length == maxBullets) {
-								this.active();
-								return false;
-							}
-
-							// Creo los bullets que faltan
-							let i = 0,
-									itemToActive = this.active(true),
-									bulletTag = sLayout.bulletTag;
-							while(i < maxBullets){
-								let bulletClassActive = (i !== itemToActive) ? '' : ' ' + classBulletActive;
-								bulletsHtml += '<' + bulletTag + ' class="' + sLayout.bulletClass + bulletClassActive + '"></' + bulletTag + '>';
-								i++;
-							}
-							$wrapperBullets.html(bulletsHtml);
 						},
 
 						active: getIndex => {

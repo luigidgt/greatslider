@@ -28,6 +28,8 @@
 
 		autoHeight: false, // redimenciona automáticamente el alto del slider, dependiendo del contenido del item
 
+		autoDestroy: false, // esta parametro se determina en TRUE, para hacer que el slider se auto destruya si el numero de items a mostrar es el mismo que los items existentes.
+
 		log: false, // true, false: para registrar en consola toda acción o incidente ocurrido.
 
 		dataParam: 'data-gs', // OPCIONAL:  el atributo data que contendrá el objeto con los parametros de configuración, OJO: las propiedades del objeto deben estar entre comillas dobles. No se podrán incluir eventos ni metodos pero si breakpoints. Las configuraciones aquí sobre escribirán las configuraciones pasadas en el objeto inicializador del slider.

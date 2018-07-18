@@ -218,6 +218,17 @@ html(lang="es")
 				height: 45px;
 			}
 
+			#autodestroy:not(.gs-builded) {
+				overflow: hidden;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			#autodestroy:not(.gs-builded) .img-slider {
+				width: 470px;
+			}
+
 	body
 
 		h2 Slider Swipe de testimonios
@@ -397,7 +408,18 @@ html(lang="es")
 		p
 		br
 
-		
+		h2 Slider Swipe de fotos con breakpoints y con auto destrucción
+		#autodestroy.gs-container-slider
+			img(data-lazy="img/naturaleza/720/1.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/2.jpg").img-slider.gs-lazy
+			img(data-lazy="img/naturaleza/720/3.jpg").img-slider.gs-lazy
+
+		p
+		br
+		p
+		br
+
+	
 		script(src="js/lib/jquery-3.3.1.min.js")
 		script(src="js/plugin/greatslider.jquery.min.js")
 		script(src="js/main.js")
