@@ -54,9 +54,48 @@
 	window.fullScreenApi = fullScreenApi;
 })();
 
+
+
 // Great Slider Plugin
 (function($){
-	
+
+	// funciones útiles
+	let checkVideoTimes = 0;
+	let _tools = {
+		makeid: ()=> {
+			let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", text = "";
+			for (var i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+			return text.toLowerCase();
+		},
+		cleanClass: ($item, sLayout) => {
+			$item.addClass(sLayout.itemLoadedClass);
+			setTimeout(() => {
+				$item.removeClass(sLayout.itemLoadingClass);
+			}, 500);
+		},
+		checkVideoLoaded: function($item, $video, settings) {
+			let onLoadedItem = settings.onLoadedItem;
+			checkVideoTimes += 0.25;
+			if(checkVideoTimes >= 20) {
+				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'error');
+				this.cleanClass($item, settings.layout);
+				return false;
+			}
+			let theVideo = $video.get(0);
+			if (theVideo.readyState == 4) {
+				theVideo.play();
+				this.cleanClass($item, settings.layout);
+				checkVideoTimes = 0;
+				if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'success');
+			} else {
+				setTimeout(()=> {
+					this.checkVideoLoaded($item, $video, settings);
+				}, 250);
+			}
+		}
+	}
+
+	// el plugin
 	$.fn.greatSlider = function(options){
 
 		let selections = this.length,
@@ -184,53 +223,11 @@
 					$idThis,
 					configsBk;
 
-			// Funciones útiles
-			let checkVideoTimes = 0;
-			function checkVideoLoaded($item, $video){
-				let onLoadedItem = settings.onLoadedItem;
-				checkVideoTimes += 0.25;
-				if(checkVideoTimes >= 20) {
-					if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'error');
-					_cleanClass($item);
-					return false;
-				}
-				let theVideo = $video.get(0);
-				if (theVideo.readyState == 4) {
-					theVideo.play();
-					_cleanClass($item);
-					checkVideoTimes = 0;
-					if (onLoadedItem !== undefined) onLoadedItem($video, $item.index(), 'success');
-				} else {
-					setTimeout(()=> {
-						checkVideoLoaded($item, $video);
-					}, 250);
-				}
-			}
-
-			function _cleanClass($item){
-				$item.addClass(sLayout.itemLoadedClass);
-				setTimeout(() => {
-					$item.removeClass(sLayout.itemLoadingClass);
-				}, 500);
-			}
-
 			function autoHeight($item){
 				if(!actions.fullscreen('check') && configsBk.autoHeight && (configsBk.items == 1)) {
 					let $altoContent = $item.find('.' + sLayout.itemWrapperClass).height();
-					//console.log('alto del slider: ' + $altoContent);
-
-					//setTimeout(()=>{
-						let $altoWrapperSlider = $wrapperItems.height();
-								$wrapperItems.css('height', $altoContent + 'px')
-					//}, 1000);
+					$wrapperItems.css('height', $altoContent + 'px')
 				}
-			}
-
-			function makeid() {
-				let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-						text = "";
-				for (var i = 0; i < 5; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
-				return text.toLowerCase();
 			}
 
 			// Acciones disponibles
@@ -264,7 +261,7 @@
 						// Asignandole un ID si no lo tiene
 						$idThis = _this.attr('id');
 						if($idThis == undefined) {
-							$idThis = 'gs-slider-' + makeid();
+							$idThis = 'gs-slider-' + _tools.makeid();
 							_this.attr('id', $idThis);
 						}
 
@@ -752,7 +749,7 @@
 
 									let theSrcLoaded = _element.attr('src');
 									if (theSrcLoaded == dataLazy) { // si ya se cargó la imagen..
-										_cleanClass($item);
+										_tools.cleanClass($item, sLayout);
 										autoHeight($item); //.. solo adapto el alto.
 										return false;
 									}
@@ -760,13 +757,13 @@
 									_element.attr('src', dataLazy).one({
 										load: () => {
 											if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'success');
-											_cleanClass($item);
+											_tools.cleanClass($item, sLayout);
 											autoHeight($item);
 											_objThis.log({type: 'not', text: 'recurso lazy "' + dataLazy + '" cargado correctamente desde el item con posición ' + ($itemIndex + 1) + '.'});
 										},
 										error: () => {
 											if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'error');
-											_cleanClass($item);
+											_tools.cleanClass($item, sLayout);
 											_objThis.log({type: 'err', text: 'No fué posible cargar el recurso lazy "' + dataLazy + '" del item con posición ' + ($itemIndex + 1) + '.', required: true});
 										}
 									});
@@ -786,7 +783,7 @@
 										});
 									}
 									_element.get(0).load();
-									checkVideoLoaded($item, _element);
+									_tools.checkVideoLoaded($item, _element, settings);
 								} else {
 									_element.get(0).play();
 								}
@@ -879,7 +876,7 @@
 										dataLazy = 'https://player.vimeo.com/video/' + idVideo + '#' + parameters;
 										_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
 										lazyTypes.script('vimeoplayer', 'https://player.vimeo.com/api/player.js', ()=>{
-											_cleanClass($item);
+											_tools.cleanClass($item, sLayout);
 											let player = new Vimeo.Player(_element);
 	        						player.play();
 										});
