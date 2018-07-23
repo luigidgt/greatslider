@@ -224,7 +224,8 @@
 
 		- Entrar: OJO: solo funciona si se es accionado por el usuario, más no directamente.
 
-			slider.fullscreen('in'); 
+				- slider.fullscreen('in') Se mostrará el item activo en ese momento.
+				- slider.fullscreen('in', 5) Se desplazará automáticamente al item del puesto 5
 
 		- Salir:
 

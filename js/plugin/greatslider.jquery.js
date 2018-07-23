@@ -368,7 +368,7 @@
 					}
 				},
 
-				items: function(configs) {
+				items: function(configs, itemToGo2) {
 
 					// si se llama como método indicando un cambio de items a mostrar.
 					if (typeof configs == 'number') {
@@ -461,10 +461,16 @@
 								$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
 							} else { // activo el primero
 								let $activeItemIndex = $activeItem.index();
-								if ($activeItemIndex < (initItems - 1)) {
+								if ($activeItemIndex < (initItems - 1)) { // si el activo es menor
 									$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
+									$wrapperItems.removeAttr('style');
 								} else {
-									this.goTo($activeItem.index() + 1, true);
+									// para ir a un item específico si se acciona un full screen con un item específico
+									if(itemToGo2 == undefined) {
+										this.goTo($activeItem.index() + 1, true);
+									} else {
+										this.goTo(itemToGo2, true);
+									}
 								}
 							}
 
@@ -576,7 +582,6 @@
 									_objThis.log({type: 'not', text: 'No es necesario mostrar y/o crear los bullets.'});
 									return false;
 								}
-
 
 								// creando el container navs
 								if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
@@ -728,8 +733,7 @@
 
 					$lazyElements.each(function(){
 						let _element = $(this),
-								dataLazy = _element.attr(settings.lazyAttr),
-								dataLazyFs = _element.attr(settings.lazyAttrFs);
+								dataLazy = _element.attr(settings.lazyAttr);
 
 						let lazyTypes = {
 
@@ -737,6 +741,7 @@
 
 								// si se está en full screen, cargo la imagen en HD
 								if(actions.fullscreen('check')) {
+									let dataLazyFs = _element.attr(settings.lazyAttrFs);
 									if(dataLazyFs !== undefined) dataLazy = dataLazyFs;
 								}
 
@@ -985,10 +990,14 @@
 
 				getActive: function(){
 					let $activeItem = $wrapperItems.find('.' + sLayout.itemActiveClass);
-					return {item: $activeItem, index: $activeItem.index() + 1};
+					return {
+						item: $activeItem,
+						index: $activeItem.index() + 1
+					};
 				},
 
 				goTo: function(to, configs){
+
 					if (_this.hasClass(sLayout.transitionClass)) return false; // para evitar otro pase con uno yá en curso.
 
 					let $getActive = this.getActive(),
@@ -996,7 +1005,7 @@
 							activeItemIndex = $getActive.index - 1,
 							itemToActive;
 
-					if (typeof to == 'string') { // puede ser next o prev, veamos
+					if (typeof to == 'string') { // puede ser nxet o prev, veamos
 						if (configs == undefined) {
 							configs = configsBk;
 						}
@@ -1103,7 +1112,6 @@
 					if(_this.hasClass(sLayout.builtClass)) {
 						if(configs.bullets) this.bullets('active', configs);
 					}
-					
 				},
 
 				autoPlay: function(action, configs) {
@@ -1128,11 +1136,12 @@
 					}
 				},
 
-				fullscreen: function(configs) {
+				fullscreen: function(configs, itemToGo) {
+
 					let _objThis = this,
 							$fsElement = _this.find('.' + sLayout.fsButtonClass),
 							lastItems;
-
+						
 					// funciones útiles
 					let navByArrow = event => {
 						if (event.type == 'keyup') {
@@ -1155,27 +1164,32 @@
 						configs = configsBk;
 						if (fullScreenApi.isFullScreen()){ // in
 							if (_this.hasClass(sLayout.fsInClass)) {
-								// evento
-								let inFs = configs.onFullscreenIn;
-								if(inFs !== undefined) inFs();
-								//
 								$(document).on('keyup', navByArrow);
 								this.loadLazy(this.getActive().item);
 								// cambiando a 1 items visibles
 								let itemsCurrent = this.getItems();
 								if(itemsCurrent !== 1) {
 									lastItems = itemsCurrent;
-									this.items(configs.itemsInFs);
+									if (itemToGo !== undefined) {
+										this.items(configs.itemsInFs, itemToGo);
+									} else {
+										this.items(configs.itemsInFs);
+									}
 								}
+								// evento de entrada al FS
+								let inFs = configs.onFullscreenIn;
+								if(inFs !== undefined) inFs();
+								//
 							}
 						} else { // out
 							if (_this.hasClass(sLayout.fsInClass)) {
-								let outFs = configs.onFullscreenOut;
-								if(outFs !== undefined) outFs();
 								//volviendo a los items que tenía
 								if(lastItems !== undefined) {
 									let itemsCurrent = this.getItems();
-									if(itemsCurrent !== lastItems) this.items(lastItems);
+									if(itemsCurrent !== lastItems) {
+										this.items(lastItems);
+										lastItems = undefined;
+									}
 								}
 								//
 								$(document).off('keyup', navByArrow);
@@ -1193,22 +1207,29 @@
 								//
 								_this.removeClass(sLayout.fsInClass);
 								$fsElement.removeClass(sLayout.fsInClass);
+
+								itemToGo = undefined;
+								$(document).off(fullScreenApi.fullScreenEventName, envOnFullScreen); // para evitar doble anidación
+								// evento de salida de FS
+								let outFs = configs.onFullscreenOut;
+								if(outFs !== undefined) outFs();
 							}
 						} // ejecución de eventos
 					}
 
 					// es la invocación del metodo desde una acción
-					if (typeof configs == 'string') { 
+					if (typeof configs == 'string') {
+
 						if (fullScreenApi.supportsFullScreen) {
 							let actionsFs = {
 								in: ()=> {
-									if(_objThis.fullscreen('check')) {
-										_objThis.log({type: 'not', text: 'Ya nos encontramos en fullscreen.', required: true});
-									} else {
+									if(!_objThis.fullscreen('check')) {
 										_this.addClass(sLayout.fsInClass);
 										$fsElement.addClass(sLayout.fsInClass);
 										fullScreenApi.requestFullScreen(_this.get(0));
 										$(document).on(fullScreenApi.fullScreenEventName, envOnFullScreen);
+									} else {
+										_objThis.log({type: 'not', text: 'Ya nos encontramos en fullscreen.', required: true});
 									}
 								},
 								out: ()=> {
@@ -1247,18 +1268,14 @@
 						return false;
 					}
 
+
+					// Adjuntado evento click al boton FS
 					$fsElement = _this.find('.' + sLayout.fsButtonClass); // volviendolo a declarar por su creación
-
 					if ($fsElement.hasClass(attachedClass)) return false; // ya se adjunto el evento click
-					$fsElement.addClass(attachedClass);
-
-					$fsElement.on('click', e => {
+					$fsElement.addClass(attachedClass).on('click', e => {
 						e.preventDefault();
 						this.fullscreen((!this.fullscreen('check')) ? 'in' : 'out');
 					});
-
-					// anidación antigua
-					//$(document).on(fullScreenApi.fullScreenEventName, envOnFullScreen);
 				},
 
 				destroy: function(loadLazys) {
@@ -1286,7 +1303,7 @@
 					}
 					//
 					let eventDestroyed = configsBk.onDestroyed;
-					if(eventDestroyed !== undefined) eventDestroyed();
+					if(eventDestroyed !== undefined) eventDestroyed(configsBk);
 				},
 
 				touch: function(estado) {

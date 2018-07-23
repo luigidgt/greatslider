@@ -1,3 +1,4 @@
+	
 // Slider Swipe de testimonios
 $('.lostestimonios').greatSlider({
 	type: 'swipe',
@@ -50,6 +51,7 @@ $('#videos').greatSlider({
 	lazyLoad: true
 });
 
+
 // Slider de fotos con breakpoints y botones de acción
 let $miSlider = $('#breakpoints').greatSlider({
 	type: 'swipe',
@@ -72,9 +74,15 @@ let $miSlider = $('#breakpoints').greatSlider({
 			items: 4,
 			bullets: true
 		},
-		1440: {
-			bullets: false
+		1600: {
+			bullets: false,
+			items: 5
 		}
+	},
+	onInited: ()=>{
+		$('#breakpoints').find('.img-slider').click(function(){
+			$miSlider.fullscreen('in', $(this).parent().parent().index() + 1);
+		});
 	}
 });
 
