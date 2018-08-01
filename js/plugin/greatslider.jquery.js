@@ -54,8 +54,6 @@
 	window.fullScreenApi = fullScreenApi;
 })();
 
-
-
 // Great Slider Plugin
 (function($){
 
@@ -113,18 +111,22 @@
 				nav: true, 
 				navSpeed: 500, // en milisegundos
 
+				touch: true,
+				touchClass: 'gs-touch',
+
+				drag: false,
+				dragClass: 'gs-drag',
+
 				items: 1,
 				itemsInFs: 1,
 				slideBy: 1,
-
-				touch: true, 
 
 				bullets: false, 
 
 				autoplay: false, 
 				autoplaySpeed: 5000, // en milisegundos
 
-				log: false, 
+				log: false,
 
 				dataParam : 'data-gs',
 				
@@ -484,55 +486,8 @@
 					if (typeRun !== undefined) {
 						typeRun(configs);
 
-						/*
-						// Anidando la navegación por mouse
-						let $containerItems = _this.find('.' + sLayout.containerItemsClass);
-						if (!$containerItems.hasClass(attachedClass)) {
-							let gsMouseX = null;
-							$containerItems.on({
-
-								mousedown: function(e) {
-									//console.log('mouse down');
-									$(this).addClass(sLayout.wrapperMouseDownClass);
-									gsMouseX = e.clientX;
-								},
-
-								mousemove: function(e){
-									//msg += e.pageX + ", " + e.pageY;
-									let _theElement = $(this);
-									if(_theElement.hasClass(sLayout.wrapperMouseDownClass)) {
-										let marginLeft = Number(_this.find('.' + sLayout.wrapperItemsClass).css('margin-left').replace('-', '').replace('px', '').replace('%', '')); // CONTINUAR TRABAJANDO EN ESTO.
-										if (e.pageX > gsMouseX) { // vas a la derecha
-											//console.clear();
-											console.log('derecha', (gsMouseX - e.pageX));
-											//_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', marginLeft + (gsMouseX - e.pageX));
-											gsMouseX = e.pageX;
-										} else { // izquierda
-											//console.clear();
-											console.log('izquierda', (gsMouseX - e.pageX), marginLeft);
-											gsMouseX = e.pageX;
-										}
-									}
-								},
-
-								mouseup: function(e){
-									//console.log('mouse up')
-									$(this).removeClass(sLayout.wrapperMouseDownClass);
-									gsMouseX = null;
-								},
-
-								mouseenter: function(e){
-									$(this).addClass(sLayout.wrapperMouseEnterClass);
-								},
-
-								mouseleave: function(e){
-									$(this).removeClass(sLayout.wrapperMouseEnterClass);
-									if($(this).hasClass(sLayout.wrapperMouseDownClass)) $(this).removeClass(sLayout.wrapperMouseDownClass);
-								}
-
-							}).addClass(attachedClass);
-						}
-						*/
+						// activando o desactivando la navegación por arrastre
+						//(settings.drag) ? this.drag(true) : this.drag(false);
 
 						// Verificando su estilaje
 						let theIdSlider = 'gs-styles-' + $idThis.replace('gs-slider-', ''),
@@ -541,6 +496,79 @@
 					} else {
 						this.log({type: 'err', text: 'el tipo de slider determinado no es válido', required: true});
 					}
+				},
+
+				drag: function(status) {
+					let _objThis = this;
+
+					let $containerItems = _this.find('.' + sLayout.containerItemsClass);
+					if (!$containerItems.hasClass(settings.dragClass)) {
+						let gsMouseX = null,
+								$ciWidth = $containerItems.width() / 2,
+								marginLeft = null,
+								itemActiveIndex = null;
+
+						$containerItems.on({
+
+							mousedown: function(e) {
+								//console.log('mouse down');
+								$(this).addClass(sLayout.wrapperMouseDownClass);
+								gsMouseX = e.clientX;
+								marginLeft = Number(_this.find('.' + sLayout.wrapperItemsClass).css('margin-left').replace('px', '')); // CONTINUAR TRABAJANDO EN ESTO.
+								//initMarginLeft = marginLeft;
+								itemActiveIndex = _objThis.getActive().index;
+							},
+
+							mousemove: function(e){
+								//msg += e.pageX + ", " + e.pageY;
+								let _theElement = $(this);
+								if(_theElement.hasClass(sLayout.wrapperMouseDownClass)) {
+									let draging = e.pageX - gsMouseX;
+									if (e.pageX > gsMouseX) { // se arrastra a la derecha para ir al item ANTERIOR
+										let toDrag = marginLeft + draging;
+										if (draging >= $ciWidth) {
+											if (itemActiveIndex !== 1) _objThis.goTo('prev');
+											marginLeft = null;
+										} else {
+											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
+										}
+									} else { // se arrastra a la izquierda para ir al SIGUIENTE item
+										let toDrag = marginLeft + draging;
+										if (draging <= Number('-' + $ciWidth)) {
+											_objThis.goTo('next');
+											marginLeft = null;
+										} else {
+											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
+										}
+									}
+								}
+							},
+
+							mouseup: function(e){
+								//console.log('mouse up')
+								$(this).removeClass(sLayout.wrapperMouseDownClass);
+								gsMouseX = null,
+								itemActiveIndex = null;
+								if (marginLeft !== null) {
+									_objThis.goTo(_objThis.getActive().index, true);
+								}
+							},
+
+							mouseenter: function(e){
+								$(this).addClass(sLayout.wrapperMouseEnterClass);
+							},
+
+							mouseleave: function(e){
+								$(this).removeClass(sLayout.wrapperMouseEnterClass);
+								if($(this).hasClass(sLayout.wrapperMouseDownClass)) $(this).removeClass(sLayout.wrapperMouseDownClass);
+								marginLeft = null;
+								gsMouseX = null;
+								itemActiveIndex = null;
+							}
+
+						}).addClass(settings.dragClass);
+					}
+
 				},
 
 				getItems: ()=>{
@@ -994,7 +1022,6 @@
 				},
 
 				goTo: function(to, configs){
-
 					if (_this.hasClass(sLayout.transitionClass)) return false; // para evitar otro pase con uno yá en curso.
 
 					let $getActive = this.getActive(),
@@ -1002,10 +1029,9 @@
 							activeItemIndex = $getActive.index - 1,
 							itemToActive;
 
-					if (typeof to == 'string') { // puede ser nxet o prev, veamos
-						if (configs == undefined) {
-							configs = configsBk;
-						}
+					if (typeof to == 'string') { // puede ser next o prev, veamos
+
+						if (configs == undefined) configs = configsBk;
 
 						if (to == 'next') { // vamos al siguiente item
 							if (activeItemIndex == (items.length - 1)) { // yá llegó al último
@@ -1023,6 +1049,7 @@
 								itemToActive = (leftItems <= configs.slideBy) ? configs.slideBy - 1 : activeItemIndex - configs.slideBy;
 							}
 						}
+
 					} else if (typeof to == 'number') { // es un index real, (number)
 						let relocation = configs,
 								toIndexReal = to - 1;
@@ -1265,7 +1292,6 @@
 						return false;
 					}
 
-
 					// Adjuntado evento click al boton FS
 					$fsElement = _this.find('.' + sLayout.fsButtonClass); // volviendolo a declarar por su creación
 					if ($fsElement.hasClass(attachedClass)) return false; // ya se adjunto el evento click
@@ -1304,23 +1330,18 @@
 				},
 
 				touch: function(estado) {
-
 					let $theContainerItems = _this.find('.' + sLayout.containerItemsClass),
 							sliderTouchStart, sliderTouchMove;
-
 					if (!estado) {
-						if ($theContainerItems.hasClass(sLayout.attachedClass)) {
+						if ($theContainerItems.hasClass(settings.touchClass)) {
 							$theContainerItems.off('touchstart', sliderTouchStart);
 							$theContainerItems.off('touchmove', sliderTouchMove);
-							$theContainerItems.removeClass(sLayout.attachedClass);
+							$theContainerItems.removeClass(settings.touchClass);
 						}
 					} else {
-
-						if ($theContainerItems.hasClass(sLayout.attachedClass)) return false; // xq yá se anidó
-				
+						if ($theContainerItems.hasClass(settings.touchClass)) return false; // xq yá se anidó
 						var xDown = null;
 						var yDown = null;
-
 						sliderTouchStart = evt => {
 							xDown = evt.touches[0].clientX;
 							yDown = evt.touches[0].clientY;
@@ -1342,7 +1363,7 @@
 						$theContainerItems.on({
 							touchstart : sliderTouchStart,
 							touchmove: sliderTouchMove
-						}).addClass(sLayout.attachedClass);
+						}).addClass(settings.touchClass);
 					}
 				}
 			}

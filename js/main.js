@@ -5,6 +5,7 @@ $('.lostestimonios').greatSlider({
 	nav: false,
 	bullets: true,
 	autoHeight: true,
+	//drag: true,
 	layout: {
 		bulletDefaultStyles: false
 	}
