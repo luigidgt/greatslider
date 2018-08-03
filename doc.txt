@@ -86,8 +86,9 @@
 			bulletActiveClass: 'gs-bullet-active', // clase de un bullet cuando se encuentra activo
 			bulletDefaultStyles: true, // estilos por defecto que le dá el slider a los bullets
 
-			fsButton: '.gs-fs', // elemento que abrirá el fullscreen
 			fsButtonTag: 'button', // el tag del boton que abre el Full screen, si es que no existe, lo crea.
+			fsButtonClass: 'gs-fs', // la clase que tendrá el boton de FS.
+			fsButtonDefaultStyles: true, // determina si se asignará los estilos por defecto para el boton FS.
 			fsInClass: 'gs-infs', // la clase que se le agregará al slider y al boton cuando se ingrese al full screen
 
 			noneClass: 'gs-none', // clase general que desaparece del DOM a varios elementos

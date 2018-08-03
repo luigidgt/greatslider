@@ -114,7 +114,7 @@
 				touch: true,
 				touchClass: 'gs-touch',
 
-				drag: false,
+				drag: true,
 				dragClass: 'gs-drag',
 
 				items: 1,
@@ -507,15 +507,12 @@
 								$ciWidth = $containerItems.width() / 2,
 								marginLeft = null,
 								itemActiveIndex = null;
-
 						$containerItems.on({
 
 							mousedown: function(e) {
-								//console.log('mouse down');
 								$(this).addClass(sLayout.wrapperMouseDownClass);
 								gsMouseX = e.clientX;
 								marginLeft = Number(_this.find('.' + sLayout.wrapperItemsClass).css('margin-left').replace('px', '')); // CONTINUAR TRABAJANDO EN ESTO.
-								//initMarginLeft = marginLeft;
 								itemActiveIndex = _objThis.getActive().index;
 							},
 
@@ -526,20 +523,27 @@
 									let draging = e.pageX - gsMouseX;
 									if (e.pageX > gsMouseX) { // se arrastra a la derecha para ir al item ANTERIOR
 										let toDrag = marginLeft + draging;
+
 										if (draging >= $ciWidth) {
-											if (itemActiveIndex !== 1) _objThis.goTo('prev');
+											(itemActiveIndex !== 1) ? _objThis.goTo('prev') : _objThis.goTo(_objThis.getActive().index, true);
 											marginLeft = null;
 										} else {
 											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
 										}
+
+
 									} else { // se arrastra a la izquierda para ir al SIGUIENTE item
+
+
 										let toDrag = marginLeft + draging;
 										if (draging <= Number('-' + $ciWidth)) {
-											_objThis.goTo('next');
+											(itemActiveIndex !== nItems) ? _objThis.goTo('next') : _objThis.goTo(_objThis.getActive().index, true);
 											marginLeft = null;
 										} else {
 											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
 										}
+
+
 									}
 								}
 							},
