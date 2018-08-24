@@ -150,7 +150,7 @@ $('#autodestroy').greatSlider({
 			bullets: true
 		},
 		1440: {
-			bullets: false
+			destroy: true
 		}
 	}
 });

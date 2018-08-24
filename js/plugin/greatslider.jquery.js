@@ -137,6 +137,7 @@
 				lazyClass: 'gs-lazy',
 				lazyAttr: 'data-lazy',
 				lazyAttrFs : 'data-lazyfs',
+				lazyLoadOnDestroy: true,
 
 				preLoad: false,
 
@@ -246,7 +247,7 @@
 						return false;
 					}
 
-					// Si se determinó un auto pase del slider
+					// Si se determinó un auto pase del er
 					(configs.autoplay) ? this.autoPlay('play', configs) : this.autoPlay('stop', configs);
 
 					// Si aun no se construye el slider
@@ -346,7 +347,9 @@
 
 					// Sistema inicializado
 					let onInited = settings.onInited;
-					if (onInited !== undefined) onInited();
+					setTimeout(()=>{
+						if (onInited !== undefined) onInited();
+					}, 500);
 
 					this.log({
 						type: 'not',
@@ -891,7 +894,7 @@
 										_element.attr('src', dataLazy).removeAttr(settings.lazyAttr);
 										$item.addClass(sLayout.itemLoadedClass);
 									
-									} else if (dataLazy.indexOf('vimeo')){
+									} else if (dataLazy.indexOf('vimeo') !== -1){
 
 										$item.addClass(sLayout.itemLoadingClass);
 
@@ -1002,7 +1005,7 @@
 								let itemsExits = $existingItems.length;
 								if(itemsExits <= bkOptions.items) {
 									this.log({type: 'not', text: 'El slider se destruye xq ya no es necesario, la cantidad de items (' + itemsExits + ') es la misma que la de items a mostrar (' + bkOptions.items + ').', required: true});
-									this.destroy(true);
+									this.destroy();
 									return false;
 								}
 							}
@@ -1305,7 +1308,7 @@
 					});
 				},
 
-				destroy: function(loadLazys) {
+				destroy: function() {
 					let _objThis = this;
 					if(!_this.hasClass(sLayout.builtClass)) return false;
 					// devolviendo items como hijos directos de su wrapper inicial
@@ -1320,7 +1323,7 @@
 					if($theNav.length) $theNav.remove();
 
 					// cargando elementos lazy, si existen
-					if (loadLazys && settings.lazyLoad) {
+					if (settings.lazyLoad && settings.lazyLoadOnDestroy) {
 						let $itemsToLoad = _this.find('.' + settings.lazyClass);
 						if($itemsToLoad.length) {
 							$itemsToLoad.each(function(){
