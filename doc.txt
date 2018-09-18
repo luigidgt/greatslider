@@ -213,8 +213,8 @@
 
 		- Auto Play:
 
-			Iniciar: slider.autoplay('play');
-			Detener: slider.autoplay('stop');
+			Iniciar: slider.autoPlay('play');
+			Detener: slider.autoPlay('stop');
 
 		- Desplasamiento por touch (por defecto viene activado)
 
@@ -297,6 +297,8 @@
 	- retornar algo en el evento onInited
 	- quitar el heighht dado en autoHeight cuando pase a false por un breakpoint y cambie el items a diferente a 1
 	- agregar comprobador, para verificar si yá se cargó la librería y comparar entre versiones.
+	- agregar lazy load por srcset (img responsive).
+	- agregar metodo para saber cuantos items hay en el slider
 
 
 	Cosas para hacer posiblemente:
