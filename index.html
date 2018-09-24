@@ -61,19 +61,19 @@
       	color: #fff;
       }
       
-      #go {
+      .go {
       	margin-right: 20px
       }
       
-      #prev, #stop {
+      .prev, .stop {
       	margin-right: 10px
       }
       
-      #play {
+      .play {
       	margin-right: 2px
       }
       
-      #active, #next {
+      .active, .next {
       	margin-right: 5px
       }
       
@@ -219,14 +219,13 @@
       }
       
       #autodestroy:not(.gs-builded) {
-      	overflow: hidden;
       	display: flex;
       	justify-content: center;
       	align-items: center;
       }
       
       #autodestroy:not(.gs-builded) .img-slider {
-      	width: 470px;
+      	width: 396px;
       }
       
     </style>
@@ -309,11 +308,11 @@
     <h2>Slider Swipe de fotos con breakpoints, botones de acción y clicks items Fullscreendores</h2>
     <div class="gs-container-slider" id="breakpoints"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/7.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/9.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/10.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/11.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/12.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/13.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/14.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/15.jpg"></div>
     <div class="botones">
-      <button id="go">ir al item 5</button>
-      <button id="prev">&#60; Prev</button>
-      <button id="play">Play</button>
-      <button id="stop">Stop</button>
-      <button id="next">Next &#62;</button>
+      <button class="go" id="go">ir al item 5</button>
+      <button class="prev" id="prev">&#60; Prev</button>
+      <button class="play" id="play">Play</button>
+      <button class="stop" id="stop">Stop</button>
+      <button class="next" id="next">Next &#62;</button>
     </div>
     <p></p><br>
     <p></p><br>
@@ -321,8 +320,19 @@
     <div class="gs-container-slider" id="fotosdata" data-gs="{&quot;type&quot;: &quot;swipe&quot;, &quot;bullets&quot;: true, &quot;nav&quot;: false, &quot;layout&quot;: {&quot;transitionMode&quot;: &quot;linear&quot;} }"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div>
     <p></p><br>
     <p></p><br>
-    <h2>Slider Swipe de fotos con breakpoints y con auto destrucción</h2>
-    <div class="gs-container-slider" id="autodestroy"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"></div>
+    <h2>Slider Swipe de fotos con breakpoints y con auto destrucción (cuando llegue a 1600px de ancho se autodestruirá)</h2>
+    <div class="gs-container-slider" id="autodestroy"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"></div>
+    <p></p><br>
+    <p></p><br>
+    <h2>Slider comun con botones al acceso del API 'GS'</h2>
+    <div class="gs-container-slider" id="sliderconapi"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"><img class="img-slider" src="img/naturaleza/720/11.jpg"><img class="img-slider" src="img/naturaleza/720/12.jpg"><img class="img-slider" src="img/naturaleza/720/13.jpg"></div>
+    <div class="botones">
+      <button class="go" id="gob">ir al item 5</button>
+      <button class="prev" id="prevb">&#60; Prev</button>
+      <button class="play" id="playb">Play</button>
+      <button class="stop" id="stopb">Stop</button>
+      <button class="next" id="nextb">Next &#62;</button>
+    </div>
     <p></p><br>
     <p></p><br>
     <script src="js/lib/jquery-3.3.1.min.js"></script>

@@ -93,6 +93,39 @@
 		}
 	}
 
+	// seteando info para comprobaciones posteriores
+	window.gs = {
+		info: {
+			name: 'Great Slider',
+			version: 'Alfa 1.0',
+		},
+		slider: {}
+	}
+
+	//Returns constructor
+	function Returns(theActions){
+
+		this.getItems = theActions.getItems;
+		this.getActive = theActions.getActive;
+
+		this.bullets = theActions.bullets;
+		this.navs = theActions.navs;
+
+		this.items = theActions.items;
+		this.goTo = theActions.goTo;
+		this.loadLazy = theActions.loadLazy;
+
+
+		this.autoPlay = theActions.autoPlay;
+
+		this.fullscreen = theActions.fullscreen;
+
+		this.destroy = theActions.destroy;
+		this.touch = theActions.touch;
+
+		this.log = theActions.log;
+	}
+
 	// el plugin
 	$.fn.greatSlider = function(options){
 
@@ -229,7 +262,7 @@
 			function autoHeight($item){
 				if(!actions.fullscreen('check') && configsBk.autoHeight && (configsBk.items == 1)) {
 					let $altoContent = $item.find('.' + sLayout.itemWrapperClass).height();
-					$wrapperItems.css('height', $altoContent + 'px')
+					$wrapperItems.css('height', $altoContent + 'px');
 				}
 			}
 
@@ -575,12 +608,9 @@
 
 						}).addClass(settings.dragClass);
 					}
-
 				},
 
-				getItems: ()=>{
-					return currentItems;
-				},
+				getItems: ()=> currentItems,
 
 				bullets: function(action, configs) { // this.bullets('active', configs);
 
@@ -1004,7 +1034,7 @@
 							if (settings.autoDestroy) {
 								let itemsExits = $existingItems.length;
 								if(itemsExits <= bkOptions.items) {
-									this.log({type: 'not', text: 'El slider se destruye xq ya no es necesario, la cantidad de items (' + itemsExits + ') es la misma que la de items a mostrar (' + bkOptions.items + ').', required: true});
+									this.log({type: 'not', text: 'El slider se destruye xq ya no es necesario, la cantidad de items (' + itemsExits + ') es la misma que la de items a mostrar (' + bkOptions.items + ').'});
 									this.destroy();
 									return false;
 								}
@@ -1145,8 +1175,10 @@
 					}
 				},
 
-				autoPlay: function(action, configs) {
+				autoPlay: function(action = 'play', configs) {
+
 					if (configs == undefined) configs = configsBk;
+
 					if(action == 'play') {
 
 						if(gsIntervalSet !== undefined) return false; // por si se seteó el intervalo previamente
@@ -1159,11 +1191,15 @@
 						}
 						let playAP = configs.onPlay;
 						if (playAP !== undefined) playAP();
+						return true;
+
 					} else if (action == 'stop'){
 						clearInterval(gsInterval);
 						let stopAP = configs.onStop;
 						if (stopAP !== undefined) stopAP();
 						gsIntervalSet = undefined;
+						return false;
+
 					}
 				},
 
@@ -1377,7 +1413,17 @@
 
 			// Inicializando
 			actions.init(settings);
-			(selections == 1) ? returns = actions : returns.push(actions);
+
+			// preparando el return
+			let theReturn = new Returns(actions);
+			if (selections == 1) {
+				returns = theReturn;
+			} else {
+				returns.push(theReturn);
+			}
+
+			// api al slider
+			window.gs['slider'][$idThis] = returns;
 
 		});
 		

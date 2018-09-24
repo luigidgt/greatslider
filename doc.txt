@@ -3,7 +3,7 @@
 
 	- Nombre: Great Slider	 
 	- Descripción: Un slider todo terreno
-	- Version: Alpha 0.1
+	- Version: Alfa 1.0
 	- Autor: Daniel Pisconte Zevallos
 
 
@@ -202,7 +202,6 @@
 			slider.log();
 			-> varias impresiones en consola de cada registro guardado.
 
-
 	- Pase de slider:
 
 		- Next: ir al siguiente frame: slider.goTo('next');
@@ -213,7 +212,7 @@
 
 		- Auto Play:
 
-			Iniciar: slider.autoPlay('play');
+			Iniciar: slider.autoPlay('play') o slider.autoPlay()
 			Detener: slider.autoPlay('stop');
 
 		- Desplasamiento por touch (por defecto viene activado)
@@ -265,6 +264,28 @@
 	- Acciones varias:
 
 		- Destruir el slider: slider.destroy();
+
+
+* API:
+
+	Para acceder al API, se invoca al objeto 'gs' (que está anidada al objeto 'Window').
+
+	Ejm:
+
+		- Queremos saber la versión de la extensión:
+
+				- gs.info.version
+					-> "Alfa 1.0"
+
+		- Necesitamos acceder a los métodos públicos del o los sliders.
+
+			- El Slider con el ID 'breakpoints':
+
+				- Para ir al siguiente item: gs.slider['breakpoints'].goTo('next');
+				- Para ir activar el autoplay: gs.slider['breakpoints'].autoPlay();
+				- Para mostrar tres items a la vez: gs.slider['breakpoints'].items(3);
+
+	- Nota Importante: es preferible asignarle un ID al slider para que el acceso a su API sea directa y no tenga que consultarse por su obtención del ID posterior.
 
 
 * NOTAS IMPORTANTES:

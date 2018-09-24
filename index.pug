@@ -61,19 +61,19 @@ html(lang="es")
 				color: #fff;
 			}
 
-			#go {
+			.go {
 				margin-right: 20px
 			}
 
-			#prev, #stop {
+			.prev, .stop {
 				margin-right: 10px
 			}
 
-			#play {
+			.play {
 				margin-right: 2px
 			}
 
-			#active, #next {
+			.active, .next {
 				margin-right: 5px
 			}
 
@@ -219,14 +219,13 @@ html(lang="es")
 			}
 
 			#autodestroy:not(.gs-builded) {
-				overflow: hidden;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 			}
 
 			#autodestroy:not(.gs-builded) .img-slider {
-				width: 470px;
+				width: 396px;
 			}
 
 	body
@@ -384,11 +383,11 @@ html(lang="es")
 			img(data-lazy="img/naturaleza/720/15.jpg").img-slider.gs-lazy
 
 		.botones
-			button#go ir al item 5
-			button#prev &#60; Prev
-			button#play Play
-			button#stop Stop
-			button#next Next &#62;
+			button#go.go ir al item 5
+			button#prev.prev &#60; Prev
+			button#play.play Play
+			button#stop.stop Stop
+			button#next.next Next &#62;
 		p
 		br
 		p
@@ -407,14 +406,33 @@ html(lang="es")
 		p
 		br
 
-		h2 Slider Swipe de fotos con breakpoints y con auto destrucción
+		h2 Slider Swipe de fotos con breakpoints y con auto destrucción (cuando llegue a 1600px de ancho se autodestruirá)
 		#autodestroy.gs-container-slider
 			img(data-lazy="img/naturaleza/720/1.jpg").img-slider.gs-lazy
 			img(data-lazy="img/naturaleza/720/2.jpg").img-slider.gs-lazy
 			img(data-lazy="img/naturaleza/720/3.jpg").img-slider.gs-lazy
 			img(data-lazy="img/naturaleza/720/4.jpg").img-slider.gs-lazy
-			img(data-lazy="img/naturaleza/720/5.jpg").img-slider.gs-lazy
+		p
+		br
+		p
+		br
 
+		h2 Slider comun con botones al acceso del API 'GS'
+		#sliderconapi.gs-container-slider
+			img(src="img/naturaleza/720/6.jpg").img-slider
+			img(src="img/naturaleza/720/7.jpg").img-slider
+			img(src="img/naturaleza/720/8.jpg").img-slider
+			img(src="img/naturaleza/720/9.jpg").img-slider
+			img(src="img/naturaleza/720/10.jpg").img-slider
+			img(src="img/naturaleza/720/11.jpg").img-slider
+			img(src="img/naturaleza/720/12.jpg").img-slider
+			img(src="img/naturaleza/720/13.jpg").img-slider
+		.botones
+			button#gob.go ir al item 5
+			button#prevb.prev &#60; Prev
+			button#playb.play Play
+			button#stopb.stop Stop
+			button#nextb.next Next &#62;
 		p
 		br
 		p

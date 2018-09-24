@@ -51,7 +51,6 @@ $('#videos').greatSlider({
 	lazyLoad: true
 });
 
-
 // Slider de fotos con breakpoints y botones de acción
 let $miSlider = $('#breakpoints').greatSlider({
 	type: 'swipe',
@@ -145,12 +144,44 @@ $('#autodestroy').greatSlider({
 			bullets: false,
 			nav: true
 		},
-		1280: {
-			items: 4,
-			bullets: true
-		},
-		1440: {
-			destroy: true
+		1600: {
+			items: 4
 		}
 	}
+});
+
+
+$('#sliderconapi').greatSlider({
+	type: 'swipe',
+	nav: true,
+	items: 1,
+	breakPoints: {
+		768: {
+			items: 2
+		},
+		1024: {
+			items: 3
+		}
+	}
+});
+
+
+$('#gob').click(()=>{
+	gs.slider['sliderconapi'].goTo(6);
+});
+
+$('#playb').click(()=>{
+	gs.slider['sliderconapi'].autoPlay('play');
+});
+
+$('#stopb').click(()=>{
+	gs.slider['sliderconapi'].autoPlay('stop');
+});
+
+$('#nextb').click(()=>{
+	gs.slider['sliderconapi'].goTo('next');
+});
+
+$('#prevb').click(()=>{
+	gs.slider['sliderconapi'].goTo('prev');
 });
