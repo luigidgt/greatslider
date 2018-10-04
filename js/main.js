@@ -33,12 +33,7 @@ $('#fotos').greatSlider({
 $('#fotosb').greatSlider({
 	type: 'swipe',
 	nav: true,
-	autoHeight: true,
-	breakPoints: {
-		1600: {
-			items: 2
-		}
-	}
+	autoHeight: true
 });
 
 // Slider Swipe de Fotos uniformes con fullscreen y lazy diferente en fullscreen
