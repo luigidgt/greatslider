@@ -97,7 +97,7 @@
 	window.gs = {
 		info: {
 			name: 'Great Slider',
-			version: 'Alfa 1.0',
+			version: 'Alfa 1.0.1',
 		},
 		slider: {}
 	}
@@ -490,6 +490,12 @@
 								};
 							}
 
+							// Eliminando el 'height' dado inline porque posiblemente cuando solo era 1 item por vez tenía 'autoHeight'
+							if (configs.items >= 2) {
+								let $theUl = _this.find('.' + sLayout.wrapperItemsClass);
+								if ($theUl.attr('style') !== undefined) $theUl.removeAttr('style')
+							}
+
 							// busca si ya se tiene activo un item
 							let $activeItem = $wrapperItems.find('.' + sLayout.itemActiveClass);
 							if (!$activeItem.length) { // no lo hay, activo el determinado por configs.items
@@ -521,7 +527,6 @@
 					let typeRun = sliderType[configs.type];
 					if (typeRun !== undefined) {
 						typeRun(configs);
-
 						// activando o desactivando la navegación por arrastre
 						//(settings.drag) ? this.drag(true) : this.drag(false);
 

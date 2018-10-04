@@ -1,0 +1,2 @@
+* 1.0.1
+	- Eliminando el atributo 'style' del wrapper de los items (comunmente de UL) cuando se destruye el slider o se cambia de uno a más items a mostrar.
