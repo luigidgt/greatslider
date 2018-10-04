@@ -542,10 +542,18 @@
 						let gsMouseX = null,
 								$ciWidth = $containerItems.width() / 2,
 								marginLeft = null,
-								itemActiveIndex = null;
+								itemActiveIndex = null,
+								mouseDown = false;
+
 						$containerItems.on({
 
+							mouseenter: function(e){
+								$(this).addClass(sLayout.wrapperMouseEnterClass);
+							},
+
 							mousedown: function(e) {
+								mouseDown = true;
+
 								$(this).addClass(sLayout.wrapperMouseDownClass);
 								gsMouseX = e.clientX;
 								marginLeft = Number(_this.find('.' + sLayout.wrapperItemsClass).css('margin-left').replace('px', '')); // CONTINUAR TRABAJANDO EN ESTO.
@@ -555,29 +563,39 @@
 							mousemove: function(e){
 								//msg += e.pageX + ", " + e.pageY;
 								let _theElement = $(this);
-								if(_theElement.hasClass(sLayout.wrapperMouseDownClass)) {
+								//if(_theElement.hasClass(sLayout.wrapperMouseDownClass)) {
+
+								if(mouseDown) {
+
 									let draging = e.pageX - gsMouseX;
+									console.log('draging: ' + draging);
+
 									if (e.pageX > gsMouseX) { // se arrastra a la derecha para ir al item ANTERIOR
 										let toDrag = marginLeft + draging;
+										console.log('toDrag derecha: ' + toDrag);
 
-										if (draging >= $ciWidth) {
+										/*if (draging >= $ciWidth) {
 											(itemActiveIndex !== 1) ? _objThis.goTo('prev') : _objThis.goTo(_objThis.getActive().index, true);
 											marginLeft = null;
 										} else {
+											*/
 											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
-										}
+										//}
 
 
 									} else { // se arrastra a la izquierda para ir al SIGUIENTE item
 
 
 										let toDrag = marginLeft + draging;
+										console.log('toDrag izquierda: ' + toDrag);
+										/*
 										if (draging <= Number('-' + $ciWidth)) {
 											(itemActiveIndex !== nItems) ? _objThis.goTo('next') : _objThis.goTo(_objThis.getActive().index, true);
 											marginLeft = null;
 										} else {
+											*/
 											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
-										}
+										//}
 
 
 									}
@@ -588,14 +606,13 @@
 								//console.log('mouse up')
 								$(this).removeClass(sLayout.wrapperMouseDownClass);
 								gsMouseX = null,
-								itemActiveIndex = null;
+								itemActiveIndex = null,
+								mouseDown = false;
+								/*
 								if (marginLeft !== null) {
 									_objThis.goTo(_objThis.getActive().index, true);
 								}
-							},
-
-							mouseenter: function(e){
-								$(this).addClass(sLayout.wrapperMouseEnterClass);
+								*/
 							},
 
 							mouseleave: function(e){
@@ -603,7 +620,8 @@
 								if($(this).hasClass(sLayout.wrapperMouseDownClass)) $(this).removeClass(sLayout.wrapperMouseDownClass);
 								marginLeft = null;
 								gsMouseX = null;
-								itemActiveIndex = null;
+								itemActiveIndex = null,
+								mouseDown = false;
 							}
 
 						}).addClass(settings.dragClass);
@@ -1367,7 +1385,12 @@
 							});
 						}
 					}
+
+					// eliminando el estilo inline 'height' si se determinó autoHeight
+					let $wrapperUl = _this.find('.' + sLayout.wrapperItemsClass);
+					if ($wrapperUl.attr('style') !== undefined) $wrapperUl.removeAttr('style');
 					//
+
 					let eventDestroyed = configsBk.onDestroyed;
 					if(eventDestroyed !== undefined) eventDestroyed(configsBk);
 				},
