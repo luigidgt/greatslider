@@ -314,12 +314,12 @@
 
 	- carga condicionada por parametro de configuración del mini reset interno.
 	- Agregar parametro de configuración por defecto para decidir si se cargan los lazy cuando se destroye el slider.
-	- navegación por arrastre del mouse
 	- retornar algo en el evento onInited
-	- quitar el heighht dado en autoHeight cuando pase a false por un breakpoint y cambie el items a diferente a 1
 	- agregar comprobador, para verificar si yá se cargó la librería y comparar entre versiones.
 	- agregar lazy load por srcset (img responsive).
-	- agregar metodo para saber cuantos items hay en el slider
+
+	- agregar la opción de adicionar un espacio entre los items.
+	- navegación por arrastre del mouse
 
 
 	Cosas para hacer posiblemente:
