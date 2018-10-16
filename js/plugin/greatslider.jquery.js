@@ -1414,13 +1414,13 @@
 						var xDown = null;
 						var yDown = null;
 						sliderTouchStart = evt => {
-							xDown = evt.touches[0].clientX;
-							yDown = evt.touches[0].clientY;
+							xDown = evt.originalEvent.touches[0].clientX;
+							yDown = evt.originalEvent.touches[0].clientY;
 						}
 						sliderTouchMove = evt => {
 							if ( ! xDown || ! yDown ) return false;
-							var xUp = evt.touches[0].clientX;
-							var yUp = evt.touches[0].clientY;
+							var xUp = evt.originalEvent.touches[0].clientX;
+							var yUp = evt.originalEvent.touches[0].clientY;
 							var xDiff = xDown - xUp;
 							var yDiff = yDown - yUp;
 							if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
