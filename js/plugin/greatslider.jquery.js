@@ -97,7 +97,7 @@
 	window.gs = {
 		info: {
 			name: 'Great Slider',
-			version: 'Alfa 1.0.1',
+			version: 'Alfa 1.1.0',
 		},
 		slider: {}
 	}
@@ -358,8 +358,6 @@
 							if (gsBreakPoint !== false) clearTimeout(gsBreakPoint);
 							gsBreakPoint = setTimeout(() => {
 								let wWindow = window.innerWidth;
-								let onResized = settings.onResized;
-								if (onResized !== undefined) onResized(wWindow);
 
 								//para que el reacomodo de los items en resize no sea tan brusco
 								if(!_this.hasClass(sLayout.resizedClass)) {
@@ -371,9 +369,13 @@
 								setTimeout(()=>{
 									_this.removeClass(sLayout.resizeClass).removeClass(sLayout.resizedClass);
 								}, 1000);
-
 								//
+
 								_objThis.breakPoints(theBreakPoints, wWindow);
+
+								// event onResized
+								let onResized = settings.onResized;
+								if (onResized !== undefined) onResized(wWindow, this.getItems(), this.getActive());
 							}, 750);
 						});
 					}
@@ -381,7 +383,7 @@
 					// Sistema inicializado
 					let onInited = settings.onInited;
 					setTimeout(()=>{
-						if (onInited !== undefined) onInited();
+						if (onInited !== undefined) onInited(this.getItems(), this.getActive());
 					}, 500);
 
 					this.log({

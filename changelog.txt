@@ -1,3 +1,7 @@
+* 1.1.0 (28/10/2018)
+	- El evento onInited ahora devuelve varios parametros, más información en el doc.txt
+	- Se actualizó el doc.txt para describir de mejor forma el retorno de los eventos opcionales.
+
 * 1.0.2
 	- add: Se compatibiliza el pase de los slides por el evento original de touch, siendo posible usar la extensión con la versión de jquery 2.2.3
 

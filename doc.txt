@@ -3,7 +3,7 @@
 
 	- Nombre: Great Slider	 
 	- Descripción: Un slider todo terreno
-	- Version: Alfa 1.0
+	- Version: Alfa 1.1.0
 	- Autor: Daniel Pisconte Zevallos
 
 
@@ -153,25 +153,25 @@
 		-> no devuelve nada.
 
 	- onInited: cuando yá terminó de inicializarce el sistema.
-		-> tampoco devuelve nada.
+		-> currentItems (Number), itemActivo (Obj:  item (Obj jQuery), index (Number))
 
 	- onLoadingItem: cuando carga el item que activo.
-		-> elemento e index del item
+		-> elemento (Obj jQuery), itemIndex (Number)
 
 	- onLoadedItem: cuando terminó de cargar el item activo.
-		-> elemento, index, status
+		-> elemento (Obj jQuery), itemIndex (Number), estado (String)
 
 	- onStepStart: cuando se realiza un pase de frame(s).
-		-> itemActivo, indexItemActivo
+		-> itemActivo (Obj jQuery), indexItemActivo (Number)
 
 	- onStepEnd: cuando se termina de hacer un pase de frame(s).
-		-> itemActivo, indexItemActivo
+		-> itemActivo (Obj jQuery), indexItemActivo (Number)
 
 	- onResized: cuando ya se redimencionó la pantalla.
-		-> el ancho de la pantalla
+		-> anchoDeVentana (Number), currentItems (Number), itemActivo (Obj:  item (Obj jQuery), index (Number))
 
 	- onLastItem: cuando se llega al último item.
-		-> item, index
+		-> item (Obj jQuery), index (Number)
 
 	- onPlay: cuando se inicializa el autoplay.
 
@@ -313,11 +313,8 @@
 	Cosas en las que tengo que trabajar:
 
 	- carga condicionada por parametro de configuración del mini reset interno.
-	- Agregar parametro de configuración por defecto para decidir si se cargan los lazy cuando se destroye el slider.
-	- retornar algo en el evento onInited
 	- agregar comprobador, para verificar si yá se cargó la librería y comparar entre versiones.
 	- agregar lazy load por srcset (img responsive).
-
 	- agregar la opción de adicionar un espacio entre los items.
 	- navegación por arrastre del mouse
 

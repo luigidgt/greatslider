@@ -78,7 +78,7 @@ let $miSlider = $('#breakpoints').greatSlider({
 			items: 5
 		}
 	},
-	onInited: ()=>{
+	onInited: (currentItems, itemActive)=>{
 		$('#breakpoints').find('.img-slider').click(function(){
 			$miSlider.fullscreen('in', $(this).parent().parent().index() + 1);
 		});
