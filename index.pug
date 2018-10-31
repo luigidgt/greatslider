@@ -82,6 +82,12 @@ html(lang="es")
 				margin-top:20px;
 			}
 
+			#sliderroto {
+				max-width: 800px;
+					margin-right: auto;
+				margin-left: auto;
+			}
+
 			/* Estilos para los testimonios */
 			.lostestimonios {
 				width: 100%;
@@ -437,6 +443,13 @@ html(lang="es")
 		br
 		p
 		br
+
+		h2 Slider con imágenes rotas
+		#sliderroto.gs-container-slider
+			img(data-lazy="img/naturaleza/720/6.jpg").img-slider.gs-lazy
+			img(data-lazy="http://www.undominio.com/imagen-rota.jpg").img-slider.gs-lazy#imagen-rota
+			img(data-lazy="img/naturaleza/720/8.jpg").img-slider.gs-lazy
+
 
 		//script(src="js/lib/jquery-2.2.3.min.js")
 		script(src="js/lib/jquery-3.3.1.min.js")

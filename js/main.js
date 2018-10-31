@@ -185,3 +185,20 @@ $('#nextb').click(()=>{
 $('#prevb').click(()=>{
 	gs.slider['sliderconapi'].goTo('prev');
 });
+
+// Slider con imágenes rotas
+
+$('#sliderroto').greatSlider({
+	type: 'swipe',
+	nav: true,
+	items: 1,
+	lazyLoad: true,
+	onLoadedItem: (item, index, response)=> {
+		if (response == 'error') {
+			console.log(`la imagen que está en el item con index ${index} está rota, se sustituirá por otra imagen en 2 segundos...`);
+			setTimeout(()=>{
+				$('#imagen-rota').attr('src', 'img/naturaleza/720/7.jpg');
+			}, 2000)
+		}
+	}
+});

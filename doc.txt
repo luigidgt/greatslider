@@ -159,7 +159,7 @@
 		-> elemento (Obj jQuery), itemIndex (Number)
 
 	- onLoadedItem: cuando terminó de cargar el item activo.
-		-> elemento (Obj jQuery), itemIndex (Number), estado (String)
+		-> elemento (Obj jQuery), itemIndex (Number), estado (String: 'success' o 'error')
 
 	- onStepStart: cuando se realiza un pase de frame(s).
 		-> itemActivo (Obj jQuery), indexItemActivo (Number)

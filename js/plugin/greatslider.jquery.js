@@ -420,7 +420,7 @@
 					// Construcción del slider
 					if (!_this.hasClass(sLayout.builtClass)) {
 
-						if(!$existingItems.length) return this.log({type: 'err', text: 'No existen items para crear el slider :V', required: true});
+						if(!$existingItems.length) return this.log({type: 'err', text: 'No existen items para crear el slider.', required: true});
 
 						let lis = '';
 						$existingItems.each(function(i, e){
@@ -766,6 +766,7 @@
 						}
 					} else {
 						if(!$wrapperArrows.length) { // hay q crearlas
+							_objThis.log({type: 'not', text: 'NO existe el NAV, se creará.'});
 							let elementContainerNavs = '.' + sLayout.containerNavsClass,
 									$containerNavs = _this.find(elementContainerNavs),
 									defaultStylesArrow = (sLayout.arrowDefaultStyles) ? ' gs-style-arrow' : '',
@@ -774,12 +775,15 @@
 									arrowsHtml += '<' + sLayout.arrowsTag + ' class="' + sLayout.arrowNextClass + '">' + sLayout.arrowNextContent + '</' + sLayout.arrowsTag + '>';
 									arrowsHtml += '</' + sLayout.wrapperArrowsTag + '>';
 							if($containerNavs.length) {
+								_objThis.log({type: 'not', text: 'Ya existe el NAV, se crearán las flechas.'});
 								_this.find(elementContainerNavs).append(arrowsHtml)
 							} else {
+								_objThis.log({type: 'not', text: 'NO existe el NAV, creará el contenedor y las flechas.'});
 								_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '">' + arrowsHtml + '</' + sLayout.containerNavsTag + '>');
 							}
 							$wrapperArrows = _this.find('.' + sLayout.wrapperArrowsClass); // selección rectificada por creación
 						} else {
+							_objThis.log({type: 'not', text: 'Ya existe el NAV, no se creará.'});
 							if ($wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.removeClass(displayNodeClass);
 						}
 					}
@@ -787,6 +791,7 @@
 					if ($wrapperArrows.hasClass(attachedClass)) return false; // ya se adjunto el evento click
 					$wrapperArrows.addClass(attachedClass);
 
+					_objThis.log({type: 'not', text: 'Adjuntando eventos click a las flechas del NAV.'});
 					// haciendo click PREV
 					_this.find('.' + sLayout.arrowPrevClass).on('click', function(){
 						_objThis.goTo('prev');
@@ -854,7 +859,7 @@
 										error: () => {
 											if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'error');
 											_tools.cleanClass($item, sLayout);
-											_objThis.log({type: 'err', text: 'No fué posible cargar el recurso lazy "' + dataLazy + '" del item con posición ' + ($itemIndex + 1) + '.', required: true});
+											_objThis.log({type: 'err', text: 'No fué posible cargar el recurso lazy "' + dataLazy + '" del item con posición ' + ($itemIndex + 1) + '.'});
 										}
 									});
 								}
