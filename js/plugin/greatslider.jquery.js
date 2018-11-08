@@ -97,7 +97,7 @@
 	window.gs = {
 		info: {
 			name: 'Great Slider',
-			version: 'Alfa 1.1.0',
+			version: 'Alfa 1.1.1',
 		},
 		slider: {}
 	}
@@ -261,7 +261,7 @@
 
 			function autoHeight($item){
 				if(!actions.fullscreen('check') && configsBk.autoHeight && (configsBk.items == 1)) {
-					let $altoContent = $item.find('.' + sLayout.itemWrapperClass).height();
+					let $altoContent = $item.find('> .' + sLayout.itemWrapperClass).height();
 					$wrapperItems.css('height', $altoContent + 'px');
 				}
 			}
@@ -429,12 +429,12 @@
 
 						_this.html('<' + sLayout.containerItemsTag + ' class="' + sLayout.containerItemsClass + '"><' + sLayout.wrapperItemsTag + ' class="' + sLayout.wrapperItemsClass + '">' + lis + '</' + sLayout.wrapperItemsTag + '></' + sLayout.containerItemsTag + '>');
 
-						$wrapperItems = _this.find('.' + sLayout.wrapperItemsClass);
-						items = _this.find('.' + sLayout.itemClass);
+						$wrapperItems = _this.find(`> .${sLayout.containerItemsClass} > .${sLayout.wrapperItemsClass}`);
+						items = $wrapperItems.find('> .' + sLayout.itemClass);
 						nItems = items.length;
 					}
 
-					let $theItems = $wrapperItems.find('.' + sLayout.itemClass),
+					let $theItems = $wrapperItems.find('> .' + sLayout.itemClass),
 							$firstItem = $theItems.eq(0),
 							iActivePure = sLayout.itemActiveClass;
 
@@ -455,8 +455,8 @@
 								itemsStyle += thePrefix + ': opacity ' + (configs.navSpeed / 1000) + 's ' + sLayout.transitionMode + ' 0s;';
 								wrapperStyle += thePrefix + ': height .3s ' + sLayout.transitionMode + ' 0s;';
 							});
-							gsStyles += '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
-							gsStyles += '#' + $idThis + ' .' + sLayout.itemClass + '{' + itemsStyle + '};';
+							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
+							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + ' > .' + sLayout.itemClass + '{' + itemsStyle + '};';
 
 							// si el lazy está activado
 							if (configs.lazyLoad) this.loadLazy($firstItem);
@@ -480,8 +480,8 @@
 							transPrefix.forEach(thePrefix => {
 								transStyle += thePrefix + ': margin-left ' + (configs.navSpeed / 1000) + 's ' + sLayout.transitionMode + ' 0s, height .3s linear 0s;'
 							});
-							gsStyles += '#' + $idThis + ' .' + sLayout.wrapperItemsClass + '{' + transStyle + '}';
-							gsStyles += '#' + $idThis + ' .' + sLayout.itemClass + '{width: ' + (100 / nItems) + '%}';
+							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + ' {' + transStyle + '}';
+							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + ' > .' + sLayout.itemClass + ' {width: ' + (100 / nItems) + '%}';
 
 							// cargando los elementos 'lazy'
 							if (configs.lazyLoad) {
@@ -494,12 +494,12 @@
 
 							// Eliminando el 'height' dado inline porque posiblemente cuando solo era 1 item por vez tenía 'autoHeight'
 							if (configs.items >= 2) {
-								let $theUl = _this.find('.' + sLayout.wrapperItemsClass);
+								let $theUl = _this.find(`> .${sLayout.containerItemsClass} > .${sLayout.wrapperItemsClass}`);
 								if ($theUl.attr('style') !== undefined) $theUl.removeAttr('style')
 							}
 
 							// busca si ya se tiene activo un item
-							let $activeItem = $wrapperItems.find('.' + sLayout.itemActiveClass);
+							let $activeItem = $wrapperItems.find('> .' + sLayout.itemActiveClass);
 							if (!$activeItem.length) { // no lo hay, activo el determinado por configs.items
 								$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
 							} else { // activo el primero
@@ -544,7 +544,7 @@
 				drag: function(status) {
 					let _objThis = this;
 
-					let $containerItems = _this.find('.' + sLayout.containerItemsClass);
+					let $containerItems = _this.find('> .' + sLayout.containerItemsClass);
 					if (!$containerItems.hasClass(settings.dragClass)) {
 						let gsMouseX = null,
 								$ciWidth = $containerItems.width() / 2,
@@ -563,7 +563,7 @@
 
 								$(this).addClass(sLayout.wrapperMouseDownClass);
 								gsMouseX = e.clientX;
-								marginLeft = Number(_this.find('.' + sLayout.wrapperItemsClass).css('margin-left').replace('px', '')); // CONTINUAR TRABAJANDO EN ESTO.
+								marginLeft = Number($containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left').replace('px', '')); // CONTINUAR TRABAJANDO EN ESTO.
 								itemActiveIndex = _objThis.getActive().index;
 							},
 
@@ -586,7 +586,7 @@
 											marginLeft = null;
 										} else {
 											*/
-											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
+											$containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
 										//}
 
 
@@ -601,7 +601,7 @@
 											marginLeft = null;
 										} else {
 											*/
-											_this.find('.' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
+											$containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
 										//}
 
 
@@ -649,7 +649,7 @@
 
 					let _objThis = this,
 							maxBullets,
-							$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+							$wrapperBullets = _this.find(`> .${sLayout.containerNavsClass} > .${sLayout.wrapperBulletsClass}`);
 
 					let classBulletActive = sLayout.bulletActiveClass;
 					let actions = {
@@ -671,19 +671,19 @@
 								}
 
 								// creando el container navs
-								if(!_this.find('.' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
+								if(!_this.find('> .' + sLayout.containerNavsClass).length) { // no existen su wrapper nav,  hay que crearlo
 									_this.append('<' + sLayout.containerNavsTag + ' class="' + sLayout.containerNavsClass + '"></' + sLayout.containerNavsTag + '>');
 								}
 								// creando el wrapper de bullets
 								if(!$wrapperBullets.length) {
-									_this.find('.' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
-									$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+									_this.find('> .' + sLayout.containerNavsClass).append('<' + sLayout.wrapperBulletsTag + ' class="' + sLayout.wrapperBulletsClass + ((sLayout.bulletDefaultStyles) ? ' gs-style-bullets' : '') + '"></' + sLayout.wrapperBulletsTag + '>');
+									$wrapperBullets = _this.find(`> .${sLayout.containerNavsClass} > .${sLayout.wrapperBulletsClass}`);
 								} else { // si yá existe, verifico que no esté oculto
 									if ($wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.removeClass(displayNodeClass);
 								}
 
 								// calculando de acuerdo a los items a mostrar.
-								let $theBullets = $wrapperBullets.find('.' + sLayout.bulletClass),
+								let $theBullets = $wrapperBullets.find('> .' + sLayout.bulletClass),
 										bulletsHtml = '';
 
 								// activando el item correspondiente si los bullets existentes son iguales a los que crearemos
@@ -704,7 +704,7 @@
 								$wrapperBullets.html(bulletsHtml);
 
 							} else { // se determinó false
-								$wrapperBullets = _this.find('.' + sLayout.wrapperBulletsClass);
+								$wrapperBullets = _this.find(`> .${sLayout.containerNavsClass} > .${sLayout.wrapperBulletsClass}`);
 								if($wrapperBullets.length) { // verifico si existe
 									if (!$wrapperBullets.hasClass(displayNodeClass)) $wrapperBullets.addClass(displayNodeClass);
 									return false;	
@@ -713,13 +713,13 @@
 						},
 
 						active: getIndex => {
-							let itemActive = $wrapperItems.find('.' + sLayout.itemActiveClass).index();
+							let itemActive = $wrapperItems.find('> .' + sLayout.itemActiveClass).index();
 							let bulletToActive = (itemActive + 1) / configs.items;
 							if (bulletToActive % 1 !== 0) bulletToActive = Math.floor(bulletToActive) + 1;
 							bulletToActive -= 1;
 
 							if (getIndex) return bulletToActive; // si es que se solicita
-							let $bulletActiving = _this.find('.' + sLayout.bulletClass).eq(bulletToActive);
+							let $bulletActiving = _this.find('> .' + sLayout.containerNavsClass + ' .' + sLayout.bulletClass).eq(bulletToActive);
 							if (!$bulletActiving.hasClass(classBulletActive)) $bulletActiving.addClass(classBulletActive).siblings().removeClass(classBulletActive);
 						},
 
@@ -759,7 +759,7 @@
 					//
 
 					// verificación
-					let $wrapperArrows = _this.find('.' + sLayout.wrapperArrowsClass);
+					let $wrapperArrows = _this.find('> .' + sLayout.containerNavsClass +' .' + sLayout.wrapperArrowsClass);
 					if (!configs.nav) {
 						if($wrapperArrows.length) {
 							if (!$wrapperArrows.hasClass(displayNodeClass)) $wrapperArrows.addClass(displayNodeClass);
@@ -767,7 +767,7 @@
 					} else {
 						if(!$wrapperArrows.length) { // hay q crearlas
 							_objThis.log({type: 'not', text: 'NO existe el NAV, se creará.'});
-							let elementContainerNavs = '.' + sLayout.containerNavsClass,
+							let elementContainerNavs = '> .' + sLayout.containerNavsClass,
 									$containerNavs = _this.find(elementContainerNavs),
 									defaultStylesArrow = (sLayout.arrowDefaultStyles) ? ' gs-style-arrow' : '',
 									arrowsHtml = '<' + sLayout.wrapperArrowsTag + ' class="' +  sLayout.wrapperArrowsClass + defaultStylesArrow + '">';
@@ -793,12 +793,12 @@
 
 					_objThis.log({type: 'not', text: 'Adjuntando eventos click a las flechas del NAV.'});
 					// haciendo click PREV
-					_this.find('.' + sLayout.arrowPrevClass).on('click', function(){
+					$wrapperArrows.find('.' + sLayout.arrowPrevClass).on('click', function(){
 						_objThis.goTo('prev');
 					});
 
 					// haciendo click NEXT
-					_this.find('.' + sLayout.arrowNextClass).on('click', function(){
+					$wrapperArrows.find('.' + sLayout.arrowNextClass).on('click', function(){
 						_objThis.goTo('next');
 					});
 				},
@@ -1081,7 +1081,7 @@
 				},
 
 				getActive: function(){
-					let $activeItem = $wrapperItems.find('.' + sLayout.itemActiveClass);
+					let $activeItem = $wrapperItems.find('> .' + sLayout.itemActiveClass);
 					return {
 						item: $activeItem,
 						index: $activeItem.index() + 1
@@ -1236,7 +1236,7 @@
 				fullscreen: function(configs, itemToGo) {
 
 					let _objThis = this,
-							$fsElement = _this.find('.' + sLayout.fsButtonClass),
+							$fsElement = _this.find('> .' + sLayout.fsButtonClass),
 							lastItems;
 						
 					// funciones útiles
@@ -1352,7 +1352,7 @@
 
 					// no es invocación del metodo con orden, es el flujo normal
 					if (configs.fullscreen) {
-						if (!fullScreenApi.supportsFullScreen) return this.log({type: 'war', text: 'El dispositivo actual no soporta Full Screen.', required: true});
+						if (!fullScreenApi.supportsFullScreen) return this.log({type: 'war', text: 'El dispositivo actual no soporta Full Screen.'});
 						// construcción del boton
 						if(!$fsElement.length) {
 							_this.append('<' + sLayout.fsButtonTag + ' class="' + sLayout.fsButtonClass + ((sLayout.fsButtonDefaultStyles) ? ' gs-style-btnfs' : '') + '"></' + sLayout.fsButtonTag + '>');
@@ -1366,7 +1366,7 @@
 					}
 
 					// Adjuntado evento click al boton FS
-					$fsElement = _this.find('.' + sLayout.fsButtonClass); // volviendolo a declarar por su creación
+					$fsElement = _this.find('> .' + sLayout.fsButtonClass); // volviendolo a declarar por su creación
 					if ($fsElement.hasClass(attachedClass)) return false; // ya se adjunto el evento click
 					$fsElement.addClass(attachedClass).on('click', e => {
 						e.preventDefault();
@@ -1379,13 +1379,13 @@
 					if(!_this.hasClass(sLayout.builtClass)) return false;
 					// devolviendo items como hijos directos de su wrapper inicial
 					let htmlPure = '';
-					_this.find('.' + sLayout.itemWrapperClass).each( function() {
-						htmlPure += $(this).html();
+					_this.find(`> .${sLayout.containerItemsClass} > .${sLayout.wrapperItemsClass} > .${sLayout.itemClass}`).each( function() {
+						htmlPure += $(this).find(`> .${sLayout.itemWrapperClass}`).html();
 					});
 					_this.html(htmlPure).removeClass(sLayout.builtClass);
 					if(_this.attr('id').indexOf('gs-slider-') !== -1) _this.removeAttr('id');
 					// destruyendo navegación, si existe.
-					let $theNav = _this.find('.' + sLayout.containerNavsClass);
+					let $theNav = _this.find('> .' + sLayout.containerNavsClass);
 					if($theNav.length) $theNav.remove();
 
 					// cargando elementos lazy, si existen
@@ -1399,7 +1399,7 @@
 					}
 
 					// eliminando el estilo inline 'height' si se determinó autoHeight
-					let $wrapperUl = _this.find('.' + sLayout.wrapperItemsClass);
+					let $wrapperUl = _this.find(`> .${sLayout.containerItemsClass} > .${sLayout.wrapperItemsClass}`);
 					if ($wrapperUl.attr('style') !== undefined) $wrapperUl.removeAttr('style');
 					//
 
@@ -1408,7 +1408,7 @@
 				},
 
 				touch: function(estado) {
-					let $theContainerItems = _this.find('.' + sLayout.containerItemsClass),
+					let $theContainerItems = _this.find('> .' + sLayout.containerItemsClass),
 							sliderTouchStart, sliderTouchMove;
 					if (!estado) {
 						if ($theContainerItems.hasClass(settings.touchClass)) {

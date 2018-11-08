@@ -36,7 +36,7 @@
 		
 		startPosition: 0, // la posición del item que estará activo al iniciar el slider.
 
-		fullScreen: false, // false, true : habilita o deshabilita la pantalla completa
+		fullscreen: false, // false, true : habilita o deshabilita la pantalla completa
 
 		lazyLoad: true, // true, false : habilita la carga por demanda
 		lazyClass: 'gs-lazy', // la clase que tendrá el o los items a cargar por demanda

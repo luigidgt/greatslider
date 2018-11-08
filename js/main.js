@@ -202,3 +202,19 @@ $('#sliderroto').greatSlider({
 		}
 	}
 });
+
+
+// Slider multiple (con mini sliders interiores)
+$('#fotoswipe2').greatSlider({
+	type: 'swipe',
+	nav: true,
+	bullets: true,
+	items: 3,
+	onInited: ()=>{
+		$('.gs-slider').greatSlider({
+			type: 'swipe',
+			nav: true,
+			bullets: true
+		});
+	}
+});
