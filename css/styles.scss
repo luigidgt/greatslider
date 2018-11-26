@@ -81,9 +81,19 @@
 	height: 100%;
 	overflow: hidden;
 
-	&.gs-mouse-enter {
-		cursor:grab;
+	&.gs-drag {
+		&.gs-mouse-down {
+			.gs-wrapper-items {
+				transition: none !important;
+			}
+		}
+	}
 
+	&.gs-drag--hand {
+		&.gs-mouse-enter {
+			cursor:grab;
+		}
+	
 		&.gs-mouse-down {
 			cursor: grabbing;
 		}
@@ -182,12 +192,19 @@
 		max-width: 100%;
 	}
 
+	img {
+		pointer-events: none
+	}
+	
 	* {
 		-webkit-user-select: none;
     -moz-user-select: none;
     -khtml-user-select: none;
-    -ms-user-select:none;
+		-ms-user-select:none;
+		-o-user-select: none;
+		user-select: none;
 	}
+
 }
 
 // ARROWS

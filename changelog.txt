@@ -1,3 +1,6 @@
+* 1.2.0 (26/11/2018)
+	- se le agrega la funcionalidad de pase de slider por arrastre de mouse (llamada DRAG). [se agregó 'pointer-events: none' en CSS a las imágenes dentro de los items del slider], más información en el doc.txt
+
 * 1.1.1 (08/11/2018)
 	- Se refactorizó el plugin entero para la selección directa de los elementos con los cuales se trabajarán (navs, bullets, items), de ésta forma se pueden crear mini sliders dentro de un slider mayor.
 

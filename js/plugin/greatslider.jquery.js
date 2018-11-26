@@ -97,7 +97,7 @@
 	window.gs = {
 		info: {
 			name: 'Great Slider',
-			version: 'Alfa 1.1.1',
+			version: 'Alfa 1.2.0',
 		},
 		slider: {}
 	}
@@ -114,6 +114,7 @@
 		this.items = theActions.items;
 		this.goTo = theActions.goTo;
 		this.loadLazy = theActions.loadLazy;
+		this.drag = theActions.drag;
 
 
 		this.autoPlay = theActions.autoPlay;
@@ -149,6 +150,9 @@
 
 				drag: true,
 				dragClass: 'gs-drag',
+				dragIn: 4,
+				dragHand: true,
+				dragHandClass: 'gs-drag--hand',
 
 				items: 1,
 				itemsInFs: 1,
@@ -530,7 +534,7 @@
 					if (typeRun !== undefined) {
 						typeRun(configs);
 						// activando o desactivando la navegación por arrastre
-						//(settings.drag) ? this.drag(true) : this.drag(false);
+						(settings.drag) ? this.drag(true) : this.drag(false);
 
 						// Verificando su estilaje
 						let theIdSlider = 'gs-styles-' + $idThis.replace('gs-slider-', ''),
@@ -543,95 +547,97 @@
 
 				drag: function(status) {
 					let _objThis = this;
-
 					let $containerItems = _this.find('> .' + sLayout.containerItemsClass);
-					if (!$containerItems.hasClass(settings.dragClass)) {
-						let gsMouseX = null,
-								$ciWidth = $containerItems.width() / 2,
+					let theContainer = $containerItems.get(0);
+					let dragClasses = settings.dragClass;
+					if (settings.dragHand)  dragClasses += ' ' + settings.dragHandClass;
+					
+					if (!status) {
+						if (theContainer.classList.contains(settings.dragClass)) {
+							theContainer.classList.remove(dragClasses)
+							$containerItems.off('mouseenter mousedown mousemove mouseup mouseleave')
+						}
+					} else {
+						if (!theContainer.classList.contains(settings.dragClass)) {
+							let gsMouseX = null,
+								$ciWidth = $containerItems.width() / settings.dragIn,
 								marginLeft = null,
 								itemActiveIndex = null,
 								mouseDown = false;
 
-						$containerItems.on({
+							$containerItems.on({
 
-							mouseenter: function(e){
-								$(this).addClass(sLayout.wrapperMouseEnterClass);
-							},
+								mouseenter: function(e){
+									$(this).addClass(sLayout.wrapperMouseEnterClass);
+								},
 
-							mousedown: function(e) {
-								mouseDown = true;
+								mousedown: function(e) {
+									mouseDown = true;
+									$(this).get(0).classList.add(sLayout.wrapperMouseDownClass);
+									gsMouseX = e.clientX;
+									marginLeft = Number($containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left').replace('px', '')); // CONTINUAR TRABAJANDO EN ESTO.
+									itemActiveIndex = _objThis.getActive().index;
+								},
 
-								$(this).addClass(sLayout.wrapperMouseDownClass);
-								gsMouseX = e.clientX;
-								marginLeft = Number($containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left').replace('px', '')); // CONTINUAR TRABAJANDO EN ESTO.
-								itemActiveIndex = _objThis.getActive().index;
-							},
+								mousemove: function(e){
+									let _theElement = $(this);
 
-							mousemove: function(e){
-								//msg += e.pageX + ", " + e.pageY;
-								let _theElement = $(this);
-								//if(_theElement.hasClass(sLayout.wrapperMouseDownClass)) {
+									if(mouseDown) {
+										let draging = e.pageX - gsMouseX;
 
-								if(mouseDown) {
+										if (e.pageX > gsMouseX) { // se arrastra a la derecha para ir al item ANTERIOR
+											let toDrag = marginLeft + draging;
 
-									let draging = e.pageX - gsMouseX;
-									console.log('draging: ' + draging);
+											if (draging >= $ciWidth) {
+												$(this).get(0).classList.remove(sLayout.wrapperMouseDownClass);
+												(itemActiveIndex !== 1) ? _objThis.goTo('prev') : _objThis.goTo(_objThis.getActive().index, true);
+												mouseDown = false;
+												marginLeft = null;
+											} else {
+												if (settings.type == 'swipe') {
+													$containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
+												}
+											}
 
-									if (e.pageX > gsMouseX) { // se arrastra a la derecha para ir al item ANTERIOR
-										let toDrag = marginLeft + draging;
-										console.log('toDrag derecha: ' + toDrag);
-
-										/*if (draging >= $ciWidth) {
-											(itemActiveIndex !== 1) ? _objThis.goTo('prev') : _objThis.goTo(_objThis.getActive().index, true);
-											marginLeft = null;
-										} else {
-											*/
-											$containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
-										//}
-
-
-									} else { // se arrastra a la izquierda para ir al SIGUIENTE item
-
-
-										let toDrag = marginLeft + draging;
-										console.log('toDrag izquierda: ' + toDrag);
-										/*
-										if (draging <= Number('-' + $ciWidth)) {
-											(itemActiveIndex !== nItems) ? _objThis.goTo('next') : _objThis.goTo(_objThis.getActive().index, true);
-											marginLeft = null;
-										} else {
-											*/
-											$containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
-										//}
-
-
+										} else { // se arrastra a la izquierda para ir al SIGUIENTE item
+											let toDrag = marginLeft + draging;
+											if (draging <= Number('-' + $ciWidth)) {
+												$(this).get(0).classList.remove(sLayout.wrapperMouseDownClass);
+												(itemActiveIndex !== nItems) ? _objThis.goTo('next') : _objThis.goTo(_objThis.getActive().index, true);
+												mouseDown = false;
+												marginLeft = null;
+											} else {
+												if (settings.type == 'swipe') {
+													$containerItems.find('> .' + sLayout.wrapperItemsClass).css('margin-left', toDrag + 'px');
+												}
+											}
+										}
 									}
+								},
+
+								mouseup: function(e){
+									$(this).removeClass(sLayout.wrapperMouseDownClass);
+									gsMouseX = null,
+									itemActiveIndex = null,
+									mouseDown = false;
+									
+									if (marginLeft !== null) {
+										_objThis.goTo(_objThis.getActive().index, true);
+									}
+								},
+
+								mouseleave: function(e){
+									$(this).removeClass(sLayout.wrapperMouseEnterClass);
+									if($(this).hasClass(sLayout.wrapperMouseDownClass)) $(this).removeClass(sLayout.wrapperMouseDownClass);
+									if (marginLeft !== null) _objThis.goTo(_objThis.getActive().index, true)
+									marginLeft = null;
+									gsMouseX = null;
+									itemActiveIndex = null,
+									mouseDown = false;
 								}
-							},
 
-							mouseup: function(e){
-								//console.log('mouse up')
-								$(this).removeClass(sLayout.wrapperMouseDownClass);
-								gsMouseX = null,
-								itemActiveIndex = null,
-								mouseDown = false;
-								/*
-								if (marginLeft !== null) {
-									_objThis.goTo(_objThis.getActive().index, true);
-								}
-								*/
-							},
-
-							mouseleave: function(e){
-								$(this).removeClass(sLayout.wrapperMouseEnterClass);
-								if($(this).hasClass(sLayout.wrapperMouseDownClass)) $(this).removeClass(sLayout.wrapperMouseDownClass);
-								marginLeft = null;
-								gsMouseX = null;
-								itemActiveIndex = null,
-								mouseDown = false;
-							}
-
-						}).addClass(settings.dragClass);
+							}).addClass(dragClasses);
+						}
 					}
 				},
 

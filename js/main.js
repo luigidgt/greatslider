@@ -15,7 +15,8 @@ const $sliderFs = $('#fotoswipe').greatSlider({
 	type: 'swipe',
 	nav: true,
 	bullets: false,
-	fullscreen: true
+	fullscreen: true,
+	dragHand: false
 });
 
 $('#fsBtn').click(()=>{

@@ -3,7 +3,7 @@
 
 	- Nombre: Great Slider	 
 	- Descripción: Un slider todo terreno
-	- Version: Alfa 1.1.0
+	- Version: Alfa 1.1.1
 	- Autor: Daniel Pisconte Zevallos
 
 
@@ -20,6 +20,12 @@
 		slideBy: 1, // numero de items entre cada pase
 
 		touch: true, // true, false: habilita o deshabilita la navegación por touch.
+
+		drag: true, // true, false: habilita o deshabilita la navegación por arrastre de mouse.
+		dragClass: 'gs-drag', // la clase que tendrá cuando se active el arrastre.
+		dragIn: 3, // el porcentaje que se tiene que arrastrar para producir un pase entre cada frame, por defecto es el 33,33%, por eso está en 3.
+		dragHand: true, // true, false: condiciona para mostrar o no la mano cuando se pueda arrastrar.
+		dragHandClass: 'gs-drag--hand', // la clase que se tendrá para mostrar la mano.
 
 		bullets: true, // true, false : aparece o desaparece los bullets
 
@@ -317,6 +323,9 @@
 	- agregar lazy load por srcset (img responsive).
 	- agregar la opción de adicionar un espacio entre los items.
 	- navegación por arrastre del mouse
+	- agregar y quitar items a voluntad.
+	- agregar filtro para desaparecer items
+	- items con anchos variables
 
 
 	Cosas para hacer posiblemente:

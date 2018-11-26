@@ -1,384 +1,245 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <title>Greade Slider</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- estilos solo de muestra-->
-    <style>
-      #breakpoints, #bpsimples {
-      	margin-left:auto;
-      	margin-right:auto;
-      }
-      
-      .gs-container-items {
-      	background-color: #F6F6F6;
-      }
-      
-      #bpsimples {
-      	max-width: 1024px;
-      }
-      
-      .gs-container-slider {
-      	max-width: 100%;
-      }
-      
-      .gs-wrapper-content img {
-      	display :block;
-      }
-      
-      /*
-      .gs-wrapper-content img {
-      	margin-left:auto;
-      	margin-right:auto;
-      	max-width: 100%;
-      	max-height: 100%;
-      	display:block;
-      }
-      */
-      
-      h2 {
-      	text-align:center
-      }
-      
-      .botones button {
-      	padding:10px;
-      	border:1px solid #c0c0c0;
-      	border-radius: 2px;
-      	background-color: #e7e7e7;
-      	transition: all .1s linear;
-      	font-size: 15px;
-      }
-      
-      .botones button:hover {
-      	cursor:pointer
-      }
-      
-      .botones button:active {
-      	background-color: #555555;
-      	border-color:#555555;
-      	color: #fff;
-      }
-      
-      .go {
-      	margin-right: 20px
-      }
-      
-      .prev, .stop {
-      	margin-right: 10px
-      }
-      
-      .play {
-      	margin-right: 2px
-      }
-      
-      .active, .next {
-      	margin-right: 5px
-      }
-      
-      .botones {
-      	text-align:center;
-      	margin-top:20px;
-      }
-      
-      #sliderroto {
-      	max-width: 800px;
-      		margin-right: auto;
-      	margin-left: auto;
-      }
-      
-      /* Estilos para los testimonios */
-      .lostestimonios {
-      	width: 100%;
-      	max-width: 700px;
-      	padding: 20px;
-      	margin-right: auto;
-      	margin-left: auto;
-      }
-      
-      .lostestimonios .gs-container-navs {
-      	margin-top: 10px;
-      }
-      
-      .lostestimonios .gs-container-items {
-      	background-color: #fff;
-      }
-      
-      .lostestimonios .gs-wrapper-bullets {
-      	display:flex;
-      	justify-content: center;
-      	align-items: center;
-      }
-      
-      .lostestimonios .gs-wrapper-bullets .gs-bullet {
-      	width: 15px;
-      	height: 15px;
-      	background-color: #c0c0c0;
-      	border-radius: 50%;
-      	margin-right: 7px;
-      }
-      
-      .lostestimonios .gs-wrapper-bullets .gs-bullet:hover {
-      	cursor: pointer;
-      }
-      
-      .lostestimonios .gs-wrapper-bullets .gs-bullet.gs-bullet-active {
-      	background-color: #DFAA57;
-      }
-      
-      .lostestimonios .gs-wrapper-bullets .gs-bullet:last-child {
-      	margin-right: 0;
-      }
-      
-      .testimonio {
-      	padding:0 40px;
-      	position: relative;
-      }
-      
-      .testimonio:before, .testimonio:after {
-      	content: "";
-      	width: 22px;
-      	height: 22px;
-      	background-image:url('../img/comilla.png');
-      	background-repeat: no-repeat;
-      	position: absolute;
-      }
-      
-      .testimonio:before {
-      	top:0;
-      	left:0;
-      }
-      
-      .testimonio:after {
-      	bottom:22px;
-      	right: 0;
-      	transform: rotate(-180deg)
-      }
-      
-      .testimonio p {
-      	text-align: justify;
-      	line-height: 1.5;
-      	font-family: "calibri";
-      	font-size: 15px;
-      	margin-top: 0;
-      	margin-bottom: 10px;
-      	text-align-last: center;
-      }
-      
-      .testimonio p:last-child {
-      	margin-bottom: 0;
-      }
-      
-      .autor {
-      	margin-top: 15px;
-      	display: block;
-      	text-align: left;
-      	font-weight: bold;
-      	color: #DFAA57;
-      }
-      
-      /* Slider de fotos */
-      #fotos, #fotoswipe, #fotosb {	
-      	max-width: 1000px;
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-      
-      .img-slider {
-      	width: 100%;
-      }
-      
-      /* Slider de fotos no uniformes */
-      
-      #fotosc {
-      	max-width: 1000px;
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-      
-      #videos, #fotosdata {
-      	max-width: 850px;
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-      
-      #videos video, #videos iframe{
-      	width: 100%;
-      }
-      
-      #videos .gs-wrapper-content {
-      	width: 100%;
-      }
-      
-      #fotosdata {
-      	max-width: 1200px;
-      }
-      
-      #fsBtn {
-      	margin-top: 15px;
-      	margin-left: auto;
-      	margin-right: auto;
-      	display:block;
-      	width: 100px;
-      	height: 45px;
-      }
-      
-      #autodestroy:not(.gs-builded) {
-      	display: flex;
-      	justify-content: center;
-      	align-items: center;
-      }
-      
-      #autodestroy:not(.gs-builded) .img-slider {
-      	width: 396px;
-      }
-      
-      #fotoswipe2 {
-      	width: 1600px;
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-      
-      #fotoswipe2 > .gs-container-navs .gs-wrapper-bullets {
-      	bottom: -50px;
-      }
-      
-      #fotoswipe2 > .gs-container-items > .gs-wrapper-items > .gs-item-slider{
-      	padding:0 50px;
-      }
-      
-      .gs-slider {
-      	width: 100%;
-      }
-      
-    </style>
-  </head>
-  <body>
-    <h2>Slider Swipe de testimonios</h2>
-    <div class="lostestimonios gs-container-slider">
-      <div class="testimonio">
-        <div class="parrafos">
-          <p>Ruddy y Andrés hicieron un excelente trabajo. Siempre muy atentos y dispuestos en atender todas nuestras peticiones y requerimientos antes y después de haber comprado el apartamento. Nos ayudaron a negociar un mejor precio. Sin duda alguna los volvería a contactar para comprar cualquier otra propiedad.</p>
-        </div><span class="autor">RFDAYANA</span>
-      </div>
-      <div class="testimonio">
-        <div class="parrafos">
-          <p>muy agradecidos con Ruddy y Andrés por toda la ayuda que nos dieron para la compra de una propiedad en Miami. Nos guiaron y apoyaron en el proceso de negociación de principio a fin, al tiempo que fueron muy pacientes y estuvieron siempre disponibles a contestar nuestras dudas. Lograron darnos confianza y hacer todo el proceso más simple. Son personas extremadamente profesionales, con excelente conocimiento del mercado local y con una red de contactos que hacen que el proceso de compra sea más ágil y eficiente. Por último, solo podemos decir que son personas con una gran calidad humana y por lo tanto los recomendamos para cualquier persona interesada en adquirir una propiedad en la Florida.</p>
-        </div><span class="autor">AHNY</span>
-      </div>
-      <div class="testimonio">
-        <div class="parrafos">
-          <p>Ruddy y Andrés son el tipo de agentes de bienes raíces que realmente te escuchan, entienden fácilmente lo que necesitas, son agente de bienes raíces a tiempo completo, siempre dispuestos a ayudar, con un verdadero compromiso de hacer una transacción sin problemas para todas las partes, ellos tienen las habilidades de negociación necesarias para representarme como un cliente feliz, ellos siempre contestan el teléfono y solucionan cualquier problema, yo le recomiendo altamente a Ruddy y Andrés a cualquier persona que necesita un agente de bienes raíces.</p>
-        </div><span class="autor">RFDAYANA</span>
-      </div>
-      <div class="testimonio">
-        <div class="parrafos">
-          <p>Trabajar con Ruddy Arévalo ha sido increíble; ella es muy honesta, ingeniosa y creativa, súper rápido para responder a mis preguntas, ella y el hacen un trabajo excepcional, realmente siento que Ruddy es un gran agente y yo la recomiendo para cualquier persona que lo necesite.</p>
-        </div><span class="autor">XPOSEFASHION1</span>
-      </div>
-      <div class="testimonio">
-        <div class="parrafos">
-          <p>Mi esposo y yo nos encontramos en una propiedad de Ruddy y nos conectamos de inmediato ella era amable y escucharon todas mis preocupaciones. Ella era súper profesional y nos ayudo mucho sobre la zona que estábamos buscando! Ella fue muy agradable durante todo nuestro tiempo. Realmente la recomiendo a cualquiera que esté buscando un agente de bienes raíces.</p>
-        </div><span class="autor">VENZA1970</span>
-      </div>
-      <div class="testimonio">
-        <div class="parrafos">
-          <p>En mi experiencia personal trabajar con Andrés Campos fue de vital importancia el asesoramiento y la educación que me brindo al explicarme como funciona el mercado de renta de Bienes Raíces en Miami, el área que mejor me convenía de acuerdo a lo que yo estaba buscando, darme la información para comprobar los datos y las ganancias de acuerdo al valor de mi inversión y el comparable de mercado, tuve un apoyo 100% efectivo en cuanto a videos de las propiedades y datos de comparación de mercado, la negociación fue clave en mi transacción, realmente muy complacido y definitivamente volvería a buscar de su asesoría en una futura compra o venta de Bienes Raíces.</p>
-        </div><span class="autor">CIFU-RICAR</span>
-      </div>
-      <div class="testimonio">
-        <div class="parrafos">
-          <p>Ruddy y Andrés tuvieron una atención personalizada y siempre han estado a nuestra disposición. Nos han ayudado mucho también con la logística, bancos, etc. y con todo el proceso de la compra.</p>
-        </div><span class="autor">POMA-EUG</span>
-      </div>
-    </div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de Fotos uniformes con Full Screen</h2>
-    <div class="gs-container-slider" id="fotoswipe"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-    <button id="fsBtn">Full Screen</button>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Fade de Fotos uniformes</h2>
-    <div class="gs-container-slider" id="fotos"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de Fotos no uniformes</h2>
-    <div class="gs-container-slider" id="fotosb"><img class="img-slider" src="img/naturaleza/diferentes/1.jpg"><img class="img-slider" src="img/naturaleza/diferentes/3.jpg"><img class="img-slider" src="img/naturaleza/diferentes/2.jpg"><img class="img-slider" src="img/naturaleza/diferentes/4.jpg"><img class="img-slider" src="img/naturaleza/diferentes/5.jpg"></div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de Fotos uniformes con fullscreen y lazy diferente en fullscreen</h2>
-    <div class="gs-container-slider" id="fotosc"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg" data-lazyfs="img/naturaleza/1080/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg" data-lazyfs="img/naturaleza/1080/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg" data-lazyfs="img/naturaleza/1080/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg" data-lazyfs="img/naturaleza/1080/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg" data-lazyfs="img/naturaleza/1080/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg" data-lazyfs="img/naturaleza/1080/6.jpg"></div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de foto y Videos</h2>
-    <div class="gs-container-slider" id="videos"><img class="gs-lazy img-slider" data-lazy="img/naturaleza/720/1.jpg" alt="Text">
-      <video class="gs-lazy" width="100%" data-lazy="videos/devstories.mp4"></video>
-      <video class="gs-lazy" width="100%">
-        <source data-lazy="videos/big_buck_bunny.mp4" type="video/mp4">
-        <source data-lazy="videos/big_buck_bunny.ogg" type="video/ogg">
-        <source data-lazy="videos/big_buck_bunny.webm" type="video/webm">Your browser doesn't support HTML5 video tag.
-      </video>
-      <iframe class="gs-lazy" width="100%" height="487px" data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&amp;t=13s&amp;rel=0&amp;showinfo=0&amp;iv_load_policy=3" frameborder="0" allowfullscreen></iframe>
-      <iframe class="gs-lazy" width="100%" height="487px" data-lazy="https://vimeo.com/270221211#&amp;autoplay=1" frameborder="0" allowfullscreen></iframe>
-    </div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de fotos con breakpoints simples</h2>
-    <div class="gs-container-slider" id="bpsimples"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/7.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/9.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/10.jpg"></div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de fotos con breakpoints, botones de acción y clicks items Fullscreendores</h2>
-    <div class="gs-container-slider" id="breakpoints"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/7.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/9.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/10.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/11.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/12.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/13.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/14.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/15.jpg"></div>
-    <div class="botones">
-      <button class="go" id="go">ir al item 5</button>
-      <button class="prev" id="prev">&#60; Prev</button>
-      <button class="play" id="play">Play</button>
-      <button class="stop" id="stop">Stop</button>
-      <button class="next" id="next">Next &#62;</button>
-    </div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de Fotos uniformes con parametros de configuración en atributo data</h2>
-    <div class="gs-container-slider" id="fotosdata" data-gs="{&quot;type&quot;: &quot;swipe&quot;, &quot;bullets&quot;: true, &quot;nav&quot;: false, &quot;layout&quot;: {&quot;transitionMode&quot;: &quot;linear&quot;} }"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe de fotos con breakpoints y con auto destrucción (cuando llegue a 1600px de ancho se autodestruirá)</h2>
-    <div class="gs-container-slider" id="autodestroy"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"></div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider comun con botones al acceso del API 'GS'</h2>
-    <div class="gs-container-slider" id="sliderconapi"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"><img class="img-slider" src="img/naturaleza/720/11.jpg"><img class="img-slider" src="img/naturaleza/720/12.jpg"><img class="img-slider" src="img/naturaleza/720/13.jpg"></div>
-    <div class="botones">
-      <button class="go" id="gob">ir al item 5</button>
-      <button class="prev" id="prevb">&#60; Prev</button>
-      <button class="play" id="playb">Play</button>
-      <button class="stop" id="stopb">Stop</button>
-      <button class="next" id="nextb">Next &#62;</button>
-    </div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider con imágenes rotas</h2>
-    <div class="gs-container-slider" id="sliderroto"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="http://www.undominio.com/imagen-rota.jpg" id="imagen-rota"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"></div>
-    <p></p><br>
-    <p></p><br>
-    <h2>Slider Swipe con mini sliders dentro</h2>
-    <div class="gs-container-slider" id="fotoswipe2">
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-      <div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div>
-    </div>
-    <p></p><br>
-    <p></p><br>
-    <!--script(src="js/lib/jquery-2.2.3.min.js")-->
-    <script src="js/lib/jquery-3.3.1.min.js"></script>
-    <script src="js/plugin/greatslider.jquery.min.js"></script>
-    <script src="js/main.js"></script>
-  </body>
-</html>
+<!DOCTYPE html><html lang="es"><head><title>Greade Slider</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link rel="stylesheet" href="css/styles.css"><!-- estilos solo de muestra--><style>#breakpoints, #bpsimples {
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.gs-container-items {
+	background-color: #F6F6F6;
+}
+
+#bpsimples {
+	max-width: 1024px;
+}
+
+.gs-container-slider {
+	max-width: 100%;
+}
+
+.gs-wrapper-content img {
+	display :block;
+}
+
+/*
+.gs-wrapper-content img {
+	margin-left:auto;
+	margin-right:auto;
+	max-width: 100%;
+	max-height: 100%;
+	display:block;
+}
+*/
+
+h2 {
+	text-align:center
+}
+
+.botones button {
+	padding:10px;
+	border:1px solid #c0c0c0;
+	border-radius: 2px;
+	background-color: #e7e7e7;
+	transition: all .1s linear;
+	font-size: 15px;
+}
+
+.botones button:hover {
+	cursor:pointer
+}
+
+.botones button:active {
+	background-color: #555555;
+	border-color:#555555;
+	color: #fff;
+}
+
+.go {
+	margin-right: 20px
+}
+
+.prev, .stop {
+	margin-right: 10px
+}
+
+.play {
+	margin-right: 2px
+}
+
+.active, .next {
+	margin-right: 5px
+}
+
+.botones {
+	text-align:center;
+	margin-top:20px;
+}
+
+#sliderroto {
+	max-width: 800px;
+		margin-right: auto;
+	margin-left: auto;
+}
+
+/* Estilos para los testimonios */
+.lostestimonios {
+	width: 100%;
+	max-width: 700px;
+	padding: 20px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.lostestimonios .gs-container-navs {
+	margin-top: 10px;
+}
+
+.lostestimonios .gs-container-items {
+	background-color: #fff;
+}
+
+.lostestimonios .gs-wrapper-bullets {
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.lostestimonios .gs-wrapper-bullets .gs-bullet {
+	width: 15px;
+	height: 15px;
+	background-color: #c0c0c0;
+	border-radius: 50%;
+	margin-right: 7px;
+}
+
+.lostestimonios .gs-wrapper-bullets .gs-bullet:hover {
+	cursor: pointer;
+}
+
+.lostestimonios .gs-wrapper-bullets .gs-bullet.gs-bullet-active {
+	background-color: #DFAA57;
+}
+
+.lostestimonios .gs-wrapper-bullets .gs-bullet:last-child {
+	margin-right: 0;
+}
+
+.testimonio {
+	padding:0 40px;
+	position: relative;
+}
+
+.testimonio:before, .testimonio:after {
+	content: "";
+	width: 22px;
+	height: 22px;
+	background-image:url('../img/comilla.png');
+	background-repeat: no-repeat;
+	position: absolute;
+}
+
+.testimonio:before {
+	top:0;
+	left:0;
+}
+
+.testimonio:after {
+	bottom:22px;
+	right: 0;
+	transform: rotate(-180deg)
+}
+
+.testimonio p {
+	text-align: justify;
+	line-height: 1.5;
+	font-family: "calibri";
+	font-size: 15px;
+	margin-top: 0;
+	margin-bottom: 10px;
+	text-align-last: center;
+}
+
+.testimonio p:last-child {
+	margin-bottom: 0;
+}
+
+.autor {
+	margin-top: 15px;
+	display: block;
+	text-align: left;
+	font-weight: bold;
+	color: #DFAA57;
+}
+
+/* Slider de fotos */
+#fotos, #fotoswipe, #fotosb {	
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.img-slider {
+	width: 100%;
+}
+
+/* Slider de fotos no uniformes */
+
+#fotosc {
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#videos, #fotosdata {
+	max-width: 850px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#videos video, #videos iframe{
+	width: 100%;
+}
+
+#videos .gs-wrapper-content {
+	width: 100%;
+}
+
+#fotosdata {
+	max-width: 1200px;
+}
+
+#fsBtn {
+	margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	display:block;
+	width: 100px;
+	height: 45px;
+}
+
+#autodestroy:not(.gs-builded) {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#autodestroy:not(.gs-builded) .img-slider {
+	width: 396px;
+}
+
+#fotoswipe2 {
+	width: 1600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#fotoswipe2 > .gs-container-navs .gs-wrapper-bullets {
+	bottom: -50px;
+}
+
+#fotoswipe2 > .gs-container-items > .gs-wrapper-items > .gs-item-slider{
+	padding:0 50px;
+}
+
+.gs-slider {
+	width: 100%;
+}
+</style></head><body><h2>Slider Swipe de testimonios</h2><div class="lostestimonios gs-container-slider"><div class="testimonio"><div class="parrafos"><p>Ruddy y Andrés hicieron un excelente trabajo. Siempre muy atentos y dispuestos en atender todas nuestras peticiones y requerimientos antes y después de haber comprado el apartamento. Nos ayudaron a negociar un mejor precio. Sin duda alguna los volvería a contactar para comprar cualquier otra propiedad.</p></div><a class="autor" href="http://www.google.com.pe">RFDAYANA</a></div><div class="testimonio"><div class="parrafos"><p>muy agradecidos con Ruddy y Andrés por toda la ayuda que nos dieron para la compra de una propiedad en Miami. Nos guiaron y apoyaron en el proceso de negociación de principio a fin, al tiempo que fueron muy pacientes y estuvieron siempre disponibles a contestar nuestras dudas. Lograron darnos confianza y hacer todo el proceso más simple. Son personas extremadamente profesionales, con excelente conocimiento del mercado local y con una red de contactos que hacen que el proceso de compra sea más ágil y eficiente. Por último, solo podemos decir que son personas con una gran calidad humana y por lo tanto los recomendamos para cualquier persona interesada en adquirir una propiedad en la Florida.</p></div><a class="autor" href="http://www.google.com.pe">AHNY</a></div><div class="testimonio"><div class="parrafos"><p>Ruddy y Andrés son el tipo de agentes de bienes raíces que realmente te escuchan, entienden fácilmente lo que necesitas, son agente de bienes raíces a tiempo completo, siempre dispuestos a ayudar, con un verdadero compromiso de hacer una transacción sin problemas para todas las partes, ellos tienen las habilidades de negociación necesarias para representarme como un cliente feliz, ellos siempre contestan el teléfono y solucionan cualquier problema, yo le recomiendo altamente a Ruddy y Andrés a cualquier persona que necesita un agente de bienes raíces.</p></div><a class="autor" href="http://www.google.com.pe">RFDAYANA</a></div><div class="testimonio"><div class="parrafos"><p>Trabajar con Ruddy Arévalo ha sido increíble; ella es muy honesta, ingeniosa y creativa, súper rápido para responder a mis preguntas, ella y el hacen un trabajo excepcional, realmente siento que Ruddy es un gran agente y yo la recomiendo para cualquier persona que lo necesite.</p></div><a class="autor" href="http://www.google.com.pe">XPOSEFASHION1</a></div><div class="testimonio"><div class="parrafos"><p>Mi esposo y yo nos encontramos en una propiedad de Ruddy y nos conectamos de inmediato ella era amable y escucharon todas mis preocupaciones. Ella era súper profesional y nos ayudo mucho sobre la zona que estábamos buscando! Ella fue muy agradable durante todo nuestro tiempo. Realmente la recomiendo a cualquiera que esté buscando un agente de bienes raíces.</p></div><a class="autor" href="http://www.google.com.pe">VENZA1970</a></div><div class="testimonio"><div class="parrafos"><p>En mi experiencia personal trabajar con Andrés Campos fue de vital importancia el asesoramiento y la educación que me brindo al explicarme como funciona el mercado de renta de Bienes Raíces en Miami, el área que mejor me convenía de acuerdo a lo que yo estaba buscando, darme la información para comprobar los datos y las ganancias de acuerdo al valor de mi inversión y el comparable de mercado, tuve un apoyo 100% efectivo en cuanto a videos de las propiedades y datos de comparación de mercado, la negociación fue clave en mi transacción, realmente muy complacido y definitivamente volvería a buscar de su asesoría en una futura compra o venta de Bienes Raíces.</p></div><a class="autor" href="http://www.google.com.pe">CIFU-RICAR</a></div><div class="testimonio"><div class="parrafos"><p>Ruddy y Andrés tuvieron una atención personalizada y siempre han estado a nuestra disposición. Nos han ayudado mucho también con la logística, bancos, etc. y con todo el proceso de la compra.</p></div><a class="autor" href="http://www.google.com.pe">POMA-EUG</a></div></div><p></p><br><p></p><br><h2>Slider Swipe de Fotos uniformes con Full Screen</h2><div class="gs-container-slider" id="fotoswipe"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><button id="fsBtn">Full Screen</button><p></p><br><p></p><br><h2>Slider Fade de Fotos uniformes</h2><div class="gs-container-slider" id="fotos"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div><p></p><br><p></p><br><h2>Slider Swipe de Fotos no uniformes</h2><div class="gs-container-slider" id="fotosb"><img class="img-slider" src="img/naturaleza/diferentes/1.jpg"><img class="img-slider" src="img/naturaleza/diferentes/3.jpg"><img class="img-slider" src="img/naturaleza/diferentes/2.jpg"><img class="img-slider" src="img/naturaleza/diferentes/4.jpg"><img class="img-slider" src="img/naturaleza/diferentes/5.jpg"></div><p></p><br><p></p><br><h2>Slider Swipe de Fotos uniformes con fullscreen y lazy diferente en fullscreen</h2><div class="gs-container-slider" id="fotosc"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg" data-lazyfs="img/naturaleza/1080/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg" data-lazyfs="img/naturaleza/1080/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg" data-lazyfs="img/naturaleza/1080/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg" data-lazyfs="img/naturaleza/1080/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg" data-lazyfs="img/naturaleza/1080/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg" data-lazyfs="img/naturaleza/1080/6.jpg"></div><p></p><br><p></p><br><h2>Slider Swipe de foto y Videos</h2><div class="gs-container-slider" id="videos"><img class="gs-lazy img-slider" data-lazy="img/naturaleza/720/1.jpg" alt="Text"><video class="gs-lazy" width="100%" data-lazy="videos/devstories.mp4"></video><video class="gs-lazy" width="100%"><source data-lazy="videos/big_buck_bunny.mp4" type="video/mp4"><source data-lazy="videos/big_buck_bunny.ogg" type="video/ogg"><source data-lazy="videos/big_buck_bunny.webm" type="video/webm">Your browser doesn't support HTML5 video tag.</video><iframe class="gs-lazy" width="100%" height="487px" data-lazy="https://www.youtube.com/watch?v=hW9PUzl7j9w&amp;t=13s&amp;rel=0&amp;showinfo=0&amp;iv_load_policy=3" frameborder="0" allowfullscreen></iframe><iframe class="gs-lazy" width="100%" height="487px" data-lazy="https://vimeo.com/270221211#&amp;autoplay=1" frameborder="0" allowfullscreen></iframe></div><p></p><br><p></p><br><h2>Slider Swipe de fotos con breakpoints simples</h2><div class="gs-container-slider" id="bpsimples"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/7.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/9.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/10.jpg"></div><p></p><br><p></p><br><h2>Slider Swipe de fotos con breakpoints, botones de acción y clicks items Fullscreendores</h2><div class="gs-container-slider" id="breakpoints"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/5.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/7.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/9.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/10.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/11.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/12.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/13.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/14.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/15.jpg"></div><div class="botones"><button class="go" id="go">ir al item 5</button><button class="prev" id="prev">&#60; Prev</button><button class="play" id="play">Play</button><button class="stop" id="stop">Stop</button><button class="next" id="next">Next &#62;</button></div><p></p><br><p></p><br><h2>Slider Swipe de Fotos uniformes con parametros de configuración en atributo data</h2><div class="gs-container-slider" id="fotosdata" data-gs="{&quot;type&quot;: &quot;swipe&quot;, &quot;bullets&quot;: true, &quot;nav&quot;: false, &quot;layout&quot;: {&quot;transitionMode&quot;: &quot;linear&quot;} }"><img class="img-slider" src="img/naturaleza/720/1.jpg"><img class="img-slider" src="img/naturaleza/720/2.jpg"><img class="img-slider" src="img/naturaleza/720/3.jpg"><img class="img-slider" src="img/naturaleza/720/4.jpg"><img class="img-slider" src="img/naturaleza/720/5.jpg"></div><p></p><br><p></p><br><h2>Slider Swipe de fotos con breakpoints y con auto destrucción (cuando llegue a 1600px de ancho se autodestruirá)</h2><div class="gs-container-slider" id="autodestroy"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/1.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/2.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/3.jpg"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/4.jpg"></div><p></p><br><p></p><br><h2>Slider comun con botones al acceso del API 'GS'</h2><div class="gs-container-slider" id="sliderconapi"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"><img class="img-slider" src="img/naturaleza/720/11.jpg"><img class="img-slider" src="img/naturaleza/720/12.jpg"><img class="img-slider" src="img/naturaleza/720/13.jpg"></div><div class="botones"><button class="go" id="gob">ir al item 5</button><button class="prev" id="prevb">&#60; Prev</button><button class="play" id="playb">Play</button><button class="stop" id="stopb">Stop</button><button class="next" id="nextb">Next &#62;</button></div><p></p><br><p></p><br><h2>Slider con imágenes rotas</h2><div class="gs-container-slider" id="sliderroto"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/6.jpg"><img class="img-slider gs-lazy" data-lazy="http://www.undominio.com/imagen-rota.jpg" id="imagen-rota"><img class="img-slider gs-lazy" data-lazy="img/naturaleza/720/8.jpg"></div><p></p><br><p></p><br><h2>Slider Swipe con mini sliders dentro</h2><div class="gs-container-slider" id="fotoswipe2"><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div><div class="gs-container-slider gs-slider"><img class="img-slider" src="img/naturaleza/720/6.jpg"><img class="img-slider" src="img/naturaleza/720/7.jpg"><img class="img-slider" src="img/naturaleza/720/8.jpg"><img class="img-slider" src="img/naturaleza/720/9.jpg"><img class="img-slider" src="img/naturaleza/720/10.jpg"></div></div><p></p><br><p></p><br><!--script(src="js/lib/jquery-2.2.3.min.js")--><script src="js/lib/jquery-3.3.1.min.js"></script><script src="dist/greatslider.jquery.js"></script><script src="js/main.js"></script></body></html>
