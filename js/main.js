@@ -1,10 +1,10 @@
-	
 // Slider Swipe de testimonios
 $('.lostestimonios').greatSlider({
 	type: 'swipe',
 	nav: false,
 	bullets: true,
 	autoHeight: true,
+	dragIn: 2,
 	layout: {
 		bulletDefaultStyles: false
 	}
@@ -16,7 +16,7 @@ const $sliderFs = $('#fotoswipe').greatSlider({
 	nav: true,
 	bullets: false,
 	fullscreen: true,
-	dragHand: false
+	dragIn: 2
 });
 
 $('#fsBtn').click(()=>{
@@ -27,7 +27,17 @@ $('#fsBtn').click(()=>{
 $('#fotos').greatSlider({
 	type: 'fade',
 	nav: true,
-	bullets: false
+	bullets: false,
+	//drag: false,
+	preLoad: true,
+	preLoadBy: 2,
+	lazyLoad: true,
+	onStepStart: (activo, index)=> {
+		if (index == 3) {
+			console.log('llegué a 3')
+			gs.slider['fotos'].preLoad(false);
+		}
+	}
 });
 
 // Slider Swipe de Fotos no uniformes
@@ -38,11 +48,16 @@ $('#fotosb').greatSlider({
 });
 
 // Slider Swipe de Fotos uniformes con fullscreen y lazy diferente en fullscreen
-const $fotosc = $('#fotosc').greatSlider({
+$('#fotosc').greatSlider({
 	type: 'swipe',
 	nav: true,
 	lazyLoad: true,
-	fullscreen: true
+	fullscreen: true,
+	//preLoad: true,
+	drag: false,
+	preLoad: true,
+	preLoadBy: 3,
+	startPosition: 3
 });
 
 // Slider Swipe de foto y Videos con lazy
@@ -60,6 +75,9 @@ let $miSlider = $('#breakpoints').greatSlider({
 	lazyLoad: true,
 	bullets: true,
 	items: 1,
+	dragIn: 4,
+	//preLoad: true,
+	//preLoadBy: 2,
 	fullscreen: true,
 	breakPoints: {
 		768: {

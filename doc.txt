@@ -3,7 +3,7 @@
 
 	- Nombre: Great Slider	 
 	- Descripción: Un slider todo terreno
-	- Version: Alfa 1.1.1
+	- Version: Alfa 1.3.0
 	- Autor: Daniel Pisconte Zevallos
 
 
@@ -31,6 +31,7 @@
 
 		autoplay: false, // true, false : activa o desactiva el autoplay
 		autoplaySpeed: 5000, // tiempo de espera entre cada paso
+		autoplayClass: 'gs-autoplay', // la clase que se le agrega cuando se activo el 'autoplay'
 
 		autoHeight: false, // redimenciona automáticamente el alto del slider, dependiendo del contenido del item
 
@@ -48,6 +49,9 @@
 		lazyClass: 'gs-lazy', // la clase que tendrá el o los items a cargar por demanda
 		lazyAttr: 'data-lazy', // el atributo que tendrá el o los items para cargar por demanda
 		lazyAttrFs : 'data-lazyfs', // el atributo que contendrá el enlace para el recurso para pantalla completa
+
+		preLoad: false, // true, false: para habilitar o no la precarga de recursos lazy.
+		preLoadBy: 1, // el numero de items a pre cargar recursos, por defecto es el mismo numero de pase de frames (slideBy).
 
 		layout: {
 
@@ -218,13 +222,27 @@
 
 		- Auto Play:
 
-			Iniciar: slider.autoPlay('play') o slider.autoPlay()
-			Detener: slider.autoPlay('stop');
+			Estado: slider.autoPlay(); retorna un boolean indicando el estado del autoplay.
+			Iniciar: slider.autoPlay(true); tambien se puede usar slider.autoPlay('play');
+			Detener: slider.autoPlay(false); tambien se puede usar slider.autoPlay('stop');
 
-		- Desplasamiento por touch (por defecto viene activado)
+		- Desplazamiento por touch (por defecto viene activado)
 
+			Estado: slider.touch(); retorna un boolean indicando el estado del desplazamiento por touch.
 			Activar: slider.touch(true);
 			Desactivar: slider.touch(false);
+
+		- Desplazamiento por arrastre de Mouse (default: true)
+			
+			Estado: slider.drag(); retorna un boolean indicando el estado del desplazamiento por arrastre de mouse.
+			Activar: slider.drag(true);
+			Desactivar: slider.drag(false);
+
+		- Pre Load (default: false)
+
+			Estado: slider.preLoad(); Retorna un boolean indicando si está activo o no la pre carga de recursos lazy.
+			Activar: slider.preLoad(true);
+			Desactivar: slider.preLoad(false);
 
 	- Full Screen:
 

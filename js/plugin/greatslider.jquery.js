@@ -97,7 +97,7 @@
 	window.gs = {
 		info: {
 			name: 'Great Slider',
-			version: 'Alfa 1.2.0',
+			version: 'Alfa 1.3.0',
 		},
 		slider: {}
 	}
@@ -114,8 +114,8 @@
 		this.items = theActions.items;
 		this.goTo = theActions.goTo;
 		this.loadLazy = theActions.loadLazy;
+		this.preLoad = theActions.preLoad;
 		this.drag = theActions.drag;
-
 
 		this.autoPlay = theActions.autoPlay;
 
@@ -162,6 +162,7 @@
 
 				autoplay: false, 
 				autoplaySpeed: 5000, // en milisegundos
+				autoplayClass: 'gs-autoplay',
 
 				log: false,
 
@@ -177,6 +178,7 @@
 				lazyLoadOnDestroy: true,
 
 				preLoad: false,
+				//preLoadBy: 1, parametro tácito, tomando de el numero de items a mostrar	
 
 				autoHeight: false,
 				autoDestroy: false,
@@ -284,9 +286,6 @@
 						return false;
 					}
 
-					// Si se determinó un auto pase del er
-					(configs.autoplay) ? this.autoPlay('play', configs) : this.autoPlay('stop', configs);
-
 					// Si aun no se construye el slider
 					if (!_this.hasClass(sLayout.builtClass)) {
 
@@ -342,6 +341,9 @@
 
 					// Anidando el desplazamiento por touch
 					this.touch(configs.touch);
+
+					// Si se determinó un auto pase del slider
+					this.autoPlay(configs.autoplay, configs);
 
 					// Solo una vez
 					if (_this.hasClass(sLayout.builtClass)) return false;
@@ -407,6 +409,7 @@
 						}
 						this.goTo(startPosition, true);
 					}
+
 				},
 
 				items: function(configs, itemToGo2) {
@@ -462,8 +465,24 @@
 							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + '{' + wrapperStyle + '}';
 							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + ' > .' + sLayout.itemClass + '{' + itemsStyle + '};';
 
-							// si el lazy está activado
-							if (configs.lazyLoad) this.loadLazy($firstItem);
+							// para evitar la carga iniciar por determinación de starPosition
+							if (configs.startPosition == undefined) {
+
+								// si el lazy está activado
+								if (configs.lazyLoad) {
+									this.loadLazy($firstItem);
+
+									// para pre cargar elementos lazy
+									if (configs.preLoad) {
+										let nToPreload = (configs.preLoadBy == undefined) ? configs.slideBy : configs.preLoadBy;
+										let preLoadLoaded = 0;
+										while(preLoadLoaded <= nToPreload) {
+											this.loadLazy($theItems.eq(preLoadLoaded));
+											preLoadLoaded++;
+										}
+									}
+								}
+							}
 
 							// si no se declaro en las 'opciones' un autoHeight de le asigna automáticamente por la naturaleza del slider
 							if(optionsBk.autoHeight == undefined) {
@@ -487,13 +506,27 @@
 							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + ' {' + transStyle + '}';
 							gsStyles += '#' + $idThis + ' > .' + sLayout.containerItemsClass + ' > .' + sLayout.wrapperItemsClass + ' > .' + sLayout.itemClass + ' {width: ' + (100 / nItems) + '%}';
 
-							// cargando los elementos 'lazy'
-							if (configs.lazyLoad) {
-								let i = 0;
-								while (i < initItems) {
-									this.loadLazy($theItems.eq(i));
-									i++;
-								};
+							// para evitar la carga iniciar por determinación de starPosition
+							if (configs.startPosition == undefined) {
+
+								// cargando los elementos 'lazy'
+								if (configs.lazyLoad) {
+									let i = 0;
+									while (i < initItems) {
+										this.loadLazy($theItems.eq(i));
+										i++;
+									};
+								}
+
+								// para pre cargar elementos lazy
+								if (configs.preLoad) {
+									let nToPreload = (configs.preLoadBy == undefined) ? configs.slideBy : configs.preLoadBy;
+									let preLoadLoaded = 0;
+									while(preLoadLoaded <= nToPreload) {
+										this.loadLazy($theItems.eq(preLoadLoaded));
+										preLoadLoaded++;
+									}
+								}
 							}
 
 							// Eliminando el 'height' dado inline porque posiblemente cuando solo era 1 item por vez tenía 'autoHeight'
@@ -507,10 +540,22 @@
 							if (!$activeItem.length) { // no lo hay, activo el determinado por configs.items
 								$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
 							} else { // activo el primero
+
 								let $activeItemIndex = $activeItem.index();
 								if ($activeItemIndex < (initItems - 1)) { // si el activo es menor
 									$theItems.eq(initItems - 1).addClass(iActivePure).siblings().removeClass(iActivePure);
 									$wrapperItems.removeAttr('style');
+
+									// para pre cargar elementos lazy
+									if (configs.preLoad) {
+										let nToPreload = (configs.preLoadBy == undefined) ? configs.slideBy : configs.preLoadBy;
+										let preLoadLoaded = 0;
+										while(preLoadLoaded <= nToPreload) {
+											this.loadLazy($theItems.eq((initItems - 1) + preLoadLoaded));
+											preLoadLoaded++;
+										}
+									}
+
 								} else {
 									// para ir a un item específico si se acciona un full screen con un item específico
 									if(itemToGo2 == undefined) {
@@ -519,6 +564,7 @@
 										this.goTo(itemToGo2, true);
 									}
 								}
+
 							}
 
 							// auto height
@@ -546,6 +592,9 @@
 				},
 
 				drag: function(status) {
+
+					if (status == undefined) return configsBk.drag;
+
 					let _objThis = this;
 					let $containerItems = _this.find('> .' + sLayout.containerItemsClass);
 					let theContainer = $containerItems.get(0);
@@ -554,7 +603,9 @@
 					
 					if (!status) {
 						if (theContainer.classList.contains(settings.dragClass)) {
-							theContainer.classList.remove(dragClasses)
+							dragClasses.split(' ').forEach(e => {
+								theContainer.classList.remove(e);
+							});
 							$containerItems.off('mouseenter mousedown mousemove mouseup mouseleave')
 						}
 					} else {
@@ -1018,6 +1069,14 @@
 					});
 				},
 
+				preLoad: status => {
+					if (status == undefined) {
+						return configsBk.preLoad
+					} else {
+						configsBk.preLoad = status;
+					}
+				},
+				
 				log: obj => {
 					if(obj == undefined) {
 						return log.forEach(txt => {
@@ -1184,8 +1243,24 @@
 					if (configs.lazyLoad) {
 						let indexsToLoad = itemToActive;
 						while(indexsToLoad > (itemToActive - configs.items)) {
-							this.loadLazy(items.eq(indexsToLoad));
+							//console.log('indexsToLoad: ', indexsToLoad)
+							let $itemToLoaded = items.eq(indexsToLoad);
+							//if (!$itemToLoaded.hasClass(sLayout.itemLoadedClass) && !$itemToLoaded.hasClass(sLayout.itemLoadingClass)) this.loadLazy($itemToLoaded);
+							this.loadLazy($itemToLoaded);
 							indexsToLoad--;
+						}
+					
+						// para precargar elementos
+						if (configs.preLoad) {
+							let itemsToPreLoad = (configs.preLoadBy == undefined) ? configs.slideBy : configs.preLoadBy;
+							let itemLoaded = 1;
+							while(itemLoaded <= itemsToPreLoad) {
+								if ((itemToActive + itemLoaded) > nItems) break; // para que no cargue items más allá del numero total de items.
+								let $itemToLoaded = items.eq(itemToActive + itemLoaded);
+								//if (!$itemToLoaded.hasClass(sLayout.itemLoadedClass) && !$itemToLoaded.hasClass(sLayout.itemLoadingClass)) this.loadLazy($itemToLoaded);
+								this.loadLazy($itemToLoaded);
+								itemLoaded++;
+							}
 						}
 					}
 
@@ -1211,12 +1286,22 @@
 					}
 				},
 
-				autoPlay: function(action = 'play', configs) {
+				autoPlay: function(action, configs) {
 
+					if (action == undefined) return configsBk.autoplay;
 					if (configs == undefined) configs = configsBk;
 
 					if(action == 'play') {
+						action = true;
+					} else if (action == 'stop'){
+						action = false;
+					}
 
+					let $containerItems = _this.find('> .' + sLayout.containerItemsClass);
+					let theContainer = $containerItems.get(0);
+
+					if(action) {
+						theContainer.classList.add(configs.autoplayClass);
 						if(gsIntervalSet !== undefined) return false; // por si se seteó el intervalo previamente
 						gsIntervalSet = true;
 
@@ -1229,13 +1314,15 @@
 						if (playAP !== undefined) playAP();
 						return true;
 
-					} else if (action == 'stop'){
-						clearInterval(gsInterval);
-						let stopAP = configs.onStop;
-						if (stopAP !== undefined) stopAP();
-						gsIntervalSet = undefined;
-						return false;
-
+					} else {
+						theContainer.classList.remove(configs.autoplayClass);
+						if (gsInterval !== undefined) {
+							clearInterval(gsInterval);
+							let stopAP = configs.onStop;
+							if (stopAP !== undefined) stopAP();
+							gsIntervalSet = undefined;
+							return false;
+						}
 					}
 				},
 
@@ -1414,6 +1501,8 @@
 				},
 
 				touch: function(estado) {
+					if (estado == undefined) return configsBk.touch;
+
 					let $theContainerItems = _this.find('> .' + sLayout.containerItemsClass),
 							sliderTouchStart, sliderTouchMove;
 					if (!estado) {
