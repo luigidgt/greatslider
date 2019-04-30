@@ -97,7 +97,7 @@
 	window.gs = {
 		info: {
 			name: 'Great Slider',
-			version: 'Alfa 1.3.0',
+			version: 'Alfa 1.3.0.1',
 		},
 		slider: {}
 	}
@@ -1520,17 +1520,23 @@
 							yDown = evt.originalEvent.touches[0].clientY;
 						}
 						sliderTouchMove = evt => {
-							if ( ! xDown || ! yDown ) return false;
-							var xUp = evt.originalEvent.touches[0].clientX;
-							var yUp = evt.originalEvent.touches[0].clientY;
-							var xDiff = xDown - xUp;
-							var yDiff = yDown - yUp;
-							if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
-								evt.preventDefault();
-								(xDiff > 0) ? this.goTo('next') : this.goTo('prev');
+							if (xDown || yDown) {
+								var xUp = evt.originalEvent.touches[0].clientX;
+								var yUp = evt.originalEvent.touches[0].clientY;
+								var xDiff = xDown - xUp;
+								var yDiff = yDown - yUp;
+								if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+									if (xDiff > 0) {
+										evt.preventDefault();
+										this.goTo('next')
+									} else {
+										evt.preventDefault();
+										this.goTo('prev');
+									}
+								}
+								xDown = null;
+								yDown = null;
 							}
-							xDown = null;
-							yDown = null;
 						}
 						//finalmente anidando el touch
 						$theContainerItems.on({
