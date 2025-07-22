@@ -922,6 +922,46 @@
 								}
 							},
 
+							picture: () => {
+								const $sources = _element.find('source');
+								const $img = _element.find('img');
+
+								$item.addClass(sLayout.itemLoadingClass);
+								if (onLoadingItem !== undefined) onLoadingItem(_element, $itemIndex);
+
+								// Cargar <source>
+								$sources.each(function () {
+									const $srcEl = $(this);
+									const srcset = $srcEl.attr(settings.lazyAttr);
+									if (srcset) {
+										$srcEl.attr('srcset', srcset);
+									}
+								});
+
+								// Cargar <img>
+								if ($img.length) {
+									const imgLazy = $img.attr(settings.lazyAttr);
+									if (imgLazy && $img.attr('src') !== imgLazy) {
+										$img.attr('src', imgLazy).one({
+											load: () => {
+												if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'success');
+												_tools.cleanClass($item, sLayout);
+												autoHeight($item);
+												_objThis.log({ type: 'not', text: `recurso lazy "${imgLazy}" cargado correctamente.` });
+											},
+											error: () => {
+												if (onLoadedItem !== undefined) onLoadedItem(_element, $itemIndex, 'error');
+												_tools.cleanClass($item, sLayout);
+												_objThis.log({ type: 'err', text: `Error al cargar recurso lazy "${imgLazy}".` });
+											}
+										});
+									} else {
+										_tools.cleanClass($item, sLayout);
+										autoHeight($item);
+									}
+								}
+							},
+
 							video: ()=> {
 								if (!$item.hasClass(itemClassLoaded)) {
 									$item.addClass(sLayout.itemLoadingClass);
